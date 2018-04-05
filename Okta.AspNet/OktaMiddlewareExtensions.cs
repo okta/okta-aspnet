@@ -35,9 +35,18 @@ namespace Okta.AspNet
 
         public static IAppBuilder UseOktaWebApi(this IAppBuilder app, OktaWebApiOptions options)
         {
-            string authority = options.OrgAuthorityUri;
+            if (app == null)
+            {
+                throw new ArgumentNullException(nameof(app));
+            }
+
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
             var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
-              authority + "/.well-known/openid-configuration",
+               options.OrgUrl + "/.well-known/openid-configuration",
               new OpenIdConnectConfigurationRetriever(),
               new HttpDocumentRetriever());
 
@@ -46,8 +55,8 @@ namespace Okta.AspNet
                 AuthenticationMode = AuthenticationMode.Active,
                 TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidAudience = "api://default",
-                    ValidIssuer = authority,
+                    ValidAudience = options.Audience,
+                    ValidIssuer = options.OrgUrl,
                     IssuerSigningKeyResolver = (token, securityToken, identifier, parameters) =>
                     {
                         var discoveryDocument = Task.Run(() => configurationManager.GetConfigurationAsync()).GetAwaiter().GetResult();
@@ -61,21 +70,15 @@ namespace Okta.AspNet
 
         private static void SetupOpenIdConnectAuthentication(IAppBuilder app, OktaMvcOptions options)
         {
-            string clientId = options.ClientId;
-            string redirectUri = options.RedirectUri;
-            string authority = options.OrgAuthorityUri;
-            string clientSecret = options.ClientSecret;
-            string postLogoutRedirectUri = options.PostLogoutRedirectUri;
-
             app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptions
             {
-                ClientId = clientId,
-                ClientSecret = clientSecret,
-                Authority = authority,
-                RedirectUri = redirectUri,
+                ClientId = options.ClientId,
+                ClientSecret = options.ClientSecret,
+                Authority = options.OrgUrl,
+                RedirectUri = options.RedirectUri,
                 ResponseType = OpenIdConnectResponseType.CodeIdToken,
-                Scope = OpenIdConnectScope.OpenIdProfile,
-                PostLogoutRedirectUri = postLogoutRedirectUri,
+                Scope = (string.IsNullOrEmpty(options.Scope) ? OpenIdConnectScope.OpenIdProfile : options.Scope),
+                PostLogoutRedirectUri = options.PostLogoutRedirectUri,
                 TokenValidationParameters = new TokenValidationParameters
                 {
                     NameClaimType = "name"
@@ -86,15 +89,15 @@ namespace Okta.AspNet
                     AuthorizationCodeReceived = async n =>
                     {
                         // Exchange code for access and ID tokens
-                        var tokenClient = new TokenClient(authority + "/v1/token", clientId, clientSecret);
-                        var tokenResponse = await tokenClient.RequestAuthorizationCodeAsync(n.Code, redirectUri);
+                        var tokenClient = new TokenClient(options.OrgUrl + "/v1/token", options.ClientId, options.ClientSecret);
+                        var tokenResponse = await tokenClient.RequestAuthorizationCodeAsync(n.Code, options.RedirectUri);
 
                         if (tokenResponse.IsError)
                         {
                             throw new Exception(tokenResponse.Error);
                         }
 
-                        var userInfoClient = new UserInfoClient(authority + "/v1/userinfo");
+                        var userInfoClient = new UserInfoClient(options.OrgUrl + "/v1/userinfo");
                         var userInfoResponse = await userInfoClient.GetAsync(tokenResponse.AccessToken);
                         var claims = new List<Claim>();
                         claims.AddRange(userInfoResponse.Claims);

@@ -16,7 +16,7 @@ namespace Okta.AspNet.Test
         // These values are stored in Web.config. Make sure you update them!
         private readonly string clientId = ConfigurationManager.AppSettings["okta:ClientId"];
         private readonly string redirectUri = ConfigurationManager.AppSettings["okta:RedirectUri"];
-        private readonly string orgAuthorityUri = ConfigurationManager.AppSettings["okta:OrgAuthorityUri"];
+        private readonly string orgUrl = ConfigurationManager.AppSettings["okta:OrgUrl"];
         private readonly string clientSecret = ConfigurationManager.AppSettings["okta:ClientSecret"];
         private readonly string postLogoutRedirectUri = ConfigurationManager.AppSettings["okta:PostLogoutRedirectUri"];
 
@@ -30,7 +30,7 @@ namespace Okta.AspNet.Test
                 {
                     ClientId = clientId,
                     ClientSecret = clientSecret,
-                    OrgAuthorityUri = orgAuthorityUri,
+                    OrgUrl = orgUrl,
                     RedirectUri = redirectUri,
                     PostLogoutRedirectUri = postLogoutRedirectUri
                 }
