@@ -42,10 +42,10 @@
         }
 
         var oktaSignIn = new OktaSignIn({
-            baseUrl: "{OrgUri}",
+            baseUrl: "{OrgUrl}",
             clientId: "{ClientId}",
             authParams: {
-                issuer: "https:{OrgUri}/oauth2/default",
+                issuer: "https://{OrgUrl}/oauth2/default",
                 responseType: ['token', 'id_token'],
                 display: 'page'
             }

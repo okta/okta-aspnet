@@ -1,16 +1,16 @@
-﻿using Owin;
-using Microsoft.Owin.Security.OpenIdConnect;
-using System.Threading.Tasks;
+﻿using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using System.Security.Claims;
-using IdentityModel.Client;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Jwt;
+using Microsoft.Owin.Security.OpenIdConnect;
+using Okta.AspNet.Abstractions;
+using Owin;
 using System;
 using System.Collections.Generic;
-using Microsoft.IdentityModel.Tokens;
-using Okta.AspNet.Abstractions;
-using Microsoft.IdentityModel.Protocols;
-using Microsoft.Owin.Security.Jwt;
-using Microsoft.Owin.Security;
+using System.Threading.Tasks;
+using System.Security.Claims;
+using IdentityModel.Client;
 
 namespace Okta.AspNet
 {

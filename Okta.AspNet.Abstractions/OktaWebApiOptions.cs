@@ -7,7 +7,5 @@ namespace Okta.AspNet.Abstractions
     public class OktaWebApiOptions : OktaOptions
     {
         public string Audience { get; set; } = "api://default";
-
-
     }
 }
