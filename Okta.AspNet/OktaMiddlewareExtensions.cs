@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using IdentityModel.Client;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Okta.AspNet
 {
@@ -55,14 +56,18 @@ namespace Okta.AspNet
                 AuthenticationMode = AuthenticationMode.Active,
                 TokenValidationParameters = new TokenValidationParameters
                 {
+                    ValidateAudience = true,
                     ValidAudience = options.Audience,
+                    ValidateIssuer = true,
                     ValidIssuer = options.OrgUrl,
+                    ValidateIssuerSigningKey = true,
                     IssuerSigningKeyResolver = (token, securityToken, identifier, parameters) =>
                     {
                         var discoveryDocument = Task.Run(() => configurationManager.GetConfigurationAsync()).GetAwaiter().GetResult();
                         return discoveryDocument.SigningKeys;
                     }
-                }
+                },
+                TokenHandler = new CustomTokenHandler() { ClientId = options.ClientId }
             });
 
             return app;
