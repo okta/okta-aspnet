@@ -1,10 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Okta.AspNet.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Okta.AspNet
 {
@@ -14,16 +9,12 @@ namespace Okta.AspNet
         {
             RequireExpirationTime = true;
             RequireSignedTokens = true;
-
             ValidateIssuer = true;
             ValidIssuer = issuer;
-
             ValidateAudience = true;
-
+            ValidateIssuerSigningKey = true;
             ValidateLifetime = true;
             ClockSkew = options.ClockSkew;
-
-            ValidateIssuerSigningKey = true;
         }
     }
 }

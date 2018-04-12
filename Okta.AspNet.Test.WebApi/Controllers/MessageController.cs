@@ -20,8 +20,8 @@ namespace Okta.AspNet.Test.WebApi.Controllers
 
             return new string[]
             {
-            $"For {login ?? "your"} eyes only",
-            "Your mission, should you choose to accept it..."
+                $"For {login ?? "your"} eyes only",
+                "Your mission, should you choose to accept it..."
             };
         }
     }
