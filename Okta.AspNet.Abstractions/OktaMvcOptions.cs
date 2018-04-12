@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Okta.AspNet.Abstractions
+﻿namespace Okta.AspNet.Abstractions
 {
     public class OktaMvcOptions : OktaOptions
     {
@@ -15,5 +11,7 @@ namespace Okta.AspNet.Abstractions
         public string PostLogoutRedirectUri { get; set; }
 
         public string Scope { get; set; } = DefaultScope;
+
+        public bool GetClaimsFromUserInfoEndpoint { get; set; } = false;
     }
 }
