@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2036
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNet.Abstractions", "Okta.AspNet.Abstractions\Okta.AspNet.Abstractions.csproj", "{E7947664-64B6-4314-B644-2F376187B89F}"
 EndProject
@@ -10,6 +10,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.AspNet.Test.WebApi", "Okta.AspNet.Test.WebApi\Okta.AspNet.Test.WebApi.csproj", "{E8E7FD29-C41F-4FBD-936E-12B7AF8DBA44}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.AspNet", "Okta.AspNet\Okta.AspNet.csproj", "{70AB7D3C-D454-4B0D-94C7-F50AFD622367}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6481BBC0-3284-4CBF-AD7B-2480535F1184}"
+	ProjectSection(SolutionItems) = preProject
+		build.cake = build.cake
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
