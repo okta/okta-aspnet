@@ -9,6 +9,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Owin.Security.Notifications;
 using System.Linq;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Okta.AspNet
 {
@@ -22,7 +23,6 @@ namespace Okta.AspNet
             }
 
             ValidateOktaMvcOptions(options);
-
             AddOpenIdConnectAuthentication(app, options);
 
             return app;
@@ -88,8 +88,10 @@ namespace Okta.AspNet
               new OpenIdConnectConfigurationRetriever(),
               new HttpDocumentRetriever());
 
-            var signingKeyProvider = new DiscoveryDocumentSigningKeyProvider(configurationManager);
+            // Stop the default behavior of remapping JWT claim names to legacy MS/SOAP claim names
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
+            var signingKeyProvider = new DiscoveryDocumentSigningKeyProvider(configurationManager);
             var tokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
             {
                 ValidAudience = options.Audience,
@@ -123,6 +125,9 @@ namespace Okta.AspNet
 
             var tokenExchanger = new TokenExchanger(options, issuer, configurationManager);
 
+            // Stop the default behavior of remapping JWT claim names to legacy MS/SOAP claim names
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
             app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptions
             {
                 ClientId = options.ClientId,
@@ -133,7 +138,6 @@ namespace Okta.AspNet
                 Scope = options.Scope,
                 PostLogoutRedirectUri = options.PostLogoutRedirectUri,
                 TokenValidationParameters = tokenValidationParameters,
-
                 Notifications = new OpenIdConnectAuthenticationNotifications
                 {
                     AuthorizationCodeReceived = tokenExchanger.ExchangeCodeForToken,
