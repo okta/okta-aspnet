@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Okta.AspNet.Test.Controllers
+namespace Okta.AspNet.Test.Mvc.Controllers
 {
     public class HomeController : Controller
     {

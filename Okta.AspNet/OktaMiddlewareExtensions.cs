@@ -1,17 +1,13 @@
 ﻿using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Jwt;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Okta.AspNet.Abstractions;
 using Owin;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Security.Claims;
-using IdentityModel.Client;
-using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Owin.Security.Notifications;
 
 namespace Okta.AspNet
 {
@@ -24,12 +20,9 @@ namespace Okta.AspNet
                 throw new ArgumentNullException(nameof(app));
             }
 
-            if (options == null)
-            {
-                throw new ArgumentNullException(nameof(options));
-            }
+            ValidateOktaMvcOptions(options);
 
-            SetupOpenIdConnectAuthentication(app, options);
+            AddOpenIdConnectAuthentication(app, options);
 
             return app;
         }
@@ -41,102 +34,127 @@ namespace Okta.AspNet
                 throw new ArgumentNullException(nameof(app));
             }
 
+            ValidateOktaOptions(options);
+            AddJwtBearerAuthentication(app, options);
+
+            return app;
+        }
+
+        private static void ValidateOktaOptions(OktaOptions options)
+        {
             if (options == null)
             {
                 throw new ArgumentNullException(nameof(options));
             }
 
+            if (string.IsNullOrEmpty(options.OrgUrl))
+            {
+                throw new ArgumentNullException(nameof(options.OrgUrl),
+                    "Your Okta Org URL is missing. You can find it in the Okta Developer Console. It'll look like: https://{yourOktaDomain}.com");
+            }
+
+            if (string.IsNullOrEmpty(options.ClientId))
+            {
+                throw new ArgumentNullException(nameof(options.ClientId),
+                    "Your Okta Application client ID is missing. You can find it in the Okta Developer Console in the details for the Application you created.");
+            }
+        }
+
+        private static void ValidateOktaMvcOptions(OktaMvcOptions options)
+        {
+            ValidateOktaOptions(options);
+
+            if (string.IsNullOrEmpty(options.ClientSecret))
+            {
+                throw new ArgumentNullException(nameof(options.ClientSecret),
+                    "Your Okta Application client secret is missing. You can find it in the Okta Developer Console in the details for the Application you created.");
+            }
+
+            if (string.IsNullOrEmpty(options.RedirectUri))
+            {
+                throw new ArgumentNullException(nameof(options.RedirectUri),
+                    "Your Okta Application redirect URI is missing. You can find it in the Okta Developer Console in the details for the Application you created.");
+            }
+            
+        }
+
+        private static void AddJwtBearerAuthentication(IAppBuilder app, OktaWebApiOptions options)
+        {
+            var issuer = UrlHelper.CreateIssuerUrl(options.OrgUrl, options.AuthorizationServerId);
+
             var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
-               options.OrgUrl + "/.well-known/openid-configuration",
+              issuer + "/.well-known/openid-configuration",
               new OpenIdConnectConfigurationRetriever(),
               new HttpDocumentRetriever());
+
+            var tokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
+            {
+                ValidAudience = options.Audience,
+                IssuerSigningKeyResolver = (token, securityToken, identifier, parameters) =>
+                {
+                    var discoveryDocument = Task.Run(() => configurationManager.GetConfigurationAsync()).GetAwaiter().GetResult();
+                    return discoveryDocument.SigningKeys;
+                }
+            };
+
+            // TODO: Can IssuerSigningKeyResolver be replaced with a signing key provider?
 
             app.UseJwtBearerAuthentication(new JwtBearerAuthenticationOptions
             {
                 AuthenticationMode = AuthenticationMode.Active,
-                TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateAudience = true,
-                    ValidAudience = options.Audience,
-                    ValidateIssuer = true,
-                    ValidIssuer = options.OrgUrl,
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKeyResolver = (token, securityToken, identifier, parameters) =>
-                    {
-                        var discoveryDocument = Task.Run(() => configurationManager.GetConfigurationAsync()).GetAwaiter().GetResult();
-                        return discoveryDocument.SigningKeys;
-                    }
-                },
-                TokenHandler = new CustomTokenHandler() { ClientId = options.ClientId }
+                TokenValidationParameters = tokenValidationParameters,
+                TokenHandler = new StrictTokenHandler() { ClientId = options.ClientId }
             });
-
-            return app;
         }
 
-        private static void SetupOpenIdConnectAuthentication(IAppBuilder app, OktaMvcOptions options)
+        private static void AddOpenIdConnectAuthentication(IAppBuilder app, OktaMvcOptions options)
         {
+            var issuer = UrlHelper.CreateIssuerUrl(options.OrgUrl, options.AuthorizationServerId);
+            var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
+              issuer + "/.well-known/openid-configuration",
+              new OpenIdConnectConfigurationRetriever(),
+              new HttpDocumentRetriever());
+
+            var tokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
+            {
+                NameClaimType = "name"
+            };
+
+            var tokenExchanger = new TokenExchanger(options, issuer, configurationManager);
             app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptions
             {
                 ClientId = options.ClientId,
                 ClientSecret = options.ClientSecret,
-                Authority = options.OrgUrl,
+                Authority = issuer,
                 RedirectUri = options.RedirectUri,
                 ResponseType = OpenIdConnectResponseType.CodeIdToken,
-                Scope = (string.IsNullOrEmpty(options.Scope) ? OpenIdConnectScope.OpenIdProfile : options.Scope),
+                Scope = options.Scope,
                 PostLogoutRedirectUri = options.PostLogoutRedirectUri,
-                TokenValidationParameters = new TokenValidationParameters
-                {
-                    NameClaimType = "name"
-                },
+                TokenValidationParameters = tokenValidationParameters,
 
                 Notifications = new OpenIdConnectAuthenticationNotifications
                 {
-                    AuthorizationCodeReceived = async n =>
-                    {
-                        // Exchange code for access and ID tokens
-                        var tokenClient = new TokenClient(options.OrgUrl + "/v1/token", options.ClientId, options.ClientSecret);
-                        var tokenResponse = await tokenClient.RequestAuthorizationCodeAsync(n.Code, options.RedirectUri);
-
-                        if (tokenResponse.IsError)
-                        {
-                            throw new Exception(tokenResponse.Error);
-                        }
-
-                        var userInfoClient = new UserInfoClient(options.OrgUrl + "/v1/userinfo");
-                        var userInfoResponse = await userInfoClient.GetAsync(tokenResponse.AccessToken);
-                        var claims = new List<Claim>();
-                        claims.AddRange(userInfoResponse.Claims);
-                        claims.Add(new Claim("id_token", tokenResponse.IdentityToken));
-                        claims.Add(new Claim("access_token", tokenResponse.AccessToken));
-
-                        if (!string.IsNullOrEmpty(tokenResponse.RefreshToken))
-                        {
-                            claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
-                        }
-
-                        n.AuthenticationTicket.Identity.AddClaims(claims);
-
-                        return;
-                    },
-
-                    RedirectToIdentityProvider = n =>
-                    {
-                        // If signing out, add the id_token_hint
-                        if (n.ProtocolMessage.RequestType == OpenIdConnectRequestType.Logout)
-                        {
-                            var idTokenClaim = n.OwinContext.Authentication.User.FindFirst("id_token");
-
-                            if (idTokenClaim != null)
-                            {
-                                n.ProtocolMessage.IdTokenHint = idTokenClaim.Value;
-                            }
-
-                        }
-
-                        return Task.CompletedTask;
-                    }
+                    AuthorizationCodeReceived = tokenExchanger.ExchangeCodeForToken,
+                    RedirectToIdentityProvider = BeforeRedirectToIdentityProvider,
                 },
             });
+        }
+
+        private static Task BeforeRedirectToIdentityProvider(RedirectToIdentityProviderNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions> n)
+        {
+            // If signing out, add the id_token_hint
+            if (n.ProtocolMessage.RequestType == OpenIdConnectRequestType.Logout)
+            {
+                var idTokenClaim = n.OwinContext.Authentication.User.FindFirst("id_token");
+
+                if (idTokenClaim != null)
+                {
+                    n.ProtocolMessage.IdTokenHint = idTokenClaim.Value;
+                }
+
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

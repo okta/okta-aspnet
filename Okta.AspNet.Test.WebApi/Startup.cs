@@ -11,9 +11,15 @@ namespace Okta.AspNet.Test.WebApi
     {
         public void Configuration(IAppBuilder app)
         {
-            var authority = ConfigurationManager.AppSettings["okta:OrgUrl"];
+            var orgUrl = ConfigurationManager.AppSettings["okta:OrgUrl"];
             var clientId = ConfigurationManager.AppSettings["okta:ClientId"];
-            app.UseOktaWebApi(new OktaWebApiOptions() { OrgUrl = authority, ClientId = clientId });
+            var authorizationServerId = ConfigurationManager.AppSettings["okta:AuthorizationServerId"];
+            app.UseOktaWebApi(new OktaWebApiOptions()
+                {
+                    OrgUrl = orgUrl,
+                    ClientId = clientId,
+                    AuthorizationServerId = authorizationServerId
+                });
         }
     }
 }

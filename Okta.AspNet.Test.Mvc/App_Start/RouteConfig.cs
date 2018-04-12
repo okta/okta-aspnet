@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace Okta.AspNet.Test
+namespace Okta.AspNet.Test.Mvc
 {
     public class RouteConfig
     {

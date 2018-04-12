@@ -6,30 +6,16 @@ namespace Okta.AspNet.Abstractions
 {
     public class OktaOptions
     {
-        private string authorizationServerId;
+        public static readonly string DefaultAuthorizationServerId = "default";
+
+        public static readonly TimeSpan DefaultClockSkew = TimeSpan.FromMinutes(2);
 
         public string OrgUrl { get; set; }
 
         public string ClientId { get; set; }
 
-        public string AuthorizationServerId
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(authorizationServerId))
-                {
-                    return OrgUrl;
-                }
-                else
-                {
-                    return $"{OrgUrl}/oauth2/{AuthorizationServerId}";
-                }
-            }
+        public string AuthorizationServerId { get; set; } = DefaultAuthorizationServerId;
 
-            set
-            {
-                authorizationServerId = value;
-            }
-        }
+        public TimeSpan ClockSkew { get; set; } = DefaultClockSkew;
     }
 }

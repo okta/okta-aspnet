@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Optimization;
 
-namespace Okta.AspNet.Test
+namespace Okta.AspNet.Test.Mvc
 {
     public class BundleConfig
     {

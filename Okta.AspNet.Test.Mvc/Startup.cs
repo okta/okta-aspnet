@@ -7,9 +7,9 @@ using Microsoft.Owin.Security.Cookies;
 using Okta.AspNet.Abstractions;
 using Owin;
 
-[assembly: OwinStartup(typeof(Okta.AspNet.Test.Startup))]
+[assembly: OwinStartup(typeof(Okta.AspNet.Test.Mvc.Startup))]
 
-namespace Okta.AspNet.Test
+namespace Okta.AspNet.Test.Mvc
 {
     public class Startup
     {
