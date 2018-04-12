@@ -8,6 +8,7 @@ using Owin;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Owin.Security.Notifications;
+using System.Linq;
 
 namespace Okta.AspNet
 {
@@ -87,17 +88,17 @@ namespace Okta.AspNet
               new OpenIdConnectConfigurationRetriever(),
               new HttpDocumentRetriever());
 
+            var signingKeyProvider = new DiscoveryDocumentSigningKeyProvider(configurationManager);
+
             var tokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
             {
                 ValidAudience = options.Audience,
-                IssuerSigningKeyResolver = (token, securityToken, identifier, parameters) =>
+                IssuerSigningKeyResolver = (token, securityToken, keyId, validationParameters) =>
                 {
-                    var discoveryDocument = Task.Run(() => configurationManager.GetConfigurationAsync()).GetAwaiter().GetResult();
-                    return discoveryDocument.SigningKeys;
+                    var signingKeys = signingKeyProvider.GetSigningKeysAsync().GetAwaiter().GetResult();
+                    return signingKeys.Where(x => x.KeyId == keyId);
                 }
             };
-
-            // TODO: Can IssuerSigningKeyResolver be replaced with a signing key provider?
 
             app.UseJwtBearerAuthentication(new JwtBearerAuthenticationOptions
             {
@@ -121,6 +122,7 @@ namespace Okta.AspNet
             };
 
             var tokenExchanger = new TokenExchanger(options, issuer, configurationManager);
+
             app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptions
             {
                 ClientId = options.ClientId,
