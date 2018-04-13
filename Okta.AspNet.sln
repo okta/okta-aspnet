@@ -9,12 +9,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.AspNet.Test.Mvc", "Okt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.AspNet.Test.WebApi", "Okta.AspNet.Test.WebApi\Okta.AspNet.Test.WebApi.csproj", "{E8E7FD29-C41F-4FBD-936E-12B7AF8DBA44}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.AspNet", "Okta.AspNet\Okta.AspNet.csproj", "{70AB7D3C-D454-4B0D-94C7-F50AFD622367}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6481BBC0-3284-4CBF-AD7B-2480535F1184}"
 	ProjectSection(SolutionItems) = preProject
 		build.cake = build.cake
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNet", "Okta.AspNet\Okta.AspNet.csproj", "{E183845F-6656-458C-8B7A-B1C4007FBD86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,10 +34,10 @@ Global
 		{E8E7FD29-C41F-4FBD-936E-12B7AF8DBA44}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8E7FD29-C41F-4FBD-936E-12B7AF8DBA44}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8E7FD29-C41F-4FBD-936E-12B7AF8DBA44}.Release|Any CPU.Build.0 = Release|Any CPU
-		{70AB7D3C-D454-4B0D-94C7-F50AFD622367}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{70AB7D3C-D454-4B0D-94C7-F50AFD622367}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{70AB7D3C-D454-4B0D-94C7-F50AFD622367}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{70AB7D3C-D454-4B0D-94C7-F50AFD622367}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E183845F-6656-458C-8B7A-B1C4007FBD86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E183845F-6656-458C-8B7A-B1C4007FBD86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E183845F-6656-458C-8B7A-B1C4007FBD86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E183845F-6656-458C-8B7A-B1C4007FBD86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -157,7 +157,7 @@
       <Name>Okta.AspNet.Abstractions</Name>
     </ProjectReference>
     <ProjectReference Include="..\Okta.AspNet\Okta.AspNet.csproj">
-      <Project>{70ab7d3c-d454-4b0d-94c7-f50afd622367}</Project>
+      <Project>{e183845f-6656-458c-8b7a-b1c4007fbd86}</Project>
       <Name>Okta.AspNet</Name>
     </ProjectReference>
   </ItemGroup>
