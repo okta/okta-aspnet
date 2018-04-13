@@ -1,62 +1,72 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
-var DotnetProjects = new List<string>()
+var Projects = new List<string>()
 {
-	"Okta.AspNet"
-};
-
-var DotnetStandardProjects = new List<string>()
-{
-	"Okta.AspNet.Abstractions"
+	"Okta.AspNet.Abstractions",
+    "Okta.AspNet"
 };
 
 Task("Clean").Does(() =>
 {
+    Console.WriteLine("Removing ./artifacts");
     CleanDirectory("./artifacts/");
-    CleanDirectory("./packages/");
 
+    Console.WriteLine("Removing nested bin and obj directories");
     GetDirectories("./**/bin")
 		.Concat(GetDirectories("./**/obj"))
         .ToList()
         .ForEach(d => CleanDirectory(d));
 });
 
-Task("DotnetStandardRestore").Does(() => {
-    DotnetStandardProjects.ForEach(projectNameWithoutExtension => DotNetCoreRestore($"./{projectNameWithoutExtension}"));
+Task("Restore")
+.IsDependentOn("Clean")
+.Does(() =>
+{
+    Projects.ForEach(name =>
+    {
+        Console.WriteLine($"\nRestoring packages for {name}");
+        DotNetCoreRestore($"./{name}");
+    });
 });
 
-Task("DotnetStandardBuild")
-.IsDependentOn("DotnetStandardRestore")
-.Does(() => {
-    DotnetStandardProjects.ForEach(projectNameWithoutExtension => {
-        Console.WriteLine("Building project ", projectNameWithoutExtension);
+Task("Build")
+.IsDependentOn("Restore")
+.Does(() =>
+{
+    Projects.ForEach(name =>
+    {
+        Console.WriteLine($"\nBuilding {name}");
 
-        DotNetCoreBuild($"./{projectNameWithoutExtension}", new DotNetCoreBuildSettings
+        DotNetCoreBuild($"./{name}", new DotNetCoreBuildSettings
         {
             Configuration = configuration
         });
     });
 });
 
-Task("DotnetStandardCreateNugetPackages")
-.IsDependentOn("DotnetStandardBuild")
-.Does(() => {
-    DotnetStandardProjects.ForEach(projectNameWithoutExtension => {
-        Console.WriteLine("Creating NuGet package for project ", projectNameWithoutExtension);
+Task("PackNuget")
+.IsDependentOn("Build")
+.Does(() =>
+{
+    Projects.ForEach(name =>
+    {
+        Console.WriteLine($"\nCreating NuGet package for {name}");
 
-        DotNetCorePack($"./{projectNameWithoutExtension}", new DotNetCorePackSettings
+        DotNetCorePack($"./{name}", new DotNetCorePackSettings
         {
             Configuration = configuration,
-            OutputDirectory = "./artifacts/"
+            OutputDirectory = "./artifacts"
         });
     });
 });
 
 Task("Default")
     .IsDependentOn("Clean")
-    .IsDependentOn("DotnetStandardBuild")
-    .IsDependentOn("DotnetStandardCreateNugetPackages");
+    .IsDependentOn("Restore")
+    .IsDependentOn("Build")
+    // TODO: Test
+    .IsDependentOn("PackNuget");
 
 // Run the specified (or default) target
 RunTarget(target);

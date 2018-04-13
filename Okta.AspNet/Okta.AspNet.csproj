@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description></Description>
+    <Description>Official Okta middleware for ASP.NET 4.5+. Easily add authentication and authorization to ASP.NET applications.</Description>
     <Copyright>(c) 2018 Okta, Inc.</Copyright>
-    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionPrefix>1.0.0-beta1</VersionPrefix>
     <Authors>Okta, Inc.</Authors>
     <TargetFramework>net46</TargetFramework>
     <AssemblyName>Okta.AspNet</AssemblyName>
