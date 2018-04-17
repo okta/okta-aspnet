@@ -129,7 +129,7 @@ You can store these values in `Web.config`.
 ### That's it!
 
 
-Placing the `[Authorize]` attribute on your controllers or actions will require a valid access token for those routes. This package will [parse and validate the access token](https://developer.okta.com/blog/2017/06/21/what-the-heck-is-oauth#oauth-flows) and populate `Http.Context` with a limited set of user information.
+Placing the `[Authorize]` attribute on your controllers or actions will require a valid access token for those routes. This package will [parse and validate the access token](https://developer.okta.com/blog/2017/06/21/what-the-heck-is-oauth#oauth-flows) and populate `HttpContext.GetOwinContext().Authentication.User` with a limited set of user information.
 
 Check out a minimal example that uses the Okta Sign-In Widget and jQuery in the [`Okta.AspNet.Test.WebApi` project > `Index.html`](https://github.com/okta/okta-aspnet/blob/master/Okta.AspNet.Test.WebApi/Index.html).
 
