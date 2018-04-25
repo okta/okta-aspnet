@@ -1,5 +1,4 @@
 ﻿using Microsoft.Owin.Testing;
-using NUnit.Framework;
 using Owin;
 using System;
 using System.Net.Http;
@@ -7,18 +6,17 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
+using Xunit;
 
 namespace Okta.AspNet.Test.WebApi.Tests
 {
-    [TestFixture]
-    public class OktaWebApiMiddlewareTest
+    public class OktaWebApiMiddlewareShould : IDisposable
     {
         private TestServer _server;
         private string BaseUrl { get; set; }
         private string ProtectedEndpoint { get; set; }
 
-        [OneTimeSetUp]
-        public void FixtureInit()
+        public OktaWebApiMiddlewareShould()
         {
             BaseUrl = "http://localhost:8080";
             ProtectedEndpoint = String.Format("{0}/api/messages", BaseUrl);
@@ -29,41 +27,39 @@ namespace Okta.AspNet.Test.WebApi.Tests
                 startup.Configuration(app);
 
                 HttpConfiguration config = new HttpConfiguration();
-                config.Services.Replace(typeof(IAssembliesResolver), new TestWebApiResolver());
+                config.Services.Replace(typeof(IAssembliesResolver), new WebApiResolver());
                 config.MapHttpAttributeRoutes();
                 app.UseWebApi(config);
             });
 
             _server.BaseAddress = new Uri(BaseUrl);
         }
-
-        [Test]
-        public async Task TestReturns401WhenAccessToProtectedRouteWithoutTokenAsync()
+        
+        [Fact]
+        public async Task Returns401WhenAccessToProtectedRouteWithoutTokenAsync()
         {
             using (var client = new HttpClient(_server.Handler))
             {
                 var response = await client.GetAsync(ProtectedEndpoint);
-                Assert.IsTrue(response.StatusCode == System.Net.HttpStatusCode.Unauthorized);
+                Assert.True(response.StatusCode == System.Net.HttpStatusCode.Unauthorized);
             }
         }
 
-        [Test]
-        public async Task TestReturns401WhenAccessToProtectedRouteWithInvalidTokenAsync()
+        [Fact]
+        public async Task Returns401WhenAccessToProtectedRouteWithInvalidTokenAsync()
         {
             var accessToken = "thisIsAnInvalidToken";
             using (var client = new HttpClient(_server.Handler))
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
                 var response = await client.GetAsync(ProtectedEndpoint);
-                Assert.IsTrue(response.StatusCode == System.Net.HttpStatusCode.Unauthorized);
+                Assert.True(response.StatusCode == System.Net.HttpStatusCode.Unauthorized);
             }
         }
-
-        [OneTimeTearDown]
-        public void FixtureDispose()
+        
+        public void Dispose()
         {
             _server.Dispose();
         }
-
     }
 }

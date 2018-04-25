@@ -8,7 +8,7 @@ using System.Web.Http.Dispatcher;
 
 namespace Okta.AspNet.Test.WebApi.Tests
 {
-    public class TestWebApiResolver : DefaultAssembliesResolver
+    public class WebApiResolver : DefaultAssembliesResolver
     {
         public override ICollection<Assembly> GetAssemblies()
         {

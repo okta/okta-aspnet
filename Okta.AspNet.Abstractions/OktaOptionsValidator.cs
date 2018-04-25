@@ -1,11 +1,10 @@
-﻿using Okta.AspNet.Abstractions;
-using System;
+﻿using System;
 
-namespace Okta.AspNet
+namespace Okta.AspNet.Abstractions
 {
     public class OktaOptionsValidator
     {
-        public void Validate(OktaOptions options)
+        public virtual void ValidateBaseOktaOptions(OktaOptions options)
         {
             if (options == null)
             {

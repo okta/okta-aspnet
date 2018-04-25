@@ -1,17 +1,12 @@
-﻿using Okta.AspNet.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
-namespace Okta.AspNet
+namespace Okta.AspNet.Abstractions
 {
     public class OktaMvcOptionsValidator : OktaOptionsValidator
     {
         public void Validate(OktaMvcOptions options)
         {
-            base.Validate(options);
+            base.ValidateBaseOktaOptions(options);
 
             if (string.IsNullOrEmpty(options.ClientSecret))
             {
