@@ -37,6 +37,19 @@ namespace Okta.AspNet.Abstractions.Test
             ShouldFailValidation(options, nameof(OktaWebApiOptions.OrgUrl));
         }
 
+        [Fact]
+        public void NotThrowWhenParamsAreProvided()
+        {
+            var options = new OktaWebApiOptions()
+            {
+                OrgUrl = "OrgUrl",
+                ClientId = "ClientId",
+            };
+
+            new OktaWebApiOptionsValidator().Validate(options);
+            Assert.True(true, "No exception was thrown.");
+        }
+
         private void ShouldFailValidation(OktaWebApiOptions options, string paramName)
         {
             try

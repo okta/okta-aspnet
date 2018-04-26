@@ -10,13 +10,13 @@ using Xunit;
 
 namespace Okta.AspNet.Test.WebApi.Tests
 {
-    public class OktaWebApiMiddlewareShould : IDisposable
+    public class MiddlewareShould : IDisposable
     {
         private TestServer _server;
         private string BaseUrl { get; set; }
         private string ProtectedEndpoint { get; set; }
 
-        public OktaWebApiMiddlewareShould()
+        public MiddlewareShould()
         {
             BaseUrl = "http://localhost:8080";
             ProtectedEndpoint = String.Format("{0}/api/messages", BaseUrl);
@@ -49,10 +49,12 @@ namespace Okta.AspNet.Test.WebApi.Tests
         public async Task Returns401WhenAccessToProtectedRouteWithInvalidTokenAsync()
         {
             var accessToken = "thisIsAnInvalidToken";
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, ProtectedEndpoint);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
             using (var client = new HttpClient(_server.Handler))
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-                var response = await client.GetAsync(ProtectedEndpoint);
+                var response = await client.SendAsync(request);
                 Assert.True(response.StatusCode == System.Net.HttpStatusCode.Unauthorized);
             }
         }

@@ -2,7 +2,7 @@
 using System;
 using Xunit;
 
-namespace Okta.AspNet.Test.Mvc.Tests
+namespace Okta.AspNet.Abstractions.Test
 {
     public class OktaMvcOptionsValidatorShould
     {
@@ -63,6 +63,21 @@ namespace Okta.AspNet.Test.Mvc.Tests
             };
 
             ShouldFailValidation(options, nameof(OktaMvcOptions.OrgUrl));
+        }
+
+        [Fact]
+        public void NotThrowWhenParamsAreProvided()
+        {
+            var options = new OktaMvcOptions()
+            {
+                OrgUrl = "OrgUrl",
+                ClientId = "ClientId",
+                ClientSecret = "ClientSecret",
+                RedirectUri = "RedirectUri"
+            };
+
+            new OktaMvcOptionsValidator().Validate(options);
+            Assert.True(true, "No exception was thrown.");
         }
 
         private void ShouldFailValidation(OktaMvcOptions options, string paramName)
