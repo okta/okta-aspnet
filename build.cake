@@ -4,6 +4,7 @@ var configuration = Argument("configuration", "Release");
 var Projects = new List<string>()
 {
 	"Okta.AspNet.Abstractions",
+    "Okta.AspNet.Abstractions.Test",
     "Okta.AspNet"
 };
 
@@ -45,8 +46,23 @@ Task("Build")
     });
 });
 
-Task("PackNuget")
+Task("RunTests")
+.IsDependentOn("Restore")
 .IsDependentOn("Build")
+.Does(() =>
+{
+    var testProjects = new[] { "Okta.AspNet.Abstractions.Test" };
+    // For now, we won't run integration tests in CI
+
+    foreach (var name in testProjects)
+    {
+        DotNetCoreTest(string.Format("./{0}/{0}.csproj", name));
+    }
+});
+
+
+Task("PackNuget")
+.IsDependentOn("RunTests")
 .Does(() =>
 {
     Projects.ForEach(name =>
@@ -65,7 +81,7 @@ Task("Default")
     .IsDependentOn("Clean")
     .IsDependentOn("Restore")
     .IsDependentOn("Build")
-    // TODO: Test
+    .IsDependentOn("RunTests")
     .IsDependentOn("PackNuget");
 
 // Run the specified (or default) target
