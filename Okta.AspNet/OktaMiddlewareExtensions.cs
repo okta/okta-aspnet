@@ -22,7 +22,7 @@ namespace Okta.AspNet
                 throw new ArgumentNullException(nameof(app));
             }
 
-            ValidateOktaMvcOptions(options);
+            new OktaMvcOptionsValidator().Validate(options);
             AddOpenIdConnectAuthentication(app, options);
 
             return app;
@@ -35,50 +35,12 @@ namespace Okta.AspNet
                 throw new ArgumentNullException(nameof(app));
             }
 
-            ValidateOktaOptions(options);
+            new OktaWebApiOptionsValidator().Validate(options);
             AddJwtBearerAuthentication(app, options);
 
             return app;
         }
-
-        private static void ValidateOktaOptions(OktaOptions options)
-        {
-            if (options == null)
-            {
-                throw new ArgumentNullException(nameof(options));
-            }
-
-            if (string.IsNullOrEmpty(options.OrgUrl))
-            {
-                throw new ArgumentNullException(nameof(options.OrgUrl),
-                    "Your Okta Org URL is missing. You can find it in the Okta Developer Console. It'll look like: https://{yourOktaDomain}.com");
-            }
-
-            if (string.IsNullOrEmpty(options.ClientId))
-            {
-                throw new ArgumentNullException(nameof(options.ClientId),
-                    "Your Okta Application client ID is missing. You can find it in the Okta Developer Console in the details for the Application you created.");
-            }
-        }
-
-        private static void ValidateOktaMvcOptions(OktaMvcOptions options)
-        {
-            ValidateOktaOptions(options);
-
-            if (string.IsNullOrEmpty(options.ClientSecret))
-            {
-                throw new ArgumentNullException(nameof(options.ClientSecret),
-                    "Your Okta Application client secret is missing. You can find it in the Okta Developer Console in the details for the Application you created.");
-            }
-
-            if (string.IsNullOrEmpty(options.RedirectUri))
-            {
-                throw new ArgumentNullException(nameof(options.RedirectUri),
-                    "Your Okta Application redirect URI is missing. You can find it in the Okta Developer Console in the details for the Application you created.");
-            }
-            
-        }
-
+        
         private static void AddJwtBearerAuthentication(IAppBuilder app, OktaWebApiOptions options)
         {
             var issuer = UrlHelper.CreateIssuerUrl(options.OrgUrl, options.AuthorizationServerId);
