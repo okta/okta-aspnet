@@ -6,6 +6,8 @@ namespace Okta.AspNet.Abstractions.Test
 {
     public class OktaMvcOptionsValidatorShould
     {
+        private static readonly string VALID_ORG_URL = "https://myOktaDomain.oktapreview.com";
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -13,12 +15,25 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var options = new OktaMvcOptions()
             {
-                OrgUrl = "OrgUrl",
+                OrgUrl = VALID_ORG_URL,
                 ClientId = "ClientId",
                 ClientSecret = clientSecret
             };
 
-            ShouldFailValidation(options, nameof(OktaMvcOptions.ClientSecret));
+            ShouldFailWhenArgumentIsNullOrEmpty(options, nameof(OktaMvcOptions.ClientSecret));
+        }
+
+        [Fact]
+        public void FailWhenClientSecretIsNotDefined()
+        {
+            var options = new OktaMvcOptions()
+            {
+                OrgUrl = VALID_ORG_URL,
+                ClientId = "ClientId",
+                ClientSecret = "{ClientSecret}"
+            };
+
+            ShouldFailWhenArgumentIsNullOrEmpty(options, nameof(OktaMvcOptions.ClientSecret));
         }
 
         [Theory]
@@ -28,13 +43,13 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var options = new OktaMvcOptions()
                 {
-                    OrgUrl = "OrgUrl",
+                    OrgUrl = VALID_ORG_URL,
                     ClientId = "ClientId",
                     ClientSecret = "ClientSecret",
                     RedirectUri = redirectUri
                 };
 
-            ShouldFailValidation(options, nameof(OktaMvcOptions.RedirectUri));
+            ShouldFailWhenArgumentIsNullOrEmpty(options, nameof(OktaMvcOptions.RedirectUri));
         }
 
         [Theory]
@@ -44,11 +59,11 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var options = new OktaMvcOptions()
             {
-                OrgUrl = "OrgUrl",
+                OrgUrl = VALID_ORG_URL,
                 ClientId = clientId,
             };
 
-            ShouldFailValidation(options, nameof(OktaMvcOptions.ClientId));
+            ShouldFailWhenArgumentIsNullOrEmpty(options, nameof(OktaMvcOptions.ClientId));
         }
 
         [Theory]
@@ -62,7 +77,61 @@ namespace Okta.AspNet.Abstractions.Test
                 ClientId = "ClientId"
             };
 
-            ShouldFailValidation(options, nameof(OktaMvcOptions.OrgUrl));
+            ShouldFailWhenArgumentIsNullOrEmpty(options, nameof(OktaMvcOptions.OrgUrl));
+        }
+
+        [Theory]
+        [InlineData("http://myOktaDomain.oktapreview.com")]
+        [InlineData("httsp://myOktaDomain.oktapreview.com")]
+        [InlineData("invalidOrgUrl")]
+        public void FailIfOrgUrlIsNotStartingWithHttps(String orgUrl)
+        {
+            var options = new OktaMvcOptions()
+            {
+                OrgUrl = orgUrl,
+                ClientId = "ClientId"
+            };
+
+            ShouldFailWhenArgumentIsInvalid(options, nameof(OktaMvcOptions.OrgUrl));
+        }
+
+        [Theory]
+        [InlineData("https://{Youroktadomain}.com")]
+        [InlineData("https://{yourOktaDomain}.com")]
+        [InlineData("https://{YourOktaDomain}.com")]
+        public void FailIfOrgUrlIsNotDefined(String orgUrl)
+        {
+            var options = new OktaMvcOptions()
+            {
+                OrgUrl = orgUrl,
+                ClientId = "ClientId"
+            };
+
+            ShouldFailWhenArgumentIsInvalid(options, nameof(OktaMvcOptions.OrgUrl));
+        }
+
+        [Fact]
+        public void FailIfOrgUrlIsIncludingAdmin()
+        {
+            var options = new OktaMvcOptions()
+            {
+                OrgUrl = "https://myOktaOrg-admin.oktapreview.com",
+                ClientId = "ClientId"
+            };
+
+            ShouldFailWhenArgumentIsInvalid(options, nameof(OktaMvcOptions.OrgUrl));
+        }
+
+        [Fact]
+        public void FailIfOrgUrlHasTypo()
+        {
+            var options = new OktaMvcOptions()
+            {
+                OrgUrl = "https://myOktaDomain.oktapreview.com.com",
+                ClientId = "ClientId"
+            };
+
+            ShouldFailWhenArgumentIsInvalid(options, nameof(OktaMvcOptions.OrgUrl));
         }
 
         [Fact]
@@ -70,7 +139,7 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var options = new OktaMvcOptions()
             {
-                OrgUrl = "OrgUrl",
+                OrgUrl = VALID_ORG_URL,
                 ClientId = "ClientId",
                 ClientSecret = "ClientSecret",
                 RedirectUri = "RedirectUri"
@@ -80,7 +149,7 @@ namespace Okta.AspNet.Abstractions.Test
             Assert.True(true, "No exception was thrown.");
         }
 
-        private void ShouldFailValidation(OktaMvcOptions options, string paramName)
+        private void ShouldFailWhenArgumentIsNullOrEmpty(OktaMvcOptions options, string paramName)
         {
             try
             {
@@ -88,6 +157,19 @@ namespace Okta.AspNet.Abstractions.Test
                 Assert.True(false, "No exception was thrown.");
             }
             catch (ArgumentNullException e)
+            {
+                Assert.Contains(e.ParamName, paramName);
+            }
+        }
+
+        private void ShouldFailWhenArgumentIsInvalid(OktaMvcOptions options, string paramName)
+        {
+            try
+            {
+                new OktaMvcOptionsValidator().Validate(options);
+                Assert.True(false, "No exception was thrown.");
+            }
+            catch (ArgumentException e)
             {
                 Assert.Contains(e.ParamName, paramName);
             }

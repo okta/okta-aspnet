@@ -9,6 +9,8 @@ namespace Okta.AspNet.Abstractions.Test
 {
     public class OktaWebApiOptionsValidatorShould
     {
+        private static readonly string VALID_ORG_URL = "https://myOktaDomain.oktapreview.com";
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -16,11 +18,65 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var options = new OktaWebApiOptions()
             {
-                OrgUrl = "OrgUrl",
+                OrgUrl = VALID_ORG_URL,
                 ClientId = clientId,
             };
 
-            ShouldFailValidation(options, nameof(OktaWebApiOptions.ClientId));
+            ShouldFailWhenArgumentIsNullOrEmpty(options, nameof(OktaWebApiOptions.ClientId));
+        }
+
+        [Theory]
+        [InlineData("http://myOktaDomain.oktapreview.com")]
+        [InlineData("httsp://myOktaDomain.oktapreview.com")]
+        [InlineData("invalidOrgUrl")]
+        public void FailIfOrgUrlIsNotStartingWithHttps(String orgUrl)
+        {
+            var options = new OktaWebApiOptions()
+            {
+                OrgUrl = orgUrl,
+                ClientId = "ClientId"
+            };
+
+            ShouldFailWhenArgumentIsInvalid(options, nameof(OktaWebApiOptions.OrgUrl));
+        }
+
+        [Theory]
+        [InlineData("https://{Youroktadomain}.com")]
+        [InlineData("https://{yourOktaDomain}.com")]
+        [InlineData("https://{YourOktaDomain}.com")]
+        public void FailIfOrgUrlIsNotDefined(String orgUrl)
+        {
+            var options = new OktaWebApiOptions()
+            {
+                OrgUrl = orgUrl,
+                ClientId = "ClientId"
+            };
+
+            ShouldFailWhenArgumentIsInvalid(options, nameof(OktaWebApiOptions.OrgUrl));
+        }
+
+        [Fact]
+        public void FailIfOrgUrlIsIncludingAdmin()
+        {
+            var options = new OktaWebApiOptions()
+            {
+                OrgUrl = "https://myOktaDomain-admin.oktapreview.com",
+                ClientId = "ClientId"
+            };
+
+            ShouldFailWhenArgumentIsInvalid(options, nameof(OktaWebApiOptions.OrgUrl));
+        }
+
+        [Fact]
+        public void FailIfOrgUrlHasTypo()
+        {
+            var options = new OktaWebApiOptions()
+            {
+                OrgUrl = "https://myOktaDomain.oktapreview.com.com",
+                ClientId = "ClientId"
+            };
+
+            ShouldFailWhenArgumentIsInvalid(options, nameof(OktaWebApiOptions.OrgUrl));
         }
 
         [Theory]
@@ -34,7 +90,7 @@ namespace Okta.AspNet.Abstractions.Test
                 ClientId = "ClientId"
             };
 
-            ShouldFailValidation(options, nameof(OktaWebApiOptions.OrgUrl));
+            ShouldFailWhenArgumentIsNullOrEmpty(options, nameof(OktaWebApiOptions.OrgUrl));
         }
 
         [Fact]
@@ -42,7 +98,7 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var options = new OktaWebApiOptions()
             {
-                OrgUrl = "OrgUrl",
+                OrgUrl = VALID_ORG_URL,
                 ClientId = "ClientId",
             };
 
@@ -50,7 +106,7 @@ namespace Okta.AspNet.Abstractions.Test
             Assert.True(true, "No exception was thrown.");
         }
 
-        private void ShouldFailValidation(OktaWebApiOptions options, string paramName)
+        private void ShouldFailWhenArgumentIsNullOrEmpty(OktaWebApiOptions options, string paramName)
         {
             try
             {
@@ -58,6 +114,19 @@ namespace Okta.AspNet.Abstractions.Test
                 Assert.True(false, "No exception was thrown.");
             }
             catch (ArgumentNullException e)
+            {
+                Assert.Contains(e.ParamName, paramName);
+            }
+        }
+
+        private void ShouldFailWhenArgumentIsInvalid(OktaWebApiOptions options, string paramName)
+        {
+            try
+            {
+                new OktaWebApiOptionsValidator().Validate(options);
+                Assert.True(false, "No exception was thrown.");
+            }
+            catch (ArgumentException e)
             {
                 Assert.Contains(e.ParamName, paramName);
             }
