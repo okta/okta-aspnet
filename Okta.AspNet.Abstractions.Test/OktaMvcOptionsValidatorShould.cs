@@ -1,6 +1,6 @@
-﻿using Okta.AspNet.Abstractions;
-using System;
+﻿using System;
 using Xunit;
+using FluentAssertions;
 
 namespace Okta.AspNet.Abstractions.Test
 {
@@ -13,12 +13,27 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var options = new OktaMvcOptions()
             {
-                OrgUrl = "OrgUrl",
+                OrgUrl = OktaOptionsValidatorHelper.VALID_ORG_URL,
                 ClientId = "ClientId",
                 ClientSecret = clientSecret
             };
 
-            ShouldFailValidation(options, nameof(OktaMvcOptions.ClientSecret));
+            Action action = () => new OktaMvcOptionsValidator().Validate(options);
+            action.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == nameof(OktaMvcOptions.ClientSecret));
+        }
+
+        [Fact]
+        public void FailWhenClientSecretIsNotDefined()
+        {
+            var options = new OktaMvcOptions()
+            {
+                OrgUrl = OktaOptionsValidatorHelper.VALID_ORG_URL,
+                ClientId = "ClientId",
+                ClientSecret = "{ClientSecret}"
+            };
+
+            Action action = () => new OktaMvcOptionsValidator().Validate(options);
+            action.Should().Throw<ArgumentException>().Where(e => e.ParamName == nameof(OktaMvcOptions.ClientSecret));
         }
 
         [Theory]
@@ -28,41 +43,14 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var options = new OktaMvcOptions()
                 {
-                    OrgUrl = "OrgUrl",
+                    OrgUrl = OktaOptionsValidatorHelper.VALID_ORG_URL,
                     ClientId = "ClientId",
                     ClientSecret = "ClientSecret",
                     RedirectUri = redirectUri
                 };
 
-            ShouldFailValidation(options, nameof(OktaMvcOptions.RedirectUri));
-        }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        public void FailWhenClientIdIsNullOrEmpty(String clientId)
-        {
-            var options = new OktaMvcOptions()
-            {
-                OrgUrl = "OrgUrl",
-                ClientId = clientId,
-            };
-
-            ShouldFailValidation(options, nameof(OktaMvcOptions.ClientId));
-        }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        public void FailIfOrgUrlIsNullOrEmpty(String orgUrl)
-        {
-            var options = new OktaMvcOptions()
-            {
-                OrgUrl = orgUrl,
-                ClientId = "ClientId"
-            };
-
-            ShouldFailValidation(options, nameof(OktaMvcOptions.OrgUrl));
+            Action action = () => new OktaMvcOptionsValidator().Validate(options);
+            action.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == nameof(OktaMvcOptions.RedirectUri));
         }
 
         [Fact]
@@ -70,27 +58,14 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var options = new OktaMvcOptions()
             {
-                OrgUrl = "OrgUrl",
+                OrgUrl = OktaOptionsValidatorHelper.VALID_ORG_URL,
                 ClientId = "ClientId",
                 ClientSecret = "ClientSecret",
                 RedirectUri = "RedirectUri"
             };
 
-            new OktaMvcOptionsValidator().Validate(options);
-            Assert.True(true, "No exception was thrown.");
-        }
-
-        private void ShouldFailValidation(OktaMvcOptions options, string paramName)
-        {
-            try
-            {
-                new OktaMvcOptionsValidator().Validate(options);
-                Assert.True(false, "No exception was thrown.");
-            }
-            catch (ArgumentNullException e)
-            {
-                Assert.Contains(e.ParamName, paramName);
-            }
+            Action action = () => new OktaMvcOptionsValidator().Validate(options);
+            action.Should().NotThrow();
         }
     }
 }
