@@ -2,9 +2,9 @@
 {
     public class OktaWebApiOptionsValidator : OktaOptionsValidator
     {
-        public void Validate(OktaWebApiOptions options)
+        protected override void ValidateOptions(OktaOptions options)
         {
-            base.ValidateBaseOktaOptions(options);
+            return;
         }
     }
 }

@@ -2,9 +2,11 @@
 
 namespace Okta.AspNet.Abstractions
 {
-    public class OktaOptionsValidator
+    public abstract class OktaOptionsValidator
     {
-        public virtual void ValidateBaseOktaOptions(OktaOptions options)
+        protected abstract void ValidateOptions(OktaOptions options);
+            
+        public void Validate(OktaOptions options)
         {
             if (options == null)
             {
@@ -24,20 +26,20 @@ namespace Okta.AspNet.Abstractions
                     , nameof(options.OrgUrl));
             }
             
-            if (options.OrgUrl.ToUpper().Contains("{yourOktaDomain}".ToUpper()))
+            if (options.OrgUrl.IndexOf("{yourOktaDomain}", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
                     "You need to copy your Okta Org URL from the Okta developer dashboard."
                     , nameof(options.OrgUrl));
             }
 
-            if (options.OrgUrl.Contains("-admin.oktapreview.com"))
+            if (options.OrgUrl.IndexOf("-admin.oktapreview.com", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
                     "Your Okta Org URL should not contain -admin. You can copy your Org URL from the Okta developer dashboard."
                     , nameof(options.OrgUrl));
             }
-            if (options.OrgUrl.Contains(".com.com"))
+            if (options.OrgUrl.IndexOf(".com.com", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
                     "It looks like there's a typo in your Org URL. You can copy your Org URL from the Okta developer dashboard."
@@ -50,11 +52,13 @@ namespace Okta.AspNet.Abstractions
                     "Your Okta Application client ID is missing. You can find it in the Okta Developer Console in the details for the Application you created.");
             }
 
-            if (options.ClientId.ToUpper().Contains("{ClientId}".ToUpper()))
+            if (options.ClientId.IndexOf("{ClientId}", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentNullException(nameof(options.ClientId),
                   "You need to copy your Client ID from the Okta Developer Console in the details for the Application you created.");
             }
+
+            ValidateOptions(options);
         }
     }
 }
