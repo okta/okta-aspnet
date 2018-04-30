@@ -2,9 +2,11 @@
 
 namespace Okta.AspNet.Abstractions
 {
-    public class OktaOptionsValidator
+    public abstract class OktaOptionsValidator
     {
-        public virtual void ValidateBaseOktaOptions(OktaOptions options)
+        protected abstract void ValidateOptions(OktaOptions options);
+            
+        public void Validate(OktaOptions options)
         {
             if (options == null)
             {
@@ -55,6 +57,8 @@ namespace Okta.AspNet.Abstractions
                 throw new ArgumentNullException(nameof(options.ClientId),
                   "You need to copy your Client ID from the Okta Developer Console in the details for the Application you created.");
             }
+
+            ValidateOptions(options);
         }
     }
 }
