@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Okta.AspNetCore.Mvc.Example.Models;
 
-namespace Okta.AspNetCore.Mvc.Example
+namespace Okta.AspNetCore.Mvc.Example.Controllers
 {
     public class HomeController : Controller
     {

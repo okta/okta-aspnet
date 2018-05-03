@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNet.Abstractions", "Okta.AspNet.Abstractions\Okta.AspNet.Abstractions.csproj", "{E7947664-64B6-4314-B644-2F376187B89F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.AspNet.Test.Mvc", "Okta.AspNet.Test.Mvc\Okta.AspNet.Test.Mvc.csproj", "{846491FA-2FAC-416A-9C11-6EDC6116777B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.AspNet.Mvc.Example", "Okta.AspNet.Test.Mvc\Okta.AspNet.Mvc.Example.csproj", "{846491FA-2FAC-416A-9C11-6EDC6116777B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6481BBC0-3284-4CBF-AD7B-2480535F1184}"
 	ProjectSection(SolutionItems) = preProject
