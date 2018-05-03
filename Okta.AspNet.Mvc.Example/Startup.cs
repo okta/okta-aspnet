@@ -1,16 +1,13 @@
-﻿using System;
-using System.Configuration;
-using System.Threading.Tasks;
-using System.Web.Routing;
+﻿using System.Configuration;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Okta.AspNet.Abstractions;
 using Owin;
 
-[assembly: OwinStartup(typeof(Okta.AspNet.Test.Mvc.Startup))]
+[assembly: OwinStartup(typeof(Okta.AspNet.Mvc.Example.Startup))]
 
-namespace Okta.AspNet.Test.Mvc
+namespace Okta.AspNet.Mvc.Example
 {
     public class Startup
     {
