@@ -32,6 +32,7 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest.Controllers
         }
         
         [Authorize]
+        [HttpGet]
         public IActionResult Claims()
         {
             return View(HttpContext.User.Claims);

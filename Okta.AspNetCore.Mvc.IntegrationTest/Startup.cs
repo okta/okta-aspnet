@@ -10,20 +10,10 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup()
         {
             var builder = new ConfigurationBuilder();
-
-            if (env.IsDevelopment())
-            {
-                builder.SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json");
-            }
-            if (env.IsStaging() || env.IsProduction())
-            {
-                builder.AddEnvironmentVariables();
-            }
-            
+            builder.AddEnvironmentVariables();
             Configuration = builder.Build();
         }
 
@@ -32,14 +22,11 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var oktaConfigSettings = new OktaConfigurationSettings();
-            Configuration.GetSection("Okta").Bind(oktaConfigSettings);
-            
             services.AddOktaMvc(new OktaMvcOptions()
             {
-                ClientId = oktaConfigSettings.ClientId,
-                ClientSecret = oktaConfigSettings.ClientSecret,
-                OrgUrl = oktaConfigSettings.OrgUrl
+                ClientId = Configuration["Okta:ClientId"],
+                ClientSecret = Configuration["Okta:ClientSecret"],
+                OrgUrl = Configuration["Okta:OrgUrl"]
             });
 
             services.AddMvc();
