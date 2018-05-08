@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Okta.AspNet.Abstractions;
-using Okta.AspNetCore.Mvc.Example.Models;
 
 namespace Okta.AspNetCore.Mvc.Example
 {
@@ -19,16 +18,10 @@ namespace Okta.AspNetCore.Mvc.Example
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var oktaConfigSettings = new OktaConfigurationSettings();
-            Configuration.GetSection("Okta").Bind(oktaConfigSettings);
-            
-            services.AddOktaMvc(new OktaMvcOptions()
-            {
-                ClientId = oktaConfigSettings.ClientId,
-                ClientSecret = oktaConfigSettings.ClientSecret,
-                OrgUrl = oktaConfigSettings.OrgUrl
-            });
+            var oktaMvcOptions = new OktaMvcOptions();
+            Configuration.GetSection("Okta").Bind(oktaMvcOptions);
 
+            services.AddOktaMvc(oktaMvcOptions);
             services.AddMvc();
         }
 

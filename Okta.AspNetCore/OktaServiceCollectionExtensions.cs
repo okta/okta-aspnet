@@ -5,16 +5,16 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Okta.AspNetCore
 {
-    public static class OktaServicesConfiguration
+    public static class OktaServiceCollectionExtensions
     {
         public static void AddOktaMvc(this IServiceCollection services, OktaMvcOptions oktaOptions)
         {
             var issuer = UrlHelper.CreateIssuerUrl(oktaOptions.OrgUrl, oktaOptions.AuthorizationServerId);
 
-            #region ShouldWeExtractThisOutside?
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -22,8 +22,6 @@ namespace Okta.AspNetCore
                 options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
             })
             .AddCookie()
-            #endregion ShouldWeExtractThisOutside?
-
             .AddOpenIdConnect(options => 
             {
                 options.ClientId = oktaOptions.ClientId;
@@ -42,6 +40,22 @@ namespace Okta.AspNetCore
                 };
             });
 
+        }
+
+        public static void AddOktaWebApi(this IServiceCollection services, OktaWebApiOptions oktaOptions)
+        {
+            var issuer = UrlHelper.CreateIssuerUrl(oktaOptions.OrgUrl, oktaOptions.AuthorizationServerId);
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = issuer;
+                options.Audience = oktaOptions.Audience;
+            });
         }
     }
 }
