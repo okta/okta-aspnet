@@ -26,6 +26,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNetCore.Mvc.Integra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNetCore.Mvc.Example", "Okta.AspNetCore.Mvc.Example\Okta.AspNetCore.Mvc.Example.csproj", "{329B013F-90BA-47CF-8FC4-19EF7E5D4F29}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.AspNetCore.WebApi.IntegrationTest", "Okta.AspNetCore.WebApi.IntegrationTest\Okta.AspNetCore.WebApi.IntegrationTest.csproj", "{EB050A58-FC65-4B17-9152-212BB4FB7DCF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{329B013F-90BA-47CF-8FC4-19EF7E5D4F29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{329B013F-90BA-47CF-8FC4-19EF7E5D4F29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{329B013F-90BA-47CF-8FC4-19EF7E5D4F29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB050A58-FC65-4B17-9152-212BB4FB7DCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB050A58-FC65-4B17-9152-212BB4FB7DCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB050A58-FC65-4B17-9152-212BB4FB7DCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB050A58-FC65-4B17-9152-212BB4FB7DCF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

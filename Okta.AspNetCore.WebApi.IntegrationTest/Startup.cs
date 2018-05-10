@@ -1,14 +1,17 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Okta.AspNet.Abstractions;
-using Okta.AspNetCore.Mvc.IntegrationTest.Models;
-using System.IO;
 
-namespace Okta.AspNetCore.Mvc.IntegrationTest
+namespace Okta.AspNetCore.WebApi.IntegrationTest
 {
     public class Startup
     {
@@ -26,15 +29,15 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
         {
             services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
             })
-            .AddCookie()
-            .AddOktaMvc(new OktaMvcOptions()
+            .AddOktaWebApi(new OktaWebApiOptions()
             {
                 ClientId = Configuration["Okta:ClientId"],
-                ClientSecret = Configuration["Okta:ClientSecret"],
-                OrgUrl = Configuration["Okta:OrgUrl"]
+                OrgUrl = Configuration["Okta:OrgUrl"],
+                AuthorizationServerId = Configuration["Okta:AuthorizationServerId"]
             });
 
             services.AddMvc();
@@ -45,22 +48,11 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
         {
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
 
-            app.UseStaticFiles();
             app.UseAuthentication();
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseMvc();
         }
     }
 }

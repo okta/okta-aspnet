@@ -5,7 +5,7 @@
     <Copyright>(c) 2018 Okta, Inc.</Copyright>
     <VersionPrefix>1.0.0-beta1</VersionPrefix>
     <Authors>Okta, Inc.</Authors>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <AssemblyName>Okta.AspNet</AssemblyName>
     <PackageId>Okta.AspNet</PackageId>
     <PackageTags>okta,token,authentication,authorization</PackageTags>
