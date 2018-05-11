@@ -6,8 +6,10 @@
 Okta ASP.NET middleware
 ========================
 
-This package will add authentication via Okta to your ASP.NET application. You can follow our instructions below, checkout our examples on [GitHub](https://github.com/okta/okta-aspnet) or jump to our [quickstart](https://developer.okta.com/quickstart/#/okta-sign-in-page/dotnet/aspnet4) to see how to configure your ASP.NET MVC web app or your Web API.
+This package will add authentication via Okta to your ASP.NET 4.x/Core application. You can follow our instructions below, checkout our examples on [GitHub](https://github.com/okta/okta-aspnet) or jump to our quickstart to see how to configure your ASP.NET MVC 4.x/Core web app or your Web API.
 
+* [Quickstart ASP.NET 4.x MVC](https://developer.okta.com/quickstart/#/okta-sign-in-page/dotnet/aspnet4)
+* [Quickstart ASP.NET Core MVC](https://developer.okta.com/quickstart/#/okta-sign-in-page/dotnet/aspnetcore)
 
 ## What you need
 
@@ -15,16 +17,18 @@ This package will add authentication via Okta to your ASP.NET application. You c
 
 ## Installing the package
 
-You can install the package by using the NuGet Package Explorer to search for [Okta.AspNet](https://nuget.org/packages/Okta.AspNet).
+You can install the package by using the NuGet Package Explorer to search for either [Okta.AspNet](https://nuget.org/packages/Okta.AspNet) or [Okta.AspNetCore](https://nuget.org/packages/Okta.AspNetCore) depending on what version you are using.
 
 Or, you can use the `dotnet` command:
 
+
 ```
-dotnet add package Okta.AspNet
+dotnet add package Okta.AspNet (4.x)
+
+dotnet add package Okta.AspNetCore (Core)
 ```
 
-
-## Using Okta with ASP.NET MVC
+## Using Okta with ASP.NET MVC 4.x
 
 For step-by-step instructions, visit the **[Okta ASP.NET MVC quickstart](https://developer.okta.com/quickstart/#/okta-sign-in-page/dotnet/aspnet4)**. The quickstart will guide you through adding Okta login to your ASP.NET application.
 
@@ -55,9 +59,55 @@ public class Startup
 }
 ```
 
-### Configuration
+### That's it!
 
-The `OktaMvcOptions` class configures the Okta middleware. It has these options:
+Placing the `[Authorize]` attribute on your controllers or actions will check whether the user is logged in, and redirect them to Okta if necessary.
+
+ASP.NET automatically populates `HttpContext.User` with the information Okta sends back about the user. You can check whether the user is logged in with `User.Identity.IsAuthenticated` in your actions or views.
+
+You can also check out an MVC example that uses this package on [GitHub](...). //TODO: Example link
+
+## Using Okta with ASP.NET Core MVC
+
+For step-by-step instructions, visit the **[Okta ASP.NET Core MVC quickstart](https://developer.okta.com/quickstart/#/okta-sign-in-page/dotnet/aspnetcore)**. The quickstart will guide you through adding Okta login to your ASP.NET application.
+
+You can also download our [sample application](https://github.com/okta/okta-aspnet).
+
+### Usage example
+
+Okta plugs into your OWIN Startup class with the `UseOktaMvc()` method:
+
+```csharp
+
+public void ConfigureServices(IServiceCollection services)
+{
+    var oktaMvcOptions = new OktaMvcOptions();
+    Configuration.GetSection("Okta").Bind(oktaMvcOptions);
+
+    services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+    })
+    .AddCookie()
+    .AddOktaMvc(oktaMvcOptions);
+
+    services.AddMvc();
+}
+```
+
+### That's it!
+
+Placing the `[Authorize]` attribute on your controllers or actions will check whether the user is logged in, and redirect them to Okta if necessary.
+
+ASP.NET automatically populates `HttpContext.User` with the information Okta sends back about the user. You can check whether the user is logged in with `User.Identity.IsAuthenticated` in your actions or views.
+
+You can also check out an MVC example that uses this package on [GitHub](...). //TODO: Update example url
+
+## ASP.NET MVC Configuration (4.x/Core)
+
+The `OktaMvcOptions` class configures the Okta middleware. It is the same for both ASP.NET 4.x and ASP.NET Core. You can see all the available options in the table below:
 
 
 | Property                  | Required?    | Details                         |
@@ -75,16 +125,7 @@ The `OktaMvcOptions` class configures the Okta middleware. It has these options:
 You can store these values in `Web.config`, but take care when checking in the client secret to source control.
 
 
-### That's it!
-
-Placing the `[Authorize]` attribute on your controllers or actions will check whether the user is logged in, and redirect them to Okta if necessary.
-
-ASP.NET automatically populates `HttpContext.User` with the information Okta sends back about the user. You can check whether the user is logged in with `User.Identity.IsAuthenticated` in your actions or views.
-
-You can also check out an MVC example that uses this package on [GitHub](https://github.com/okta/okta-aspnet/tree/master/Okta.AspNet.Test.Mvc).
-
-
-## Using Okta with ASP.NET Web API
+## Using Okta with ASP.NET Web API 4.x
 
 For step-by-step instructions, visit the **[Okta ASP.NET Web API quickstart](https://developer.okta.com/quickstart/#/widget/dotnet/aspnet4)**. The quickstart will guide you through adding Okta token validation to your ASP.NET Web API.
 
@@ -110,10 +151,57 @@ public class Startup
 }
 ```
 
+### That's it!
 
-### Configuration
+Placing the `[Authorize]` attribute on your controllers or actions will require a valid access token for those routes. This package will [parse and validate the access token](https://developer.okta.com/blog/2017/06/21/what-the-heck-is-oauth#oauth-flows) and populate `Http.Context` with a limited set of user information.
 
-The `OktaWebApiOptions` class configures the Okta middleware. It has these options:
+Check out a minimal example that uses the Okta Sign-In Widget and jQuery in the [`Okta.AspNet.Test.WebApi` project > `Index.html`](https://github.com/okta/okta-aspnet/blob/master/Okta.AspNet.Test.WebApi/Index.html).
+
+*Note*: To test the widget example make sure to add your base URI (i.e http://localhost:8080) as a valid Login Redirect URI in your developer console and, make sure to use the same URI in the browser.
+
+Follow our [quickstart](https://developer.okta.com/quickstart/#/widget/dotnet/aspnet4) to see how to add authentication on other types of clients.
+
+## Using Okta with ASP.NET Core Web API
+
+For step-by-step instructions, visit the **[Okta ASP.NET Core Web API quickstart](https://developer.okta.com/quickstart/#/widget/dotnet/aspnetcore)**. The quickstart will guide you through adding Okta token validation to your ASP.NET Web API.
+
+You can also download our [sample application](https://github.com/okta/okta-aspnet). //TODO: Update url?
+
+
+### Usage example
+
+Okta plugs into your OWIN Startup class with the `UseOktaWebApi()` method:
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+    })
+    .AddOktaWebApi(new OktaWebApiOptions()
+    {
+        ClientId = Configuration["Okta:ClientId"],
+        OrgUrl = Configuration["Okta:OrgUrl"],
+        AuthorizationServerId = Configuration["Okta:AuthorizationServerId"]
+    });
+
+    services.AddMvc();
+}
+```
+
+### That's it!
+
+Placing the `[Authorize]` attribute on your controllers or actions will require a valid access token for those routes. This package will [parse and validate the access token](https://developer.okta.com/blog/2017/06/21/what-the-heck-is-oauth#oauth-flows) and populate `Http.Context` with a limited set of user information.
+
+Follow our [quickstart](https://developer.okta.com/quickstart/#/widget/dotnet/aspnetcore) to see how to add authentication on other types of clients.
+
+
+## ASP.NET WEB API Configuration (4.x/Core)
+
+The `OktaWebApiOptions` class configures the Okta middleware. It is the same for both ASP.NET 4.x and ASP.NET Core. You can see all the available options in the table below:
 
 | Property                  | Required?    | Details                         |
 |---------------------------|--------------|---------------------------------|
@@ -124,18 +212,6 @@ The `OktaWebApiOptions` class configures the Okta middleware. It has these optio
 | ClockSkew                 | No           | The clock skew allowed when validating tokens. The default value is 2 minutes. |
 
 You can store these values in `Web.config`.
-
-
-### That's it!
-
-
-Placing the `[Authorize]` attribute on your controllers or actions will require a valid access token for those routes. This package will [parse and validate the access token](https://developer.okta.com/blog/2017/06/21/what-the-heck-is-oauth#oauth-flows) and populate `Http.Context` with a limited set of user information.
-
-Check out a minimal example that uses the Okta Sign-In Widget and jQuery in the [`Okta.AspNet.Test.WebApi` project > `Index.html`](https://github.com/okta/okta-aspnet/blob/master/Okta.AspNet.Test.WebApi/Index.html).
-
-*Note*: To test the widget example make sure to add your base URI (i.e http://localhost:8080) as a valid Login Redirect URI in your developer console and, make sure to use the same URI in the browser.
-
-Follow our [quickstart](https://developer.okta.com/quickstart/#/widget/dotnet/aspnet4) to see how to add authentication on other types of clients.
 
 ## Contributing
 
