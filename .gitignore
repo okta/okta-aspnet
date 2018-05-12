@@ -289,3 +289,5 @@ tools/**
 
 # Temporary NuGet pack output
 artifacts/
+/Okta.AspNet.Mvc.Example
+Okta.AspNet.Mvc.Example

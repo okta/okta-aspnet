@@ -5,7 +5,8 @@ var Projects = new List<string>()
 {
 	"Okta.AspNet.Abstractions",
     "Okta.AspNet.Abstractions.Test",
-    "Okta.AspNet"
+    "Okta.AspNet",
+	"Okta.AspNetCore"
 };
 
 Task("Clean").Does(() =>

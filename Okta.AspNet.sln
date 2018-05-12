@@ -5,18 +5,28 @@ VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNet.Abstractions", "Okta.AspNet.Abstractions\Okta.AspNet.Abstractions.csproj", "{E7947664-64B6-4314-B644-2F376187B89F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.AspNet.Test.Mvc", "Okta.AspNet.Test.Mvc\Okta.AspNet.Test.Mvc.csproj", "{846491FA-2FAC-416A-9C11-6EDC6116777B}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6481BBC0-3284-4CBF-AD7B-2480535F1184}"
 	ProjectSection(SolutionItems) = preProject
 		build.cake = build.cake
+		Okta.AspNet.Mvc.Example\Okta.AspNet.Mvc.Example.csproj = Okta.AspNet.Mvc.Example\Okta.AspNet.Mvc.Example.csproj
+		Okta.AspNetCore.Mvc.IntegrationTest\Okta.AspNetCore.Mvc.Example.csproj = Okta.AspNetCore.Mvc.IntegrationTest\Okta.AspNetCore.Mvc.Example.csproj
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNet", "Okta.AspNet\Okta.AspNet.csproj", "{E183845F-6656-458C-8B7A-B1C4007FBD86}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.AspNet.WebApi.IntegrationTest", "Okta.AspNet.WebApi.IntegrationTest\Okta.AspNet.WebApi.IntegrationTest.csproj", "{E8E7FD29-C41F-4FBD-936E-12B7AF8DBA44}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.AspNet.Abstractions.Test", "Okta.AspNet.Abstractions.Test\Okta.AspNet.Abstractions.Test.csproj", "{235DB4EB-B420-41A8-9E52-5ADBD0F2F22F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNet.Abstractions.Test", "Okta.AspNet.Abstractions.Test\Okta.AspNet.Abstractions.Test.csproj", "{235DB4EB-B420-41A8-9E52-5ADBD0F2F22F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNetCore", "Okta.AspNetCore\Okta.AspNetCore.csproj", "{1994FF40-65A1-4DD9-A943-F4143E8B1055}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.AspNet.Mvc.Example", "Okta.AspNet.Mvc.Example\Okta.AspNet.Mvc.Example.csproj", "{846491FA-2FAC-416A-9C11-6EDC6116777B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNetCore.Mvc.IntegrationTest", "Okta.AspNetCore.Mvc.IntegrationTest\Okta.AspNetCore.Mvc.IntegrationTest.csproj", "{5147A476-EBF7-4512-B3B3-897126563ACF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNetCore.Mvc.Example", "Okta.AspNetCore.Mvc.Example\Okta.AspNetCore.Mvc.Example.csproj", "{329B013F-90BA-47CF-8FC4-19EF7E5D4F29}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.AspNetCore.WebApi.IntegrationTest", "Okta.AspNetCore.WebApi.IntegrationTest\Okta.AspNetCore.WebApi.IntegrationTest.csproj", "{EB050A58-FC65-4B17-9152-212BB4FB7DCF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,10 +38,6 @@ Global
 		{E7947664-64B6-4314-B644-2F376187B89F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7947664-64B6-4314-B644-2F376187B89F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7947664-64B6-4314-B644-2F376187B89F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{846491FA-2FAC-416A-9C11-6EDC6116777B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{846491FA-2FAC-416A-9C11-6EDC6116777B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{846491FA-2FAC-416A-9C11-6EDC6116777B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{846491FA-2FAC-416A-9C11-6EDC6116777B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E183845F-6656-458C-8B7A-B1C4007FBD86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E183845F-6656-458C-8B7A-B1C4007FBD86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E183845F-6656-458C-8B7A-B1C4007FBD86}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -44,6 +50,26 @@ Global
 		{235DB4EB-B420-41A8-9E52-5ADBD0F2F22F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{235DB4EB-B420-41A8-9E52-5ADBD0F2F22F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{235DB4EB-B420-41A8-9E52-5ADBD0F2F22F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1994FF40-65A1-4DD9-A943-F4143E8B1055}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1994FF40-65A1-4DD9-A943-F4143E8B1055}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1994FF40-65A1-4DD9-A943-F4143E8B1055}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1994FF40-65A1-4DD9-A943-F4143E8B1055}.Release|Any CPU.Build.0 = Release|Any CPU
+		{846491FA-2FAC-416A-9C11-6EDC6116777B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{846491FA-2FAC-416A-9C11-6EDC6116777B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{846491FA-2FAC-416A-9C11-6EDC6116777B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{846491FA-2FAC-416A-9C11-6EDC6116777B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5147A476-EBF7-4512-B3B3-897126563ACF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5147A476-EBF7-4512-B3B3-897126563ACF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5147A476-EBF7-4512-B3B3-897126563ACF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5147A476-EBF7-4512-B3B3-897126563ACF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{329B013F-90BA-47CF-8FC4-19EF7E5D4F29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{329B013F-90BA-47CF-8FC4-19EF7E5D4F29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{329B013F-90BA-47CF-8FC4-19EF7E5D4F29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{329B013F-90BA-47CF-8FC4-19EF7E5D4F29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB050A58-FC65-4B17-9152-212BB4FB7DCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB050A58-FC65-4B17-9152-212BB4FB7DCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB050A58-FC65-4B17-9152-212BB4FB7DCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB050A58-FC65-4B17-9152-212BB4FB7DCF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
