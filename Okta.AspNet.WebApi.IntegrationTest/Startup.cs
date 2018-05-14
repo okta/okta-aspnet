@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using Microsoft.Owin;
 using Okta.AspNet.Abstractions;
 using Owin;
@@ -11,9 +12,9 @@ namespace Okta.AspNet.Test.WebApi
     {
         public void Configuration(IAppBuilder app)
         {
-            var orgUrl = ConfigurationManager.AppSettings["okta:OrgUrl"];
-            var clientId = ConfigurationManager.AppSettings["okta:ClientId"];
-            var authorizationServerId = ConfigurationManager.AppSettings["okta:AuthorizationServerId"];
+            var orgUrl = Environment.GetEnvironmentVariable("okta:OrgUrl");
+            var clientId = Environment.GetEnvironmentVariable("okta:ClientId");
+            var authorizationServerId = Environment.GetEnvironmentVariable("okta:AuthorizationServerId");
             app.UseOktaWebApi(new OktaWebApiOptions()
                 {
                     OrgUrl = orgUrl,
