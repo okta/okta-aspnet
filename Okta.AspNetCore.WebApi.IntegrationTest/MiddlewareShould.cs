@@ -21,7 +21,7 @@ namespace Okta.AspNetCore.WebApi.IntegrationTest
         {
             Configuration = TestConfiguration.GetConfiguration();
             BaseUrl = "http://localhost:58533";
-            ProtectedEndpoint = String.Format("{0}/api/messages", BaseUrl);
+            ProtectedEndpoint = $"{BaseUrl}/api/messages";
             _server = new TestServer(new WebHostBuilder()
             .UseStartup<Startup>()
             .UseConfiguration(Configuration));
