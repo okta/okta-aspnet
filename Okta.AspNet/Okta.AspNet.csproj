@@ -24,6 +24,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Okta.AspNet.Abstractions\Okta.AspNet.Abstractions.csproj" />
+    <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta007" />
+    <AdditionalFiles Include="..\stylecop.json" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>..\OktaSdk.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
 
 </Project>
