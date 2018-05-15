@@ -25,11 +25,11 @@ namespace Okta.AspNet
             _configurationManager = configurationManager;
         }
 
-        public async Task ExchangeCodeForToken(AuthorizationCodeReceivedNotification response)
+        public async Task ExchangeCodeForTokenAsync(AuthorizationCodeReceivedNotification response)
         {
-            var openIdConfiguration = await _configurationManager.GetConfigurationAsync();
+            var openIdConfiguration = await _configurationManager.GetConfigurationAsync().ConfigureAwait(false);
             var tokenClient = new TokenClient(openIdConfiguration.TokenEndpoint, _options.ClientId, _options.ClientSecret);
-            var tokenResponse = await tokenClient.RequestAuthorizationCodeAsync(response.Code, _options.RedirectUri);
+            var tokenResponse = await tokenClient.RequestAuthorizationCodeAsync(response.Code, _options.RedirectUri).ConfigureAwait(false);
 
             if (tokenResponse.IsError)
             {
@@ -38,10 +38,10 @@ namespace Okta.AspNet
 
             if (_options.GetClaimsFromUserInfoEndpoint)
             {
-                await EnrichIdentityViaUserInfo(
+                await EnrichIdentityViaUserInfoAsync(
                     response.AuthenticationTicket.Identity,
                     openIdConfiguration,
-                    tokenResponse);
+                    tokenResponse).ConfigureAwait(false);
             }
 
             response.AuthenticationTicket.Identity.AddClaim(new Claim("id_token", tokenResponse.IdentityToken));
@@ -55,10 +55,10 @@ namespace Okta.AspNet
             return;
         }
 
-        private async Task EnrichIdentityViaUserInfo(ClaimsIdentity subject, OpenIdConnectConfiguration openIdConfiguration, TokenResponse tokenResponse)
+        private async Task EnrichIdentityViaUserInfoAsync(ClaimsIdentity subject, OpenIdConnectConfiguration openIdConfiguration, TokenResponse tokenResponse)
         {
             var userInfoClient = new UserInfoClient(openIdConfiguration.UserInfoEndpoint);
-            var userInfoResponse = await userInfoClient.GetAsync(tokenResponse.AccessToken);
+            var userInfoResponse = await userInfoClient.GetAsync(tokenResponse.AccessToken).ConfigureAwait(false);
 
             // Claims returned from the UserInfoClient have issuer = "LOCAL AUTHORITY" by default
             var userInfoClaims = userInfoResponse.Claims
