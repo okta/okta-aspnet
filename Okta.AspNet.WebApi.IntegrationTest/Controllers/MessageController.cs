@@ -3,7 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Web.Http;
 
-namespace Okta.AspNet.Test.WebApi.Controllers
+namespace Okta.AspNet.WebApi.IntegrationTest.Controllers
 {
     [Authorize]
     public class MessageController : ApiController

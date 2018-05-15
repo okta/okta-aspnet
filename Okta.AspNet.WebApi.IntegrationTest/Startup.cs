@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Configuration;
 using Microsoft.Owin;
 using Okta.AspNet.Abstractions;
 using Owin;
 
-[assembly: OwinStartup(typeof(Okta.AspNet.Test.WebApi.Startup))]
+[assembly: OwinStartup(typeof(Okta.AspNet.WebApi.IntegrationTest.Startup))]
 
-namespace Okta.AspNet.Test.WebApi
+namespace Okta.AspNet.WebApi.IntegrationTest
 {
     public class Startup
     {

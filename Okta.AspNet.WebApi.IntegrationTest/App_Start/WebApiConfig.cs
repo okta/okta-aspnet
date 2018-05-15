@@ -1,6 +1,6 @@
 ﻿using System.Web.Http;
 
-namespace Okta.AspNet.Test.WebApi
+namespace Okta.AspNet.WebApi.IntegrationTest
 {
     public static class WebApiConfig
     {
