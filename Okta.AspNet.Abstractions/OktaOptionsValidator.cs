@@ -22,28 +22,25 @@ namespace Okta.AspNet.Abstractions
             if (!options.OrgUrl.StartsWith("https://"))
             {
                 throw new ArgumentException(
-                    "Your Okta Org URL must start with https. You can copy your Org URL from the Okta developer dashboard."
-                    , nameof(options.OrgUrl));
+                    "Your Okta Org URL must start with https. You can copy your Org URL from the Okta developer dashboard.",
+                    nameof(options.OrgUrl));
             }
             
             if (options.OrgUrl.IndexOf("{yourOktaDomain}", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
-                    "You need to copy your Okta Org URL from the Okta developer dashboard."
-                    , nameof(options.OrgUrl));
+                    "You need to copy your Okta Org URL from the Okta developer dashboard.", nameof(options.OrgUrl));
             }
 
             if (options.OrgUrl.IndexOf("-admin.oktapreview.com", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
-                    "Your Okta Org URL should not contain -admin. You can copy your Org URL from the Okta developer dashboard."
-                    , nameof(options.OrgUrl));
+                    "Your Okta Org URL should not contain -admin. You can copy your Org URL from the Okta developer dashboard.", nameof(options.OrgUrl));
             }
             if (options.OrgUrl.IndexOf(".com.com", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
-                    "It looks like there's a typo in your Org URL. You can copy your Org URL from the Okta developer dashboard."
-                    , nameof(options.OrgUrl));
+                    "It looks like there's a typo in your Org URL. You can copy your Org URL from the Okta developer dashboard.", nameof(options.OrgUrl));
             }
 
             if (string.IsNullOrEmpty(options.ClientId))

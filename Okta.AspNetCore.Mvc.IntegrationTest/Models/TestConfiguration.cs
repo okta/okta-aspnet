@@ -8,7 +8,7 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest.Models
 
         public static IConfiguration GetConfiguration()
         {
-            if(_configuration == null)
+            if (_configuration == null)
             {
                 _configuration = new ConfigurationBuilder()
                 .AddEnvironmentVariables()
