@@ -52,8 +52,7 @@ namespace Okta.AspNetCore
                 options.SecurityTokenValidators.Add(new StrictSecurityTokenHandler()
                     {
                         ClientId = oktaOptions.ClientId
-                    }
-                );
+                    });
                 
             });
 

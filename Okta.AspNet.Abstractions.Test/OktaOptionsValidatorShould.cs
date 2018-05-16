@@ -8,7 +8,7 @@ namespace Okta.AspNet.Abstractions.Test
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void FailWhenClientIdIsNullOrEmpty(String clientId)
+        public void FailWhenClientIdIsNullOrEmpty(string clientId)
         {
             var options = new OktaOptions()
             {
@@ -23,7 +23,7 @@ namespace Okta.AspNet.Abstractions.Test
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void FailIfOrgUrlIsNullOrEmpty(String orgUrl)
+        public void FailIfOrgUrlIsNullOrEmpty(string orgUrl)
         {
             var options = new OktaOptions()
             {
@@ -39,7 +39,7 @@ namespace Okta.AspNet.Abstractions.Test
         [InlineData("http://myOktaDomain.oktapreview.com")]
         [InlineData("httsp://myOktaDomain.oktapreview.com")]
         [InlineData("invalidOrgUrl")]
-        public void FailIfOrgUrlIsNotStartingWithHttps(String orgUrl)
+        public void FailIfOrgUrlIsNotStartingWithHttps(string orgUrl)
         {
             var options = new OktaMvcOptions()
             {
@@ -55,7 +55,7 @@ namespace Okta.AspNet.Abstractions.Test
         [InlineData("https://{Youroktadomain}.com")]
         [InlineData("https://{yourOktaDomain}.com")]
         [InlineData("https://{YourOktaDomain}.com")]
-        public void FailIfOrgUrlIsNotDefined(String orgUrl)
+        public void FailIfOrgUrlIsNotDefined(string orgUrl)
         {
             var options = new OktaMvcOptions()
             {

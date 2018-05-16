@@ -19,7 +19,7 @@ namespace Okta.AspNet.WebApi.IntegrationTest
         public MiddlewareShould()
         {
             BaseUrl = "http://localhost:8080";
-            ProtectedEndpoint = String.Format("{0}/api/messages", BaseUrl);
+            ProtectedEndpoint = string.Format("{0}/api/messages", BaseUrl);
 
             _server = TestServer.Create(app =>
             {

@@ -102,13 +102,13 @@ namespace Okta.AspNet
                 TokenValidationParameters = tokenValidationParameters,
                 Notifications = new OpenIdConnectAuthenticationNotifications
                 {
-                    AuthorizationCodeReceived = tokenExchanger.ExchangeCodeForToken,
-                    RedirectToIdentityProvider = BeforeRedirectToIdentityProvider,
+                    AuthorizationCodeReceived = tokenExchanger.ExchangeCodeForTokenAsync,
+                    RedirectToIdentityProvider = BeforeRedirectToIdentityProviderAsync,
                 },
             });
         }
 
-        private static Task BeforeRedirectToIdentityProvider(RedirectToIdentityProviderNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions> n)
+        private static Task BeforeRedirectToIdentityProviderAsync(RedirectToIdentityProviderNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions> n)
         {
             // If signing out, add the id_token_hint
             if (n.ProtocolMessage.RequestType == OpenIdConnectRequestType.Logout)

@@ -1,6 +1,11 @@
-﻿using System;
-using Xunit;
+﻿// <copyright file="OktaMvcOptionsValidatorShould.cs" company="Okta, Inc">
+// Copyright (c) 2018-present Okta, Inc. All rights reserved.
+// Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
+// </copyright>
+
+using System;
 using FluentAssertions;
+using Xunit;
 
 namespace Okta.AspNet.Abstractions.Test
 {
@@ -9,13 +14,13 @@ namespace Okta.AspNet.Abstractions.Test
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void FailWhenClientSecretIsNullOrEmpty(String clientSecret)
+        public void FailWhenClientSecretIsNullOrEmpty(string clientSecret)
         {
             var options = new OktaMvcOptions()
             {
                 OrgUrl = OktaOptionsValidatorHelper.VALID_ORG_URL,
                 ClientId = "ClientId",
-                ClientSecret = clientSecret
+                ClientSecret = clientSecret,
             };
 
             Action action = () => new OktaMvcOptionsValidator().Validate(options);
@@ -29,7 +34,7 @@ namespace Okta.AspNet.Abstractions.Test
             {
                 OrgUrl = OktaOptionsValidatorHelper.VALID_ORG_URL,
                 ClientId = "ClientId",
-                ClientSecret = "{ClientSecret}"
+                ClientSecret = "{ClientSecret}",
             };
 
             Action action = () => new OktaMvcOptionsValidator().Validate(options);
@@ -39,14 +44,14 @@ namespace Okta.AspNet.Abstractions.Test
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void FailWhenRedirectUriIsNullOrEmpty(String redirectUri)
+        public void FailWhenRedirectUriIsNullOrEmpty(string redirectUri)
         {
             var options = new OktaMvcOptions()
                 {
                     OrgUrl = OktaOptionsValidatorHelper.VALID_ORG_URL,
                     ClientId = "ClientId",
                     ClientSecret = "ClientSecret",
-                    RedirectUri = redirectUri
+                    RedirectUri = redirectUri,
                 };
 
             Action action = () => new OktaMvcOptionsValidator().Validate(options);
@@ -61,7 +66,7 @@ namespace Okta.AspNet.Abstractions.Test
                 OrgUrl = OktaOptionsValidatorHelper.VALID_ORG_URL,
                 ClientId = "ClientId",
                 ClientSecret = "ClientSecret",
-                RedirectUri = "RedirectUri"
+                RedirectUri = "RedirectUri",
             };
 
             Action action = () => new OktaMvcOptionsValidator().Validate(options);

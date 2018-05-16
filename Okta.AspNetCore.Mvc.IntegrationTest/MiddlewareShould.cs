@@ -24,7 +24,7 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
         {
             Configuration = TestConfiguration.GetConfiguration();
             BaseUrl = "http://localhost:57451";
-            ProtectedEndpoint = String.Format("{0}/Account/Claims", BaseUrl);
+            ProtectedEndpoint = string.Format("{0}/Account/Claims", BaseUrl);
             _server = new TestServer(new WebHostBuilder()
             .UseStartup<Startup>()
             .UseConfiguration(Configuration));            
