@@ -1,4 +1,9 @@
-﻿using System;
+﻿// <copyright file="OktaMvcOptionsValidator.cs" company="Okta, Inc">
+// Copyright (c) 2018-present Okta, Inc. All rights reserved.
+// Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
+// </copyright>
+
+using System;
 
 namespace Okta.AspNet.Abstractions
 {
@@ -10,7 +15,8 @@ namespace Okta.AspNet.Abstractions
 
             if (string.IsNullOrEmpty(mvcOptions.ClientSecret))
             {
-                throw new ArgumentNullException(nameof(mvcOptions.ClientSecret),
+                throw new ArgumentNullException(
+                    nameof(mvcOptions.ClientSecret),
                     "Your Okta Application client secret is missing. You can find it in the Okta Developer Console in the details for the Application you created.");
             }
 

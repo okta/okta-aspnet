@@ -1,11 +1,16 @@
-﻿using Microsoft.Owin.Testing;
-using Owin;
+﻿// <copyright file="MiddlewareShould.cs" company="Okta, Inc">
+// Copyright (c) 2018-present Okta, Inc. All rights reserved.
+// Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
+// </copyright>
+
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
+using Microsoft.Owin.Testing;
+using Owin;
 using Xunit;
 
 namespace Okta.AspNet.WebApi.IntegrationTest
@@ -13,7 +18,9 @@ namespace Okta.AspNet.WebApi.IntegrationTest
     public class MiddlewareShould : IDisposable
     {
         private TestServer _server;
+
         private string BaseUrl { get; set; }
+
         private string ProtectedEndpoint { get; set; }
 
         public MiddlewareShould()
@@ -34,7 +41,7 @@ namespace Okta.AspNet.WebApi.IntegrationTest
 
             _server.BaseAddress = new Uri(BaseUrl);
         }
-        
+
         [Fact]
         public async Task Returns401WhenAccessToProtectedRouteWithoutTokenAsync()
         {
@@ -58,7 +65,7 @@ namespace Okta.AspNet.WebApi.IntegrationTest
                 Assert.True(response.StatusCode == System.Net.HttpStatusCode.Unauthorized);
             }
         }
-        
+
         public void Dispose()
         {
             _server.Dispose();

@@ -1,6 +1,12 @@
-﻿using System;
-using Xunit;
+﻿// <copyright file="OktaOptionsValidatorShould.cs" company="Okta, Inc">
+// Copyright (c) 2018-present Okta, Inc. All rights reserved.
+// Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
+// </copyright>
+
+using System;
 using FluentAssertions;
+using Xunit;
+
 namespace Okta.AspNet.Abstractions.Test
 {
     public class OktaOptionsValidatorShould
@@ -12,7 +18,7 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var options = new OktaOptions()
             {
-                OrgUrl = OktaOptionsValidatorHelper.VALID_ORG_URL,
+                OrgUrl = OktaOptionsValidatorHelper.ValidOrgUrl,
                 ClientId = clientId,
             };
 
@@ -28,11 +34,11 @@ namespace Okta.AspNet.Abstractions.Test
             var options = new OktaOptions()
             {
                 OrgUrl = orgUrl,
-                ClientId = "ClientId"
+                ClientId = "ClientId",
             };
 
             Action action = () => new MockOktaOptionsValidator().Validate(options);
-            action.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == nameof(OktaOptions.OrgUrl)); 
+            action.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == nameof(OktaOptions.OrgUrl));
         }
 
         [Theory]
@@ -44,7 +50,7 @@ namespace Okta.AspNet.Abstractions.Test
             var options = new OktaMvcOptions()
             {
                 OrgUrl = orgUrl,
-                ClientId = "ClientId"
+                ClientId = "ClientId",
             };
 
             Action action = () => new MockOktaOptionsValidator().Validate(options);
@@ -60,7 +66,7 @@ namespace Okta.AspNet.Abstractions.Test
             var options = new OktaMvcOptions()
             {
                 OrgUrl = orgUrl,
-                ClientId = "ClientId"
+                ClientId = "ClientId",
             };
 
             Action action = () => new MockOktaOptionsValidator().Validate(options);
@@ -73,7 +79,7 @@ namespace Okta.AspNet.Abstractions.Test
             var options = new OktaMvcOptions()
             {
                 OrgUrl = "https://myOktaOrg-admin.oktapreview.com",
-                ClientId = "ClientId"
+                ClientId = "ClientId",
             };
 
             Action action = () => new MockOktaOptionsValidator().Validate(options);
@@ -86,7 +92,7 @@ namespace Okta.AspNet.Abstractions.Test
             var options = new OktaMvcOptions()
             {
                 OrgUrl = "https://myOktaDomain.oktapreview.com.com",
-                ClientId = "ClientId"
+                ClientId = "ClientId",
             };
 
             Action action = () => new MockOktaOptionsValidator().Validate(options);
@@ -94,4 +100,3 @@ namespace Okta.AspNet.Abstractions.Test
         }
     }
 }
-
