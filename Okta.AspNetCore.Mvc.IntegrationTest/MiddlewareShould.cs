@@ -31,8 +31,10 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
             ProtectedEndpoint = string.Format("{0}/Account/Claims", BaseUrl);
             _server = new TestServer(new WebHostBuilder()
             .UseStartup<Startup>()
-            .UseConfiguration(Configuration));
-            _server.BaseAddress = new Uri(BaseUrl);
+            .UseConfiguration(Configuration))
+            {
+                BaseAddress = new Uri(BaseUrl),
+            };
         }
 
         [Fact]

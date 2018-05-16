@@ -4,7 +4,6 @@
 // </copyright>
 
 using Microsoft.IdentityModel.Tokens;
-using Okta.AspNet.Abstractions;
 
 namespace Okta.AspNet.Abstractions
 {
