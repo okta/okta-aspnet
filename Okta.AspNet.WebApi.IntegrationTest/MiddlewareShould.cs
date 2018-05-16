@@ -8,7 +8,7 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Xunit;
 
-namespace Okta.AspNet.Test.WebApi.Tests
+namespace Okta.AspNet.WebApi.IntegrationTest
 {
     public class MiddlewareShould : IDisposable
     {
