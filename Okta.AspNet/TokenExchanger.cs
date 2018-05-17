@@ -1,14 +1,17 @@
-﻿using IdentityModel.Client;
+﻿// <copyright file="TokenExchanger.cs" company="Okta, Inc">
+// Copyright (c) 2018-present Okta, Inc. All rights reserved.
+// Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
+// </copyright>
+
+using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using IdentityModel.Client;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.Owin.Security.Notifications;
 using Okta.AspNet.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Okta.AspNet
 {
@@ -79,4 +82,3 @@ namespace Okta.AspNet
         }
     }
 }
-

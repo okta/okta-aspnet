@@ -1,15 +1,20 @@
-﻿using Microsoft.IdentityModel.Protocols;
+﻿// <copyright file="OktaMiddlewareExtensions.cs" company="Okta, Inc">
+// Copyright (c) 2018-present Okta, Inc. All rights reserved.
+// Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
+// </copyright>
+
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Jwt;
+using Microsoft.Owin.Security.Notifications;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Okta.AspNet.Abstractions;
 using Owin;
-using System;
-using System.Threading.Tasks;
-using Microsoft.Owin.Security.Notifications;
-using System.Linq;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace Okta.AspNet
 {
@@ -40,7 +45,7 @@ namespace Okta.AspNet
 
             return app;
         }
-        
+
         private static void AddJwtBearerAuthentication(IAppBuilder app, OktaWebApiOptions options)
         {
             var issuer = UrlHelper.CreateIssuerUrl(options.OrgUrl, options.AuthorizationServerId);
@@ -61,14 +66,14 @@ namespace Okta.AspNet
                 {
                     var signingKeys = signingKeyProvider.GetSigningKeysAsync().GetAwaiter().GetResult();
                     return signingKeys.Where(x => x.KeyId == keyId);
-                }
+                },
             };
 
             app.UseJwtBearerAuthentication(new JwtBearerAuthenticationOptions
             {
                 AuthenticationMode = AuthenticationMode.Active,
                 TokenValidationParameters = tokenValidationParameters,
-                TokenHandler = new StrictTokenHandler() { ClientId = options.ClientId }
+                TokenHandler = new StrictTokenHandler() { ClientId = options.ClientId },
             });
         }
 
@@ -82,7 +87,7 @@ namespace Okta.AspNet
 
             var tokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
             {
-                NameClaimType = "name"
+                NameClaimType = "name",
             };
 
             var tokenExchanger = new TokenExchanger(options, issuer, configurationManager);
@@ -113,13 +118,10 @@ namespace Okta.AspNet
             // If signing out, add the id_token_hint
             if (n.ProtocolMessage.RequestType == OpenIdConnectRequestType.Logout)
             {
-                var idTokenClaim = n.OwinContext.Authentication.User.FindFirst("id_token");
-
-                if (idTokenClaim != null)
+                if (n.OwinContext.Authentication.User.FindFirst("id_token") != null)
                 {
-                    n.ProtocolMessage.IdTokenHint = idTokenClaim.Value;
+                    n.ProtocolMessage.IdTokenHint = n.OwinContext.Authentication.User.FindFirst("id_token").Value;
                 }
-
             }
 
             return Task.CompletedTask;

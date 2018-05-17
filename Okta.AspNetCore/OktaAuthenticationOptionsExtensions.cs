@@ -1,9 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Okta.AspNet.Abstractions;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authentication;
+﻿// <copyright file="OktaAuthenticationOptionsExtensions.cs" company="Okta, Inc">
+// Copyright (c) 2018-present Okta, Inc. All rights reserved.
+// Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
+// </copyright>
+
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Okta.AspNet.Abstractions;
 
 namespace Okta.AspNetCore
 {
@@ -15,7 +20,7 @@ namespace Okta.AspNetCore
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            builder.AddOpenIdConnect(options => 
+            builder.AddOpenIdConnect(options =>
             {
                 options.ClientId = oktaOptions.ClientId;
                 options.ClientSecret = oktaOptions.ClientSecret;
@@ -27,7 +32,7 @@ namespace Okta.AspNetCore
                 options.Scope.Add("profile");
                 options.SaveTokens = true;
                 options.UseTokenLifetime = false;
-                options.SecurityTokenValidator = new StrictSecurityTokenHandler() { ClientId = oktaOptions.ClientId};
+                options.SecurityTokenValidator = new StrictSecurityTokenHandler() { ClientId = oktaOptions.ClientId };
                 options.TokenValidationParameters = new DefaultTokenValidationParameters(oktaOptions, issuer)
                 {
                     NameClaimType = "name",
@@ -51,9 +56,8 @@ namespace Okta.AspNetCore
                 options.TokenValidationParameters = tokenValidationParameters;
                 options.SecurityTokenValidators.Add(new StrictSecurityTokenHandler()
                     {
-                        ClientId = oktaOptions.ClientId
+                        ClientId = oktaOptions.ClientId,
                     });
-                
             });
 
             return builder;
