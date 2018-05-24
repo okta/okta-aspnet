@@ -16,16 +16,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IdentityModel" Version="3.5.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="5.2.1" />
-    <PackageReference Include="Microsoft.Owin.Security.Jwt" Version="4.0.0" />
-    <PackageReference Include="Microsoft.Owin.Security.OpenIdConnect" Version="4.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Okta.AspNet.Abstractions\Okta.AspNet.Abstractions.csproj" />
     <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003" />
+    <PackageReference Include="IdentityModel" Version="3.6.1" />
+    <PackageReference Include="Microsoft.IdentityModel" Version="6.1.7600.16394" />
+    <PackageReference Include="Microsoft.Owin.Security" Version="4.0.0" />
+    <PackageReference Include="Microsoft.Owin.Security.Jwt" Version="4.0.0" />
+    <PackageReference Include="Microsoft.Owin.Security.OpenIdConnect" Version="4.0.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta007" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.2.2" />
     <AdditionalFiles Include="..\stylecop.json" />
   </ItemGroup>
 

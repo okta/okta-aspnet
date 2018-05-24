@@ -25,12 +25,9 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LogoutAsync()
+        public IActionResult Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
-
-            return RedirectToAction("Index", "Home");
+            return new SignOutResult(new[] { OpenIdConnectDefaults.AuthenticationScheme, CookieAuthenticationDefaults.AuthenticationScheme });
         }
 
         [Authorize]

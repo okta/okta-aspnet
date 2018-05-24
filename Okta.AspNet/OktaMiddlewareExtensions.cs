@@ -6,12 +6,14 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Jwt;
 using Microsoft.Owin.Security.Notifications;
+using Microsoft.Owin.Security.OAuth;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Okta.AspNet.Abstractions;
 using Owin;
@@ -49,11 +51,12 @@ namespace Okta.AspNet
         private static void AddJwtBearerAuthentication(IAppBuilder app, OktaWebApiOptions options)
         {
             var issuer = UrlHelper.CreateIssuerUrl(options.OrgUrl, options.AuthorizationServerId);
+            var httpClient = new HttpClient(new UserAgentHandler());
 
             var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
               issuer + "/.well-known/openid-configuration",
               new OpenIdConnectConfigurationRetriever(),
-              new HttpDocumentRetriever());
+              new HttpDocumentRetriever(httpClient));
 
             // Stop the default behavior of remapping JWT claim names to legacy MS/SOAP claim names
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();

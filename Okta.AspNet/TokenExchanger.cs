@@ -5,6 +5,7 @@
 
 using System;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityModel.Client;
@@ -31,7 +32,7 @@ namespace Okta.AspNet
         public async Task ExchangeCodeForTokenAsync(AuthorizationCodeReceivedNotification response)
         {
             var openIdConfiguration = await _configurationManager.GetConfigurationAsync().ConfigureAwait(false);
-            var tokenClient = new TokenClient(openIdConfiguration.TokenEndpoint, _options.ClientId, _options.ClientSecret);
+            var tokenClient = new TokenClient(openIdConfiguration.TokenEndpoint, _options.ClientId, _options.ClientSecret, new UserAgentHandler());
             var tokenResponse = await tokenClient.RequestAuthorizationCodeAsync(response.Code, _options.RedirectUri).ConfigureAwait(false);
 
             if (tokenResponse.IsError)

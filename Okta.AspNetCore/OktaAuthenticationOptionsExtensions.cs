@@ -32,7 +32,7 @@ namespace Okta.AspNetCore
                 options.Scope.Add("profile");
                 options.SaveTokens = true;
                 options.UseTokenLifetime = false;
-                options.SecurityTokenValidator = new StrictSecurityTokenHandler() { ClientId = oktaOptions.ClientId };
+                options.BackchannelHttpHandler = new UserAgentHandler();
                 options.TokenValidationParameters = new DefaultTokenValidationParameters(oktaOptions, issuer)
                 {
                     NameClaimType = "name",
@@ -45,6 +45,7 @@ namespace Okta.AspNetCore
         public static AuthenticationBuilder AddOktaWebApi(this AuthenticationBuilder builder, OktaWebApiOptions oktaOptions)
         {
             var issuer = UrlHelper.CreateIssuerUrl(oktaOptions.OrgUrl, oktaOptions.AuthorizationServerId);
+
             var tokenValidationParameters = new DefaultTokenValidationParameters(oktaOptions, issuer)
             {
                 ValidAudience = oktaOptions.Audience,
@@ -52,8 +53,10 @@ namespace Okta.AspNetCore
 
             builder.AddJwtBearer(options =>
             {
+                options.Audience = oktaOptions.Audience;
                 options.Authority = issuer;
                 options.TokenValidationParameters = tokenValidationParameters;
+                options.BackchannelHttpHandler = new UserAgentHandler();
                 options.SecurityTokenValidators.Add(new StrictSecurityTokenHandler()
                     {
                         ClientId = oktaOptions.ClientId,
