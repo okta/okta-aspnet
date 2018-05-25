@@ -83,10 +83,12 @@ namespace Okta.AspNet
         private static void AddOpenIdConnectAuthentication(IAppBuilder app, OktaMvcOptions options)
         {
             var issuer = UrlHelper.CreateIssuerUrl(options.OrgUrl, options.AuthorizationServerId);
+            var httpClient = new HttpClient(new UserAgentHandler());
+
             var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
               issuer + "/.well-known/openid-configuration",
               new OpenIdConnectConfigurationRetriever(),
-              new HttpDocumentRetriever());
+              new HttpDocumentRetriever(httpClient));
 
             var tokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
             {

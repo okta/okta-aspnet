@@ -32,7 +32,7 @@ namespace Okta.AspNet
         public async Task ExchangeCodeForTokenAsync(AuthorizationCodeReceivedNotification response)
         {
             var openIdConfiguration = await _configurationManager.GetConfigurationAsync().ConfigureAwait(false);
-            var tokenClient = new TokenClient(openIdConfiguration.TokenEndpoint, _options.ClientId, _options.ClientSecret, new UserAgentHandler());
+            var tokenClient = new TokenClient(openIdConfiguration.TokenEndpoint, _options.ClientId, _options.ClientSecret);
             var tokenResponse = await tokenClient.RequestAuthorizationCodeAsync(response.Code, _options.RedirectUri).ConfigureAwait(false);
 
             if (tokenResponse.IsError)
