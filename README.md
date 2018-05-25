@@ -48,7 +48,7 @@ public class Startup
 
         app.UseOktaMvc(new OktaMvcOptions
         {
-            OktaDomain = "https://{yourOktaDomain}.com",
+            OktaDomain = "https://{yourOktaDomain}",
             ClientId = "{clientId}",
             ClientSecret = "{clientSecret}",
             AuthorizationServerId = "default",
@@ -143,7 +143,7 @@ public class Startup
     {
         app.UseOktaWebApi(new OktaWebApiOptions
         {
-            OktaDomain = "https://{yourOktaDomain}.com",
+            OktaDomain = "https://{yourOktaDomain}",
             ClientId = "{clientId}",
             AuthorizationServerId = "default"
         });
