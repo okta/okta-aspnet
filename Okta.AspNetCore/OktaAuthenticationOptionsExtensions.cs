@@ -16,7 +16,7 @@ namespace Okta.AspNetCore
     {
         public static AuthenticationBuilder AddOktaMvc(this AuthenticationBuilder builder, OktaMvcOptions oktaOptions)
         {
-            var issuer = UrlHelper.CreateIssuerUrl(oktaOptions.OrgUrl, oktaOptions.AuthorizationServerId);
+            var issuer = UrlHelper.CreateIssuerUrl(oktaOptions.OktaDomain, oktaOptions.AuthorizationServerId);
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
@@ -44,7 +44,7 @@ namespace Okta.AspNetCore
 
         public static AuthenticationBuilder AddOktaWebApi(this AuthenticationBuilder builder, OktaWebApiOptions oktaOptions)
         {
-            var issuer = UrlHelper.CreateIssuerUrl(oktaOptions.OrgUrl, oktaOptions.AuthorizationServerId);
+            var issuer = UrlHelper.CreateIssuerUrl(oktaOptions.OktaDomain, oktaOptions.AuthorizationServerId);
 
             var tokenValidationParameters = new DefaultTokenValidationParameters(oktaOptions, issuer)
             {

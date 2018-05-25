@@ -35,7 +35,7 @@ namespace Okta.AspNetCore.WebApi.IntegrationTest
             .AddOktaWebApi(new OktaWebApiOptions()
             {
                 ClientId = Configuration["Okta:ClientId"],
-                OrgUrl = Configuration["Okta:OrgUrl"],
+                OktaDomain = Configuration["Okta:OktaDomain"],
             });
 
             services.AddMvc();

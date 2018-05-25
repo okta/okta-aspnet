@@ -38,7 +38,7 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
             {
                 ClientId = Configuration["Okta:ClientId"],
                 ClientSecret = Configuration["Okta:ClientSecret"],
-                OrgUrl = Configuration["Okta:OrgUrl"],
+                OktaDomain = Configuration["Okta:OktaDomain"],
             });
 
             services.AddMvc();

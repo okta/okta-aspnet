@@ -18,36 +18,36 @@ namespace Okta.AspNet.Abstractions
                 throw new ArgumentNullException(nameof(options));
             }
 
-            if (string.IsNullOrEmpty(options.OrgUrl))
+            if (string.IsNullOrEmpty(options.OktaDomain))
             {
                 throw new ArgumentNullException(
-                    nameof(options.OrgUrl),
-                    "Your Okta Org URL is missing. You can find it in the Okta Developer Console. It'll look like: https://{yourOktaDomain}.com");
+                    nameof(options.OktaDomain),
+                    "Your Okta domain is missing. You can find it in the Okta Developer Console. It'll look like: https://{yourOktaDomain}.com");
             }
 
-            if (!options.OrgUrl.StartsWith("https://"))
+            if (!options.OktaDomain.StartsWith("https://"))
             {
                 throw new ArgumentException(
                     "Your Okta Org URL must start with https. You can copy your Org URL from the Okta developer dashboard.",
-                    nameof(options.OrgUrl));
+                    nameof(options.OktaDomain));
             }
 
-            if (options.OrgUrl.IndexOf("{yourOktaDomain}", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (options.OktaDomain.IndexOf("{yourOktaDomain}", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
-                    "You need to copy your Okta Org URL from the Okta developer dashboard.", nameof(options.OrgUrl));
+                    "You need to copy your Okta Org URL from the Okta developer dashboard.", nameof(options.OktaDomain));
             }
 
-            if (options.OrgUrl.IndexOf("-admin.oktapreview.com", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (options.OktaDomain.IndexOf("-admin.oktapreview.com", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
-                    "Your Okta Org URL should not contain -admin. You can copy your Org URL from the Okta developer dashboard.", nameof(options.OrgUrl));
+                    "Your Okta Org URL should not contain -admin. You can copy your Org URL from the Okta developer dashboard.", nameof(options.OktaDomain));
             }
 
-            if (options.OrgUrl.IndexOf(".com.com", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (options.OktaDomain.IndexOf(".com.com", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
-                    "It looks like there's a typo in your Org URL. You can copy your Org URL from the Okta developer dashboard.", nameof(options.OrgUrl));
+                    "It looks like there's a typo in your Org URL. You can copy your Org URL from the Okta developer dashboard.", nameof(options.OktaDomain));
             }
 
             if (string.IsNullOrEmpty(options.ClientId))
