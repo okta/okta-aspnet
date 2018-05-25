@@ -22,32 +22,32 @@ namespace Okta.AspNet.Abstractions
             {
                 throw new ArgumentNullException(
                     nameof(options.OktaDomain),
-                    "Your Okta domain is missing. You can find it in the Okta Developer Console. It'll look like: https://{yourOktaDomain}.com");
+                    "Your Okta domain is missing. You can find it in the Okta Developer Console. It'll look like: https://dev-12345.oktapreview.com");
             }
 
             if (!options.OktaDomain.StartsWith("https://"))
             {
                 throw new ArgumentException(
-                    "Your Okta Org URL must start with https. You can copy your Org URL from the Okta developer dashboard.",
+                    "Your Okta domain must start with https. You can copy your Okta domain from the Okta developer dashboard.",
                     nameof(options.OktaDomain));
             }
 
             if (options.OktaDomain.IndexOf("{yourOktaDomain}", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
-                    "You need to copy your Okta Org URL from the Okta developer dashboard.", nameof(options.OktaDomain));
+                    "You need to copy your Okta domain from the Okta developer dashboard.", nameof(options.OktaDomain));
             }
 
             if (options.OktaDomain.IndexOf("-admin.oktapreview.com", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
-                    "Your Okta Org URL should not contain -admin. You can copy your Org URL from the Okta developer dashboard.", nameof(options.OktaDomain));
+                    "Your Okta domain should not contain -admin. You can copy your Okta domain from the Okta developer dashboard.", nameof(options.OktaDomain));
             }
 
             if (options.OktaDomain.IndexOf(".com.com", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
-                    "It looks like there's a typo in your Org URL. You can copy your Org URL from the Okta developer dashboard.", nameof(options.OktaDomain));
+                    "It looks like there's a typo in your Okta domain. You can copy your Okta domain from the Okta developer dashboard.", nameof(options.OktaDomain));
             }
 
             if (string.IsNullOrEmpty(options.ClientId))

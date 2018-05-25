@@ -58,9 +58,9 @@ namespace Okta.AspNet.Abstractions.Test
         }
 
         [Theory]
-        [InlineData("https://{Youroktadomain}.com")]
-        [InlineData("https://{yourOktaDomain}.com")]
-        [InlineData("https://{YourOktaDomain}.com")]
+        [InlineData("https://{Youroktadomain}")]
+        [InlineData("https://{yourOktaDomain}")]
+        [InlineData("https://{YourOktaDomain}")]
         public void FailIfOktaDomainIsNotDefined(string oktaDomain)
         {
             var options = new OktaMvcOptions()
