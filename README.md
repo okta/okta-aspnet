@@ -48,7 +48,7 @@ public class Startup
 
         app.UseOktaMvc(new OktaMvcOptions
         {
-            OrgUrl = "https://{yourOktaDomain}.com",
+            OktaDomain = "https://{yourOktaDomain}.com",
             ClientId = "{clientId}",
             ClientSecret = "{clientSecret}",
             AuthorizationServerId = "default",
@@ -112,7 +112,7 @@ The `OktaMvcOptions` class configures the Okta middleware. It is the same for bo
 
 | Property                  | Required?    | Details                         |
 |---------------------------|--------------|---------------------------------|
-| OrgUrl                    | **Yes**      | Your Okta domain, i.e https://dev-123456.oktapreview.com  | 
+| OktaDomain                    | **Yes**      | Your Okta domain, i.e https://dev-123456.oktapreview.com  | 
 | ClientId                  | **Yes**      | The client ID of your Okta Application |
 | ClientSecret              | **Yes**      | The client secret of your Okta Application |
 | RedirectUri               | **Yes**      | The location Okta should redirect to process a login. This is typically `http://{yourApp}/authorization-code/callback`. No matter the value, the redirect is handled automatically by this package, so you don't need to write any custom code to handle this route. |
@@ -143,7 +143,7 @@ public class Startup
     {
         app.UseOktaWebApi(new OktaWebApiOptions
         {
-            OrgUrl = "https://{yourOktaDomain}.com",
+            OktaDomain = "https://{yourOktaDomain}.com",
             ClientId = "{clientId}",
             AuthorizationServerId = "default"
         });
@@ -179,12 +179,12 @@ public void ConfigureServices(IServiceCollection services)
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
+        options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
     })
     .AddOktaWebApi(new OktaWebApiOptions()
     {
         ClientId = Configuration["Okta:ClientId"],
-        OrgUrl = Configuration["Okta:OrgUrl"],
+        OktaDomain = Configuration["Okta:OktaDomain"],
         AuthorizationServerId = Configuration["Okta:AuthorizationServerId"]
     });
 
@@ -205,7 +205,7 @@ The `OktaWebApiOptions` class configures the Okta middleware. It is the same for
 
 | Property                  | Required?    | Details                         |
 |---------------------------|--------------|---------------------------------|
-| OrgUrl                    | **Yes**      | Your Okta domain, i.e https://dev-123456.oktapreview.com  | 
+| OktaDomain                    | **Yes**      | Your Okta domain, i.e https://dev-123456.oktapreview.com  | 
 | ClientId                  | **Yes**      | The client ID of your Okta Application |
 | AuthorizationServerId     | No           | The Okta Authorization Server to use. The default value is `default`. |
 | Audience                  | No           | The expected audience of incoming tokens. The default value is `api://default`. |

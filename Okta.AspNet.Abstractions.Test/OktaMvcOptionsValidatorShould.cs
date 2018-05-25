@@ -18,7 +18,7 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var options = new OktaMvcOptions()
             {
-                OrgUrl = OktaOptionsValidatorHelper.ValidOrgUrl,
+                OktaDomain = OktaOptionsValidatorHelper.ValidOktaDomain,
                 ClientId = "ClientId",
                 ClientSecret = clientSecret,
             };
@@ -32,7 +32,7 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var options = new OktaMvcOptions()
             {
-                OrgUrl = OktaOptionsValidatorHelper.ValidOrgUrl,
+                OktaDomain = OktaOptionsValidatorHelper.ValidOktaDomain,
                 ClientId = "ClientId",
                 ClientSecret = "{ClientSecret}",
             };
@@ -48,7 +48,7 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var options = new OktaMvcOptions()
                 {
-                    OrgUrl = OktaOptionsValidatorHelper.ValidOrgUrl,
+                    OktaDomain = OktaOptionsValidatorHelper.ValidOktaDomain,
                     ClientId = "ClientId",
                     ClientSecret = "ClientSecret",
                     RedirectUri = redirectUri,
@@ -63,7 +63,7 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var options = new OktaMvcOptions()
             {
-                OrgUrl = OktaOptionsValidatorHelper.ValidOrgUrl,
+                OktaDomain = OktaOptionsValidatorHelper.ValidOktaDomain,
                 ClientId = "ClientId",
                 ClientSecret = "ClientSecret",
                 RedirectUri = "RedirectUri",

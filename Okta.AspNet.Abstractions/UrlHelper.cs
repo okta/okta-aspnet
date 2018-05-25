@@ -11,19 +11,19 @@ namespace Okta.AspNet.Abstractions
 {
     public static class UrlHelper
     {
-        public static string CreateIssuerUrl(string orgUrl, string authorizationServerId)
+        public static string CreateIssuerUrl(string oktaDomain, string authorizationServerId)
         {
-            if (string.IsNullOrEmpty(orgUrl))
+            if (string.IsNullOrEmpty(oktaDomain))
             {
-                throw new ArgumentNullException(nameof(orgUrl));
+                throw new ArgumentNullException(nameof(oktaDomain));
             }
 
             if (string.IsNullOrEmpty(authorizationServerId))
             {
-                return orgUrl;
+                return oktaDomain;
             }
 
-            return $"{EnsureTrailingSlash(orgUrl)}oauth2/{authorizationServerId}";
+            return $"{EnsureTrailingSlash(oktaDomain)}oauth2/{authorizationServerId}";
         }
 
         /// <summary>
