@@ -7,6 +7,6 @@ namespace Okta.AspNet.Abstractions.Test
 {
     public static class OktaOptionsValidatorHelper
     {
-        public const string ValidOrgUrl = "https://myOktaDomain.oktapreview.com";
+        public const string ValidOktaDomain = "https://myOktaDomain.oktapreview.com";
     }
 }

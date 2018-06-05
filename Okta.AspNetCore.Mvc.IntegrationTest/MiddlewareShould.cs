@@ -45,7 +45,7 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
             {
                 var response = await client.GetAsync(ProtectedEndpoint);
                 Assert.True(response.StatusCode == System.Net.HttpStatusCode.Found);
-                Assert.StartsWith(Configuration["Okta:OrgUrl"], response.Headers.Location.AbsoluteUri);
+                Assert.StartsWith(Configuration["Okta:OktaDomain"], response.Headers.Location.AbsoluteUri);
             }
         }
 

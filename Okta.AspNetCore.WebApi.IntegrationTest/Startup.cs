@@ -30,12 +30,12 @@ namespace Okta.AspNetCore.WebApi.IntegrationTest
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddOktaWebApi(new OktaWebApiOptions()
             {
                 ClientId = Configuration["Okta:ClientId"],
-                OrgUrl = Configuration["Okta:OrgUrl"],
-                AuthorizationServerId = Configuration["Okta:AuthorizationServerId"],
+                OktaDomain = Configuration["Okta:OktaDomain"],
             });
 
             services.AddMvc();
@@ -49,6 +49,8 @@ namespace Okta.AspNetCore.WebApi.IntegrationTest
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
             app.UseAuthentication();
             app.UseMvc();
         }

@@ -31,13 +31,14 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
             {
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             })
             .AddCookie()
             .AddOktaMvc(new OktaMvcOptions()
             {
                 ClientId = Configuration["Okta:ClientId"],
                 ClientSecret = Configuration["Okta:ClientSecret"],
-                OrgUrl = Configuration["Okta:OrgUrl"],
+                OktaDomain = Configuration["Okta:OktaDomain"],
             });
 
             services.AddMvc();

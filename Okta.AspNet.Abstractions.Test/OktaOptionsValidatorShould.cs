@@ -18,7 +18,7 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var options = new OktaOptions()
             {
-                OrgUrl = OktaOptionsValidatorHelper.ValidOrgUrl,
+                OktaDomain = OktaOptionsValidatorHelper.ValidOktaDomain,
                 ClientId = clientId,
             };
 
@@ -29,74 +29,74 @@ namespace Okta.AspNet.Abstractions.Test
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void FailIfOrgUrlIsNullOrEmpty(string orgUrl)
+        public void FailIfOktaDomainIsNullOrEmpty(string oktaDomain)
         {
             var options = new OktaOptions()
             {
-                OrgUrl = orgUrl,
+                OktaDomain = oktaDomain,
                 ClientId = "ClientId",
             };
 
             Action action = () => new MockOktaOptionsValidator().Validate(options);
-            action.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == nameof(OktaOptions.OrgUrl));
+            action.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == nameof(OktaOptions.OktaDomain));
         }
 
         [Theory]
         [InlineData("http://myOktaDomain.oktapreview.com")]
         [InlineData("httsp://myOktaDomain.oktapreview.com")]
-        [InlineData("invalidOrgUrl")]
-        public void FailIfOrgUrlIsNotStartingWithHttps(string orgUrl)
+        [InlineData("invalidOktaDomain")]
+        public void FailIfOktaDomainIsNotStartingWithHttps(string oktaDomain)
         {
             var options = new OktaMvcOptions()
             {
-                OrgUrl = orgUrl,
+                OktaDomain = oktaDomain,
                 ClientId = "ClientId",
             };
 
             Action action = () => new MockOktaOptionsValidator().Validate(options);
-            action.Should().Throw<ArgumentException>().Where(e => e.ParamName == nameof(OktaOptions.OrgUrl));
+            action.Should().Throw<ArgumentException>().Where(e => e.ParamName == nameof(OktaOptions.OktaDomain));
         }
 
         [Theory]
-        [InlineData("https://{Youroktadomain}.com")]
-        [InlineData("https://{yourOktaDomain}.com")]
-        [InlineData("https://{YourOktaDomain}.com")]
-        public void FailIfOrgUrlIsNotDefined(string orgUrl)
+        [InlineData("https://{Youroktadomain}")]
+        [InlineData("https://{yourOktaDomain}")]
+        [InlineData("https://{YourOktaDomain}")]
+        public void FailIfOktaDomainIsNotDefined(string oktaDomain)
         {
             var options = new OktaMvcOptions()
             {
-                OrgUrl = orgUrl,
+                OktaDomain = oktaDomain,
                 ClientId = "ClientId",
             };
 
             Action action = () => new MockOktaOptionsValidator().Validate(options);
-            action.Should().Throw<ArgumentException>().Where(e => e.ParamName == nameof(OktaOptions.OrgUrl));
+            action.Should().Throw<ArgumentException>().Where(e => e.ParamName == nameof(OktaOptions.OktaDomain));
         }
 
         [Fact]
-        public void FailIfOrgUrlIsIncludingAdmin()
+        public void FailIfOktaDomainIsIncludingAdmin()
         {
             var options = new OktaMvcOptions()
             {
-                OrgUrl = "https://myOktaOrg-admin.oktapreview.com",
+                OktaDomain = "https://myOktaOrg-admin.oktapreview.com",
                 ClientId = "ClientId",
             };
 
             Action action = () => new MockOktaOptionsValidator().Validate(options);
-            action.Should().Throw<ArgumentException>().Where(e => e.ParamName == nameof(OktaOptions.OrgUrl));
+            action.Should().Throw<ArgumentException>().Where(e => e.ParamName == nameof(OktaOptions.OktaDomain));
         }
 
         [Fact]
-        public void FailIfOrgUrlHasTypo()
+        public void FailIfOktaDomainHasTypo()
         {
             var options = new OktaMvcOptions()
             {
-                OrgUrl = "https://myOktaDomain.oktapreview.com.com",
+                OktaDomain = "https://myOktaDomain.oktapreview.com.com",
                 ClientId = "ClientId",
             };
 
             Action action = () => new MockOktaOptionsValidator().Validate(options);
-            action.Should().Throw<ArgumentException>().Where(e => e.ParamName == nameof(OktaOptions.OrgUrl));
+            action.Should().Throw<ArgumentException>().Where(e => e.ParamName == nameof(OktaOptions.OktaDomain));
         }
     }
 }
