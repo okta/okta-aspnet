@@ -10,12 +10,11 @@ namespace Okta.AspNet.Abstractions
 {
     public class UserAgentBuilder
     {
-        private const string EntrySeparator = " ";
         private const string VersionSeparator = "/";
 
         public static string GetUserAgent()
         {
-            return GetOSVersion() + GetFrameworkVersion();
+            return string.Join(" ", GetOSVersion(), GetFrameworkVersion());
         }
 
         private static string GetFrameworkVersion()
@@ -25,14 +24,14 @@ namespace Okta.AspNet.Abstractions
                .GetName()
                .Version;
 
-            var frameworkToken = $"okta-aspnet{VersionSeparator}{frameworkVersion.Major}.{frameworkVersion.Minor}.{frameworkVersion.Build}{EntrySeparator}";
+            var frameworkToken = $"okta-aspnet{VersionSeparator}{frameworkVersion.Major}.{frameworkVersion.Minor}.{frameworkVersion.Build}";
 
             return frameworkToken;
         }
 
         private static string GetOSVersion()
         {
-            return $"os-version{VersionSeparator}{RuntimeInformation.OSDescription.ToString()}{VersionSeparator}{RuntimeInformation.OSArchitecture.ToString()}{EntrySeparator}";
+            return $"os-version{VersionSeparator}{RuntimeInformation.OSDescription.ToString()}{VersionSeparator}{RuntimeInformation.OSArchitecture.ToString()}";
         }
     }
 }
