@@ -6,7 +6,9 @@ var Projects = new List<string>()
 	"Okta.AspNet.Abstractions",
     "Okta.AspNet.Abstractions.Test",
     "Okta.AspNet",
-	"Okta.AspNetCore"
+	"Okta.AspNet.Test",
+	"Okta.AspNetCore",
+	"Okta.AspNetCore.Test"
 };
 
 Task("Clean").Does(() =>
@@ -52,7 +54,7 @@ Task("RunTests")
 .IsDependentOn("Build")
 .Does(() =>
 {
-    var testProjects = new[] { "Okta.AspNet.Abstractions.Test" };
+    var testProjects = new[] { "Okta.AspNet.Abstractions.Test", "Okta.AspNet.Test", "Okta.AspNetCore.Test" };
     // For now, we won't run integration tests in CI
 
     foreach (var name in testProjects)

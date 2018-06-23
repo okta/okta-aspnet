@@ -13,9 +13,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Jwt;
 using Microsoft.Owin.Security.Notifications;
-using Microsoft.Owin.Security.OAuth;
 using Microsoft.Owin.Security.OpenIdConnect;
-using Okta.AspNet.Abstractions;
 using Owin;
 
 namespace Okta.AspNet
@@ -42,7 +40,7 @@ namespace Okta.AspNet
                 throw new ArgumentNullException(nameof(app));
             }
 
-            new OktaWebApiOptionsValidator().Validate(options);
+            new Abstractions.OktaWebApiOptionsValidator().Validate(options);
             AddJwtBearerAuthentication(app, options);
 
             return app;
@@ -50,8 +48,8 @@ namespace Okta.AspNet
 
         private static void AddJwtBearerAuthentication(IAppBuilder app, OktaWebApiOptions options)
         {
-            var issuer = UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
-            var httpClient = new HttpClient(new UserAgentHandler());
+            var issuer = Abstractions.UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
+            var httpClient = new HttpClient(new Abstractions.UserAgentHandler());
 
             var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
               issuer + "/.well-known/openid-configuration",
@@ -62,7 +60,7 @@ namespace Okta.AspNet
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             var signingKeyProvider = new DiscoveryDocumentSigningKeyProvider(configurationManager);
-            var tokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
+            var tokenValidationParameters = new Abstractions.DefaultTokenValidationParameters(options, issuer)
             {
                 ValidAudience = options.Audience,
                 IssuerSigningKeyResolver = (token, securityToken, keyId, validationParameters) =>
@@ -76,21 +74,21 @@ namespace Okta.AspNet
             {
                 AuthenticationMode = AuthenticationMode.Active,
                 TokenValidationParameters = tokenValidationParameters,
-                TokenHandler = new StrictTokenHandler() { ClientId = options.ClientId },
+                TokenHandler = new Abstractions.StrictTokenHandler() { ClientId = options.ClientId },
             });
         }
 
         private static void AddOpenIdConnectAuthentication(IAppBuilder app, OktaMvcOptions options)
         {
-            var issuer = UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
-            var httpClient = new HttpClient(new UserAgentHandler());
+            var issuer = Abstractions.UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
+            var httpClient = new HttpClient(new Abstractions.UserAgentHandler());
 
             var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
               issuer + "/.well-known/openid-configuration",
               new OpenIdConnectConfigurationRetriever(),
               new HttpDocumentRetriever(httpClient));
 
-            var tokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
+            var tokenValidationParameters = new Abstractions.DefaultTokenValidationParameters(options, issuer)
             {
                 NameClaimType = "name",
             };
@@ -129,7 +127,7 @@ namespace Okta.AspNet
                 }
             }
 
-            return Task.CompletedTask;
+            return Task.FromResult(false);
         }
     }
 }

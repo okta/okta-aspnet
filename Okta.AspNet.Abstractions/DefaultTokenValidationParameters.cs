@@ -9,7 +9,7 @@ namespace Okta.AspNet.Abstractions
 {
     public class DefaultTokenValidationParameters : TokenValidationParameters
     {
-        public DefaultTokenValidationParameters(OktaOptions options, string issuer)
+        public DefaultTokenValidationParameters(OktaWebOptions options, string issuer)
         {
             RequireExpirationTime = true;
             RequireSignedTokens = true;

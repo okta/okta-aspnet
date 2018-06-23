@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Okta.AspNet.Abstractions;
 
 namespace Okta.AspNetCore
 {
@@ -16,7 +15,7 @@ namespace Okta.AspNetCore
     {
         public static AuthenticationBuilder AddOktaMvc(this AuthenticationBuilder builder, OktaMvcOptions oktaOptions)
         {
-            var issuer = UrlHelper.CreateIssuerUrl(oktaOptions.OktaDomain, oktaOptions.AuthorizationServerId);
+            var issuer = AspNet.Abstractions.UrlHelper.CreateIssuerUrl(oktaOptions.OktaDomain, oktaOptions.AuthorizationServerId);
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
@@ -32,8 +31,8 @@ namespace Okta.AspNetCore
                 options.Scope.Add("profile");
                 options.SaveTokens = true;
                 options.UseTokenLifetime = false;
-                options.BackchannelHttpHandler = new UserAgentHandler();
-                options.TokenValidationParameters = new DefaultTokenValidationParameters(oktaOptions, issuer)
+                options.BackchannelHttpHandler = new AspNet.Abstractions.UserAgentHandler();
+                options.TokenValidationParameters = new AspNet.Abstractions.DefaultTokenValidationParameters(oktaOptions, issuer)
                 {
                     NameClaimType = "name",
                 };
@@ -44,9 +43,9 @@ namespace Okta.AspNetCore
 
         public static AuthenticationBuilder AddOktaWebApi(this AuthenticationBuilder builder, OktaWebApiOptions oktaOptions)
         {
-            var issuer = UrlHelper.CreateIssuerUrl(oktaOptions.OktaDomain, oktaOptions.AuthorizationServerId);
+            var issuer = AspNet.Abstractions.UrlHelper.CreateIssuerUrl(oktaOptions.OktaDomain, oktaOptions.AuthorizationServerId);
 
-            var tokenValidationParameters = new DefaultTokenValidationParameters(oktaOptions, issuer)
+            var tokenValidationParameters = new AspNet.Abstractions.DefaultTokenValidationParameters(oktaOptions, issuer)
             {
                 ValidAudience = oktaOptions.Audience,
             };
@@ -56,7 +55,7 @@ namespace Okta.AspNetCore
                 options.Audience = oktaOptions.Audience;
                 options.Authority = issuer;
                 options.TokenValidationParameters = tokenValidationParameters;
-                options.BackchannelHttpHandler = new UserAgentHandler();
+                options.BackchannelHttpHandler = new AspNet.Abstractions.UserAgentHandler();
                 options.SecurityTokenValidators.Add(new StrictSecurityTokenHandler()
                     {
                         ClientId = oktaOptions.ClientId,

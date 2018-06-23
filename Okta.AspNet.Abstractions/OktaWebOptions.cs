@@ -1,4 +1,4 @@
-﻿// <copyright file="OktaOptions.cs" company="Okta, Inc">
+﻿// <copyright file="OktaWebOptions.cs" company="Okta, Inc">
 // Copyright (c) 2018-present Okta, Inc. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 // </copyright>
@@ -7,7 +7,7 @@ using System;
 
 namespace Okta.AspNet.Abstractions
 {
-    public class OktaOptions
+    public class OktaWebOptions
     {
         public static readonly string DefaultAuthorizationServerId = "default";
 
