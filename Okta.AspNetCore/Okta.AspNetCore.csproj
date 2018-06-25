@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Official Okta middleware for ASP.NET Core 2.0+. Easily add authentication and authorization to ASP.NET Core applications.</Description>
     <Copyright>(c) 2018 Okta, Inc.</Copyright>
-    <VersionPrefix>1.0.0-beta1</VersionPrefix>
+    <VersionPrefix>1.0.0-beta5</VersionPrefix>
     <Authors>Okta, Inc.</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Okta.AspNetCore</AssemblyName>
@@ -16,17 +16,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="2.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Okta.AspNet.Abstractions\Okta.AspNet.Abstractions.csproj" />
-    <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003" PrivateAssets="All">
-    </PackageReference>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta007" PrivateAssets="All">
-    </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="2.1.0" />
+    <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003" PrivateAssets="All" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" PrivateAssets="All" />
     <AdditionalFiles Include="..\stylecop.json" />
   </ItemGroup>
 
