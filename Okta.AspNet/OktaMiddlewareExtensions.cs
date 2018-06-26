@@ -14,6 +14,7 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Jwt;
 using Microsoft.Owin.Security.Notifications;
 using Microsoft.Owin.Security.OpenIdConnect;
+using Okta.AspNet.Abstractions;
 using Owin;
 
 namespace Okta.AspNet
@@ -48,7 +49,7 @@ namespace Okta.AspNet
 
         private static void AddJwtBearerAuthentication(IAppBuilder app, OktaWebApiOptions options)
         {
-            var issuer = Abstractions.UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
+            var issuer = UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
             var httpClient = new HttpClient(new Abstractions.UserAgentHandler());
 
             var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
@@ -60,7 +61,7 @@ namespace Okta.AspNet
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             var signingKeyProvider = new DiscoveryDocumentSigningKeyProvider(configurationManager);
-            var tokenValidationParameters = new Abstractions.DefaultTokenValidationParameters(options, issuer)
+            var tokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
             {
                 ValidAudience = options.Audience,
                 IssuerSigningKeyResolver = (token, securityToken, keyId, validationParameters) =>
@@ -74,13 +75,13 @@ namespace Okta.AspNet
             {
                 AuthenticationMode = AuthenticationMode.Active,
                 TokenValidationParameters = tokenValidationParameters,
-                TokenHandler = new Abstractions.StrictTokenHandler() { ClientId = options.ClientId },
+                TokenHandler = new StrictTokenHandler(options),
             });
         }
 
         private static void AddOpenIdConnectAuthentication(IAppBuilder app, OktaMvcOptions options)
         {
-            var issuer = Abstractions.UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
+            var issuer = UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
             var httpClient = new HttpClient(new Abstractions.UserAgentHandler());
 
             var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
@@ -88,9 +89,10 @@ namespace Okta.AspNet
               new OpenIdConnectConfigurationRetriever(),
               new HttpDocumentRetriever(httpClient));
 
-            var tokenValidationParameters = new Abstractions.DefaultTokenValidationParameters(options, issuer)
+            var tokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
             {
                 NameClaimType = "name",
+                ValidAudience = options.ClientId,
             };
 
             var tokenExchanger = new TokenExchanger(options, issuer, configurationManager);
@@ -108,6 +110,7 @@ namespace Okta.AspNet
                 Scope = options.Scope,
                 PostLogoutRedirectUri = options.PostLogoutRedirectUri,
                 TokenValidationParameters = tokenValidationParameters,
+                SecurityTokenValidator = new StrictSecurityTokenValidator(options),
                 Notifications = new OpenIdConnectAuthenticationNotifications
                 {
                     AuthorizationCodeReceived = tokenExchanger.ExchangeCodeForTokenAsync,
