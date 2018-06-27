@@ -14,10 +14,10 @@ namespace Okta.AspNetCore
 
         public const string ApiAuthenticationScheme = JwtBearerDefaults.AuthenticationScheme;
 
-        public const string Scope = "openid profile";
-
         public const string CallbackPath = "/authorization-code/callback";
 
         public const string SignOutCallbackPath = "/signout/callback";
+
+        public static readonly string[] Scope = new string[] { "openid", "profile" };
     }
 }

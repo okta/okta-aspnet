@@ -100,6 +100,9 @@ namespace Okta.AspNet
             // Stop the default behavior of remapping JWT claim names to legacy MS/SOAP claim names
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
+            var definedScopes = options.Scope?.ToArray() ?? OktaDefaults.Scope;
+            var scopeString = string.Join(" ", definedScopes);
+
             app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptions
             {
                 ClientId = options.ClientId,
@@ -107,7 +110,7 @@ namespace Okta.AspNet
                 Authority = issuer,
                 RedirectUri = options.RedirectUri,
                 ResponseType = OpenIdConnectResponseType.CodeIdToken,
-                Scope = options.Scope,
+                Scope = scopeString,
                 PostLogoutRedirectUri = options.PostLogoutRedirectUri,
                 TokenValidationParameters = tokenValidationParameters,
                 Notifications = new OpenIdConnectAuthenticationNotifications

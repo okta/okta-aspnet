@@ -5,6 +5,7 @@
 
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,11 +47,11 @@ namespace Okta.AspNetCore
                 oidcOptions.UseTokenLifetime = false;
                 oidcOptions.BackchannelHttpHandler = new UserAgentHandler();
 
-                if (!string.IsNullOrEmpty(options.Scope))
+                var hasDefinedScopes = options.Scope?.Any() ?? false;
+                if (hasDefinedScopes)
                 {
                     oidcOptions.Scope.Clear();
-                    var scopes = options.Scope.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    foreach (var scope in scopes)
+                    foreach (var scope in options.Scope)
                     {
                         oidcOptions.Scope.Add(scope);
                     }
