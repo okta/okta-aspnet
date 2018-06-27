@@ -7,15 +7,11 @@ namespace Okta.AspNetCore
 {
     public class OktaMvcOptions : AspNet.Abstractions.OktaWebOptions
     {
-        public static readonly string DefaultScope = "openid profile";
-
-        public static readonly string DefaultCallbackPath = "/authorization-code/callback";
-
         public string ClientSecret { get; set; }
 
-        public string CallbackPath { get; set; } = DefaultCallbackPath;
+        public string CallbackPath { get; set; } = OktaDefaults.CallbackPath;
 
-        public string Scope { get; set; } = DefaultScope;
+        public string Scope { get; set; } = OktaDefaults.Scope;
 
         public bool GetClaimsFromUserInfoEndpoint { get; set; } = false;
     }

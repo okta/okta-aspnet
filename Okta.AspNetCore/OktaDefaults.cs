@@ -13,5 +13,11 @@ namespace Okta.AspNetCore
         public const string MvcAuthenticationScheme = OpenIdConnectDefaults.AuthenticationScheme;
 
         public const string ApiAuthenticationScheme = JwtBearerDefaults.AuthenticationScheme;
+
+        public const string Scope = "openid profile";
+
+        public const string CallbackPath = "/authorization-code/callback";
+
+        public const string SignOutCallbackPath = "/signout/callback";
     }
 }

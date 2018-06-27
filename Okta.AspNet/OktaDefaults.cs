@@ -16,5 +16,7 @@ namespace Okta.AspNet
         public const string MvcAuthenticationType = OpenIdConnectAuthenticationDefaults.AuthenticationType;
 
         public const string ApiAuthenticationType = OAuthDefaults.AuthenticationType;
+
+        public const string Scope = "openid profile";
     }
 }
