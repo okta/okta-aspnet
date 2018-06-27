@@ -54,13 +54,12 @@ Task("RunTests")
 .IsDependentOn("Build")
 .Does(() =>
 {
-    var testProjects = new[] { "Okta.AspNet.Abstractions.Test", "Okta.AspNet.Test", "Okta.AspNetCore.Test" };
-    // For now, we won't run integration tests in CI
-
-    foreach (var name in testProjects)
-    {
+    Projects
+    .Where(name => name.EndsWith(".Test")) // For now, we won't run integration tests in CI
+    .ToList()
+    .ForEach(name => {
         DotNetCoreTest(string.Format("./{0}/{0}.csproj", name));
-    }
+    });
 });
 
 
@@ -68,7 +67,10 @@ Task("PackNuget")
 .IsDependentOn("RunTests")
 .Does(() =>
 {
-    Projects.ForEach(name =>
+    Projects
+    .Where(name => !name.Contains(".Test"))
+    .ToList()
+    .ForEach(name =>
     {
         Console.WriteLine($"\nCreating NuGet package for {name}");
 
