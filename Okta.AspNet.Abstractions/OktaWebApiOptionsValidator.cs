@@ -5,11 +5,8 @@
 
 namespace Okta.AspNet.Abstractions
 {
-    public class OktaWebApiOptionsValidator : OktaOptionsValidator
+    public sealed class OktaWebApiOptionsValidator : OktaWebOptionsValidator<OktaWebApiOptions>
     {
-        protected override void ValidateOptions(OktaOptions options)
-        {
-            return;
-        }
+        // No additional validation required here (yet)
     }
 }

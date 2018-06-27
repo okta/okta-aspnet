@@ -5,7 +5,6 @@
 
 using System;
 using Microsoft.Owin;
-using Okta.AspNet.Abstractions;
 using Owin;
 
 [assembly: OwinStartup(typeof(Okta.AspNet.WebApi.IntegrationTest.Startup))]

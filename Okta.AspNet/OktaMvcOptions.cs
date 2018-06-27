@@ -3,19 +3,19 @@
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace Okta.AspNet.Abstractions
-{
-    public class OktaMvcOptions : OktaOptions
-    {
-        public static readonly string DefaultScope = "openid profile";
+using System.Collections.Generic;
 
+namespace Okta.AspNet
+{
+    public class OktaMvcOptions : Abstractions.OktaWebOptions
+    {
         public string ClientSecret { get; set; }
 
         public string RedirectUri { get; set; }
 
         public string PostLogoutRedirectUri { get; set; }
 
-        public string Scope { get; set; } = DefaultScope;
+        public IList<string> Scope { get; set; } = OktaDefaults.Scope;
 
         public bool GetClaimsFromUserInfoEndpoint { get; set; } = false;
     }

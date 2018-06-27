@@ -5,33 +5,31 @@
 
 using System;
 
-namespace Okta.AspNet.Abstractions
+namespace Okta.AspNetCore
 {
-    public class OktaMvcOptionsValidator : OktaOptionsValidator
+    public sealed class OktaMvcOptionsValidator : AspNet.Abstractions.OktaWebOptionsValidator<OktaMvcOptions>
     {
-        protected override void ValidateOptions(OktaOptions options)
+        protected override void ValidateInternal(OktaMvcOptions options)
         {
-            var mvcOptions = (OktaMvcOptions)options;
-
-            if (string.IsNullOrEmpty(mvcOptions.ClientSecret))
+            if (string.IsNullOrEmpty(options.ClientSecret))
             {
                 throw new ArgumentNullException(
-                    nameof(mvcOptions.ClientSecret),
+                    nameof(options.ClientSecret),
                     "Your Okta Application client secret is missing. You can find it in the Okta Developer Console in the details for the Application you created.");
             }
 
-            if (mvcOptions.ClientSecret.IndexOf("{ClientSecret}", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (options.ClientSecret.IndexOf("{ClientSecret}", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
                     "You need to copy your client secret from the Okta Developer Console in the details for the Application you created.",
-                    nameof(mvcOptions.ClientSecret));
+                    nameof(options.ClientSecret));
             }
 
-            if (string.IsNullOrEmpty(mvcOptions.RedirectUri))
+            if (string.IsNullOrEmpty(options.CallbackPath))
             {
                 throw new ArgumentNullException(
-                    nameof(mvcOptions.RedirectUri),
-                    "Your Okta Application redirect URI is missing. You can find it in the Okta Developer Console in the details for the Application you created.");
+                    nameof(options.CallbackPath),
+                    "Your Okta Application callback path is missing. It should match the path of the redirect URI you specified in the Okta Developer Console for this application.");
             }
         }
     }

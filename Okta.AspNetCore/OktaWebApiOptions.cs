@@ -3,12 +3,9 @@
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace Okta.AspNet.Abstractions
+namespace Okta.AspNetCore
 {
-    public class OktaWebApiOptions : OktaWebOptions
+    public sealed class OktaWebApiOptions : AspNet.Abstractions.OktaWebApiOptions
     {
-        public static readonly string DefaultAudience = "api://default";
-
-        public string Audience { get; set; } = DefaultAudience;
     }
 }

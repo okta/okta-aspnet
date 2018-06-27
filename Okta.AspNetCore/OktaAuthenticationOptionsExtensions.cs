@@ -3,7 +3,9 @@
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,27 +16,50 @@ namespace Okta.AspNetCore
 {
     public static class OktaAuthenticationOptionsExtensions
     {
-        public static AuthenticationBuilder AddOktaMvc(this AuthenticationBuilder builder, OktaMvcOptions oktaOptions)
+        public static AuthenticationBuilder AddOktaMvc(this AuthenticationBuilder builder, OktaMvcOptions options)
         {
-            var issuer = UrlHelper.CreateIssuerUrl(oktaOptions.OktaDomain, oktaOptions.AuthorizationServerId);
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            new OktaMvcOptionsValidator().Validate(options);
+
+            return AddCodeFlow(builder, options);
+        }
+
+        private static AuthenticationBuilder AddCodeFlow(AuthenticationBuilder builder, OktaMvcOptions options)
+        {
+            var issuer = UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            builder.AddOpenIdConnect(options =>
+            builder.AddOpenIdConnect(oidcOptions =>
             {
-                options.ClientId = oktaOptions.ClientId;
-                options.ClientSecret = oktaOptions.ClientSecret;
-                options.Authority = issuer;
-                options.CallbackPath = new PathString("/authorization-code/callback");
-                options.ResponseType = OpenIdConnectResponseType.Code;
-                options.GetClaimsFromUserInfoEndpoint = oktaOptions.GetClaimsFromUserInfoEndpoint;
-                options.Scope.Add("openid");
-                options.Scope.Add("profile");
-                options.SaveTokens = true;
-                options.UseTokenLifetime = false;
-                options.BackchannelHttpHandler = new UserAgentHandler();
-                options.TokenValidationParameters = new DefaultTokenValidationParameters(oktaOptions, issuer)
+                oidcOptions.ClientId = options.ClientId;
+                oidcOptions.ClientSecret = options.ClientSecret;
+                oidcOptions.Authority = issuer;
+                oidcOptions.CallbackPath = new PathString(options.CallbackPath);
+                oidcOptions.SignedOutCallbackPath = new PathString(OktaDefaults.SignOutCallbackPath);
+                oidcOptions.ResponseType = OpenIdConnectResponseType.Code;
+                oidcOptions.GetClaimsFromUserInfoEndpoint = options.GetClaimsFromUserInfoEndpoint;
+                oidcOptions.SaveTokens = true;
+                oidcOptions.UseTokenLifetime = false;
+                oidcOptions.BackchannelHttpHandler = new UserAgentHandler();
+
+                var hasDefinedScopes = options.Scope?.Any() ?? false;
+                if (hasDefinedScopes)
                 {
+                    oidcOptions.Scope.Clear();
+                    foreach (var scope in options.Scope)
+                    {
+                        oidcOptions.Scope.Add(scope);
+                    }
+                }
+
+                oidcOptions.TokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
+                {
+                    ValidAudience = options.ClientId,
                     NameClaimType = "name",
                 };
             });
@@ -42,25 +67,36 @@ namespace Okta.AspNetCore
             return builder;
         }
 
-        public static AuthenticationBuilder AddOktaWebApi(this AuthenticationBuilder builder, OktaWebApiOptions oktaOptions)
+        public static AuthenticationBuilder AddOktaWebApi(this AuthenticationBuilder builder, OktaWebApiOptions options)
         {
-            var issuer = UrlHelper.CreateIssuerUrl(oktaOptions.OktaDomain, oktaOptions.AuthorizationServerId);
-
-            var tokenValidationParameters = new DefaultTokenValidationParameters(oktaOptions, issuer)
+            if (builder == null)
             {
-                ValidAudience = oktaOptions.Audience,
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            new OktaWebApiOptionsValidator().Validate(options);
+
+            return AddJwtValidation(builder, options);
+        }
+
+        private static AuthenticationBuilder AddJwtValidation(AuthenticationBuilder builder, OktaWebApiOptions options)
+        {
+            var issuer = UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
+
+            var tokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
+            {
+                ValidAudience = options.Audience,
             };
 
-            builder.AddJwtBearer(options =>
+            builder.AddJwtBearer(opt =>
             {
-                options.Audience = oktaOptions.Audience;
-                options.Authority = issuer;
-                options.TokenValidationParameters = tokenValidationParameters;
-                options.BackchannelHttpHandler = new UserAgentHandler();
-                options.SecurityTokenValidators.Add(new StrictSecurityTokenHandler()
-                    {
-                        ClientId = oktaOptions.ClientId,
-                    });
+                opt.Audience = options.Audience;
+                opt.Authority = issuer;
+                opt.TokenValidationParameters = tokenValidationParameters;
+                opt.BackchannelHttpHandler = new UserAgentHandler();
+
+                opt.SecurityTokenValidators.Clear();
+                opt.SecurityTokenValidators.Add(new StrictSecurityTokenValidator(options));
             });
 
             return builder;

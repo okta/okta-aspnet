@@ -1,4 +1,4 @@
-﻿// <copyright file="OktaOptionsValidator.cs" company="Okta, Inc">
+﻿// <copyright file="OktaWebOptionsValidator.cs" company="Okta, Inc">
 // Copyright (c) 2018-present Okta, Inc. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 // </copyright>
@@ -7,11 +7,15 @@ using System;
 
 namespace Okta.AspNet.Abstractions
 {
-    public abstract class OktaOptionsValidator
+    public class OktaWebOptionsValidator<T>
+        where T : OktaWebOptions
     {
-        protected abstract void ValidateOptions(OktaOptions options);
+        protected virtual void ValidateInternal(T options)
+        {
+            return;
+        }
 
-        public void Validate(OktaOptions options)
+        public void Validate(OktaWebOptions options)
         {
             if (options == null)
             {
@@ -64,7 +68,7 @@ namespace Okta.AspNet.Abstractions
                     "You need to copy your Client ID from the Okta Developer Console in the details for the Application you created.");
             }
 
-            ValidateOptions(options);
+            ValidateInternal((T)options);
         }
     }
 }

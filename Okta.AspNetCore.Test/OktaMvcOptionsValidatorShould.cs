@@ -7,10 +7,12 @@ using System;
 using FluentAssertions;
 using Xunit;
 
-namespace Okta.AspNet.Abstractions.Test
+namespace Okta.AspNetCore.Test
 {
     public class OktaMvcOptionsValidatorShould
     {
+        public const string ValidOktaDomain = "https://myOktaDomain.oktapreview.com";
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -18,7 +20,7 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var options = new OktaMvcOptions()
             {
-                OktaDomain = OktaOptionsValidatorHelper.ValidOktaDomain,
+                OktaDomain = ValidOktaDomain,
                 ClientId = "ClientId",
                 ClientSecret = clientSecret,
             };
@@ -32,7 +34,7 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var options = new OktaMvcOptions()
             {
-                OktaDomain = OktaOptionsValidatorHelper.ValidOktaDomain,
+                OktaDomain = ValidOktaDomain,
                 ClientId = "ClientId",
                 ClientSecret = "{ClientSecret}",
             };
@@ -44,18 +46,18 @@ namespace Okta.AspNet.Abstractions.Test
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void FailWhenRedirectUriIsNullOrEmpty(string redirectUri)
+        public void FailWhenCallbackPathIsNullOrEmpty(string badCallbackPath)
         {
             var options = new OktaMvcOptions()
-                {
-                    OktaDomain = OktaOptionsValidatorHelper.ValidOktaDomain,
-                    ClientId = "ClientId",
-                    ClientSecret = "ClientSecret",
-                    RedirectUri = redirectUri,
-                };
+            {
+                OktaDomain = ValidOktaDomain,
+                ClientId = "ClientId",
+                ClientSecret = "ClientSecret",
+                CallbackPath = badCallbackPath,
+            };
 
             Action action = () => new OktaMvcOptionsValidator().Validate(options);
-            action.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == nameof(OktaMvcOptions.RedirectUri));
+            action.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == nameof(OktaMvcOptions.CallbackPath));
         }
 
         [Fact]
@@ -63,10 +65,10 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var options = new OktaMvcOptions()
             {
-                OktaDomain = OktaOptionsValidatorHelper.ValidOktaDomain,
+                OktaDomain = ValidOktaDomain,
                 ClientId = "ClientId",
                 ClientSecret = "ClientSecret",
-                RedirectUri = "RedirectUri",
+                CallbackPath = "/some/path",
             };
 
             Action action = () => new OktaMvcOptionsValidator().Validate(options);

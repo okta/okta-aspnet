@@ -13,7 +13,6 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Jwt;
 using Microsoft.Owin.Security.Notifications;
-using Microsoft.Owin.Security.OAuth;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Okta.AspNet.Abstractions;
 using Owin;
@@ -76,7 +75,7 @@ namespace Okta.AspNet
             {
                 AuthenticationMode = AuthenticationMode.Active,
                 TokenValidationParameters = tokenValidationParameters,
-                TokenHandler = new StrictTokenHandler() { ClientId = options.ClientId },
+                TokenHandler = new StrictTokenHandler(options),
             });
         }
 
@@ -93,12 +92,16 @@ namespace Okta.AspNet
             var tokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
             {
                 NameClaimType = "name",
+                ValidAudience = options.ClientId,
             };
 
             var tokenExchanger = new TokenExchanger(options, issuer, configurationManager);
 
             // Stop the default behavior of remapping JWT claim names to legacy MS/SOAP claim names
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            var definedScopes = options.Scope?.ToArray() ?? OktaDefaults.Scope;
+            var scopeString = string.Join(" ", definedScopes);
 
             app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptions
             {
@@ -107,7 +110,7 @@ namespace Okta.AspNet
                 Authority = issuer,
                 RedirectUri = options.RedirectUri,
                 ResponseType = OpenIdConnectResponseType.CodeIdToken,
-                Scope = options.Scope,
+                Scope = scopeString,
                 PostLogoutRedirectUri = options.PostLogoutRedirectUri,
                 TokenValidationParameters = tokenValidationParameters,
                 Notifications = new OpenIdConnectAuthenticationNotifications
@@ -129,7 +132,7 @@ namespace Okta.AspNet
                 }
             }
 
-            return Task.CompletedTask;
+            return Task.FromResult(false);
         }
     }
 }
