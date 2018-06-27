@@ -39,6 +39,7 @@ namespace Okta.AspNetCore
                 oidcOptions.ClientSecret = options.ClientSecret;
                 oidcOptions.Authority = issuer;
                 oidcOptions.CallbackPath = new PathString(options.CallbackPath);
+                oidcOptions.SignedOutCallbackPath = new PathString(OktaDefaults.SignOutCallbackPath);
                 oidcOptions.ResponseType = OpenIdConnectResponseType.Code;
                 oidcOptions.GetClaimsFromUserInfoEndpoint = options.GetClaimsFromUserInfoEndpoint;
                 oidcOptions.SaveTokens = true;
