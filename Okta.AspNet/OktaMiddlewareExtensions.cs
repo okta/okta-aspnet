@@ -41,7 +41,7 @@ namespace Okta.AspNet
                 throw new ArgumentNullException(nameof(app));
             }
 
-            new Abstractions.OktaWebApiOptionsValidator().Validate(options);
+            new OktaWebApiOptionsValidator().Validate(options);
             AddJwtBearerAuthentication(app, options);
 
             return app;
@@ -50,7 +50,7 @@ namespace Okta.AspNet
         private static void AddJwtBearerAuthentication(IAppBuilder app, OktaWebApiOptions options)
         {
             var issuer = UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
-            var httpClient = new HttpClient(new Abstractions.UserAgentHandler());
+            var httpClient = new HttpClient(new UserAgentHandler());
 
             var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
               issuer + "/.well-known/openid-configuration",
@@ -82,7 +82,7 @@ namespace Okta.AspNet
         private static void AddOpenIdConnectAuthentication(IAppBuilder app, OktaMvcOptions options)
         {
             var issuer = UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
-            var httpClient = new HttpClient(new Abstractions.UserAgentHandler());
+            var httpClient = new HttpClient(new UserAgentHandler());
 
             var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
               issuer + "/.well-known/openid-configuration",
@@ -110,7 +110,6 @@ namespace Okta.AspNet
                 Scope = options.Scope,
                 PostLogoutRedirectUri = options.PostLogoutRedirectUri,
                 TokenValidationParameters = tokenValidationParameters,
-                SecurityTokenValidator = new StrictSecurityTokenValidator(options),
                 Notifications = new OpenIdConnectAuthenticationNotifications
                 {
                     AuthorizationCodeReceived = tokenExchanger.ExchangeCodeForTokenAsync,

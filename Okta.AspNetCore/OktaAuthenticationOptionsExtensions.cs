@@ -41,7 +41,6 @@ namespace Okta.AspNetCore
                 oidcOptions.CallbackPath = new PathString(options.CallbackPath);
                 oidcOptions.ResponseType = OpenIdConnectResponseType.Code;
                 oidcOptions.GetClaimsFromUserInfoEndpoint = options.GetClaimsFromUserInfoEndpoint;
-                oidcOptions.SecurityTokenValidator = new StrictSecurityTokenValidator(options);
                 oidcOptions.SaveTokens = true;
                 oidcOptions.UseTokenLifetime = false;
                 oidcOptions.BackchannelHttpHandler = new UserAgentHandler();
@@ -93,6 +92,8 @@ namespace Okta.AspNetCore
                 opt.Authority = issuer;
                 opt.TokenValidationParameters = tokenValidationParameters;
                 opt.BackchannelHttpHandler = new UserAgentHandler();
+
+                opt.SecurityTokenValidators.Clear();
                 opt.SecurityTokenValidators.Add(new StrictSecurityTokenValidator(options));
             });
 
