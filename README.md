@@ -32,8 +32,6 @@ dotnet add package Okta.AspNetCore (Core)
 
 For step-by-step instructions, visit the **[Okta ASP.NET MVC quickstart](https://developer.okta.com/quickstart/#/okta-sign-in-page/dotnet/aspnet4)**. The quickstart will guide you through adding Okta login to your ASP.NET application.
 
-You can also download our [sample application](https://github.com/okta/okta-aspnet).
-
 ### Usage example
 
 Okta plugs into your OWIN Startup class with the `UseOktaMvc()` method:
@@ -65,13 +63,10 @@ Placing the `[Authorize]` attribute on your controllers or actions will check wh
 
 ASP.NET automatically populates `HttpContext.User` with the information Okta sends back about the user. You can check whether the user is logged in with `User.Identity.IsAuthenticated` in your actions or views.
 
-You can also check out an MVC example that uses this package on [GitHub](...). //TODO: Example link
 
 ## Using Okta with ASP.NET Core MVC
 
 For step-by-step instructions, visit the **[Okta ASP.NET Core MVC quickstart](https://developer.okta.com/quickstart/#/okta-sign-in-page/dotnet/aspnetcore)**. The quickstart will guide you through adding Okta login to your ASP.NET application.
-
-You can also download our [sample application](https://github.com/okta/okta-aspnet).
 
 ### Usage example
 
@@ -103,8 +98,6 @@ Placing the `[Authorize]` attribute on your controllers or actions will check wh
 
 ASP.NET automatically populates `HttpContext.User` with the information Okta sends back about the user. You can check whether the user is logged in with `User.Identity.IsAuthenticated` in your actions or views.
 
-You can also check out an MVC example that uses this package on [GitHub](...). //TODO: Update example url
-
 ## ASP.NET MVC Configuration (4.x/Core)
 
 The `OktaMvcOptions` class configures the Okta middleware. It is the same for both ASP.NET 4.x and ASP.NET Core. You can see all the available options in the table below:
@@ -128,9 +121,6 @@ You can store these values in `Web.config`, but take care when checking in the c
 ## Using Okta with ASP.NET Web API 4.x
 
 For step-by-step instructions, visit the **[Okta ASP.NET Web API quickstart](https://developer.okta.com/quickstart/#/widget/dotnet/aspnet4)**. The quickstart will guide you through adding Okta token validation to your ASP.NET Web API.
-
-You can also download our [sample application](https://github.com/okta/okta-aspnet).
-
 
 ### Usage example
 
@@ -164,9 +154,6 @@ Follow our [quickstart](https://developer.okta.com/quickstart/#/widget/dotnet/as
 ## Using Okta with ASP.NET Core Web API
 
 For step-by-step instructions, visit the **[Okta ASP.NET Core Web API quickstart](https://developer.okta.com/quickstart/#/widget/dotnet/aspnetcore)**. The quickstart will guide you through adding Okta token validation to your ASP.NET Web API.
-
-You can also download our [sample application](https://github.com/okta/okta-aspnet). //TODO: Update url?
-
 
 ### Usage example
 
