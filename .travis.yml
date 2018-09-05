@@ -10,7 +10,7 @@ before_install:
   - wget  'https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks'
   - chmod +x ~/winetricks
   - env WINEPREFIX=$HOME/winedotnet452 wineboot --init
-  - env WINEPREFIX=$HOME/winedotnet452 ~/winetricks dotnet40 corefonts
+  - env WINEPREFIX=$HOME/winedotnet452 ~/winetricks dotnet452 corefonts
   - env WINEPREFIX=$HOME/winedotnet452 ~/winetricks --unattended dotnet452 corefonts
   
 
