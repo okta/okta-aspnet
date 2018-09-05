@@ -5,5 +5,5 @@ script:
   - ./build.sh
 before_install:
   - ./wine-install.sh
-  
+sudo: required
 
