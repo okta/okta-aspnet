@@ -7,5 +7,5 @@ before_install:
   - sudo apt-get install apt-transport-https
   - sudo apt-get update
   - sudo apt-get install -y nuget mono-devel mono-xbuild
-  - sudo install dotnet45
+  - sudo apt-get install dotnet45
 
