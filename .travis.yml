@@ -8,7 +8,7 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install -y nuget mono-devel mono-xbuild
   - sudo wget 'https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks'
-  - sudo chmod +x ~/winetricks
+  - sudo chmod +x winetricks
   - sudo env WINEPREFIX=$HOME/winedotnet452 wineboot --init
   - sudo env WINEPREFIX=$HOME/winedotnet452 ~/winetricks dotnet452 corefonts
   - sudo env WINEPREFIX=$HOME/winedotnet452 ~/winetricks --unattended dotnet452 corefonts
