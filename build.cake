@@ -1,16 +1,17 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
+// Ignoring .NET 4.5.2 projects as it is causing issues with travis.
+// https://github.com/okta/okta-aspnet/issues/40
 var Projects = new List<string>()
 {
-	"Okta.AspNet.Abstractions",
+    "Okta.AspNet.Abstractions",
     "Okta.AspNet.Abstractions.Test",
     //"Okta.AspNet",
-	//"Okta.AspNet.Test",
-	"Okta.AspNetCore",
-	"Okta.AspNetCore.Test"
+    //"Okta.AspNet.Test",
+    "Okta.AspNetCore",
+    "Okta.AspNetCore.Test"
 };
-
 Task("Clean").Does(() =>
 {
     Console.WriteLine("Removing ./artifacts");
@@ -22,7 +23,6 @@ Task("Clean").Does(() =>
         .ToList()
         .ForEach(d => CleanDirectory(d));
 });
-
 Task("Restore")
 .IsDependentOn("Clean")
 .Does(() =>
@@ -33,8 +33,6 @@ Task("Restore")
         DotNetCoreRestore($"./{name}");
     });
 });
-
-
 Task("Build")
 .IsDependentOn("Restore")
 .Does(() =>
@@ -42,23 +40,12 @@ Task("Build")
     Projects.ForEach(name =>
     {
         Console.WriteLine($"\nBuilding {name}");
-        if(name == "Okta.AspNet.Abstractions"){
-            DotNetCoreBuild($"./{name}", new DotNetCoreBuildSettings
-            {
-                Configuration = configuration,
-                Framework = "netstandard2.0",
-            });
-        }
-        else{
-            DotNetCoreBuild($"./{name}", new DotNetCoreBuildSettings
-            {
-                Configuration = configuration
-            });
-        }
-        
+        DotNetCoreBuild($"./{name}", new DotNetCoreBuildSettings
+        {
+            Configuration = configuration
+        });
     });
 });
-
 Task("RunTests")
 .IsDependentOn("Restore")
 .IsDependentOn("Build")
@@ -71,8 +58,6 @@ Task("RunTests")
         DotNetCoreTest(string.Format("./{0}/{0}.csproj", name));
     });
 });
-
-
 Task("PackNuget")
 .IsDependentOn("RunTests")
 .Does(() =>
@@ -91,13 +76,11 @@ Task("PackNuget")
         });
     });
 });
-
 Task("Default")
     .IsDependentOn("Clean")
     .IsDependentOn("Restore")
     .IsDependentOn("Build")
     .IsDependentOn("RunTests")
     .IsDependentOn("PackNuget");
-
 // Run the specified (or default) target
 RunTarget(target);
