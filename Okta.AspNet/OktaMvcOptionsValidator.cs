@@ -16,13 +16,13 @@ namespace Okta.AspNet
             {
                 throw new ArgumentNullException(
                     nameof(options.ClientSecret),
-                    "Your Okta Application client secret is missing. You can find it in the Okta Developer Console in the details for the Application you created.");
+                    "Your client secret is missing. You can copy it from the Okta Developer Console in the details for the Application you created.");
             }
 
             if (options.ClientSecret.IndexOf("{ClientSecret}", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
-                    "You need to copy your client secret from the Okta Developer Console in the details for the Application you created.",
+                    "Replace {clientSecret} with the client secret of your Application. You can copy it from the Okta Developer Console in the details for the Application you created.",
                     nameof(options.ClientSecret));
             }
 
