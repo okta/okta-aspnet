@@ -4,6 +4,7 @@
 // </copyright>
 
 using System;
+using System.Text.RegularExpressions;
 
 namespace Okta.AspNet.Abstractions
 {
@@ -26,46 +27,53 @@ namespace Okta.AspNet.Abstractions
             {
                 throw new ArgumentNullException(
                     nameof(options.OktaDomain),
-                    "Your Okta domain is missing. You can find it in the Okta Developer Console. It'll look like: https://dev-12345.oktapreview.com");
+                    "Your Okta URL is missing. Okta URLs should look like: https://{yourOktaDomain}. You can copy your domain from the Okta Developer Console.");
             }
 
             if (!options.OktaDomain.StartsWith("https://"))
             {
                 throw new ArgumentException(
-                    "Your Okta domain must start with https. You can copy your Okta domain from the Okta developer dashboard.",
+                    "Your Okta URL must start with https. You can copy your domain from the Okta Developer Console.",
                     nameof(options.OktaDomain));
             }
 
             if (options.OktaDomain.IndexOf("{yourOktaDomain}", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
-                    "You need to copy your Okta domain from the Okta developer dashboard.", nameof(options.OktaDomain));
+                    "Replace {yourOktaDomain} with your Okta domain. You can copy your domain from the Okta Developer Console.", nameof(options.OktaDomain));
             }
 
-            if (options.OktaDomain.IndexOf("-admin.oktapreview.com", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (options.OktaDomain.IndexOf("-admin.oktapreview.com", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                options.OktaDomain.IndexOf("-admin.okta.com", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                options.OktaDomain.IndexOf("-admin.okta-emea.com", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
-                    "Your Okta domain should not contain -admin. You can copy your Okta domain from the Okta developer dashboard.", nameof(options.OktaDomain));
+                    "Your Okta domain should not contain -admin. Your domain is: {valueWithoutAdmin}. You can copy your domain from the Okta Developer Console.", nameof(options.OktaDomain));
             }
 
             if (options.OktaDomain.IndexOf(".com.com", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
-                    "It looks like there's a typo in your Okta domain. You can copy your Okta domain from the Okta developer dashboard.", nameof(options.OktaDomain));
+                    "It looks like there's a typo in your Okta domain. You can copy your domain from the Okta Developer Console.", nameof(options.OktaDomain));
+            }
+
+            if (Regex.Matches(options.OktaDomain, "://").Count != 1)
+            {
+                throw new ArgumentNullException(nameof(options.OktaDomain), "It looks like there's a typo in your Okta domain. You can copy your domain from the Okta Developer Console.");
             }
 
             if (string.IsNullOrEmpty(options.ClientId))
             {
                 throw new ArgumentNullException(
                     nameof(options.ClientId),
-                    "Your Okta Application client ID is missing. You can find it in the Okta Developer Console in the details for the Application you created.");
+                    "Your client ID is missing. You can copy it from the Okta Developer Console in the details for the Application you created.");
             }
 
             if (options.ClientId.IndexOf("{ClientId}", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentNullException(
                     nameof(options.ClientId),
-                    "You need to copy your Client ID from the Okta Developer Console in the details for the Application you created.");
+                    "Replace {clientId} with the client ID of your Application. You can copy it from the Okta Developer Console in the details for the Application you created.");
             }
 
             ValidateInternal((T)options);
