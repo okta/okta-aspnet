@@ -75,12 +75,15 @@ namespace Okta.AspNet.Abstractions.Test
             action.Should().Throw<ArgumentException>().Where(e => e.ParamName == nameof(OktaWebOptions.OktaDomain));
         }
 
-        [Fact]
-        public void FailIfOktaDomainIsIncludingAdmin()
+        [Theory]
+        [InlineData("https://myOktaOrg-admin.oktapreview.com")]
+        [InlineData("https://myOktaOrg-admin.okta.com")]
+        [InlineData("https://myOktaOrg-admin.okta-emea.com")]
+        public void FailIfOktaDomainIsIncludingAdmin(string oktaDomain)
         {
             var options = new OktaWebOptions()
             {
-                OktaDomain = "https://myOktaOrg-admin.oktapreview.com",
+                OktaDomain = oktaDomain,
                 ClientId = "ClientId",
             };
 
@@ -88,12 +91,14 @@ namespace Okta.AspNet.Abstractions.Test
             action.Should().Throw<ArgumentException>().Where(e => e.ParamName == nameof(OktaWebOptions.OktaDomain));
         }
 
-        [Fact]
-        public void FailIfOktaDomainHasTypo()
+        [Theory]
+        [InlineData("https://myOktaDomain.oktapreview.com.com")]
+        [InlineData("https://myOktaDomain.oktapreview.com://foo")]
+        public void FailIfOktaDomainHasTypo(string oktaDomain)
         {
             var options = new OktaWebOptions()
             {
-                OktaDomain = "https://myOktaDomain.oktapreview.com.com",
+                OktaDomain = oktaDomain,
                 ClientId = "ClientId",
             };
 
