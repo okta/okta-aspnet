@@ -5,8 +5,8 @@ var Projects = new List<string>()
 {
 	"Okta.AspNet.Abstractions",
     "Okta.AspNet.Abstractions.Test",
-    "Okta.AspNet",
-	"Okta.AspNet.Test",
+    //"Okta.AspNet",
+	//"Okta.AspNet.Test",
 	"Okta.AspNetCore",
 	"Okta.AspNetCore.Test"
 };
@@ -34,6 +34,7 @@ Task("Restore")
     });
 });
 
+
 Task("Build")
 .IsDependentOn("Restore")
 .Does(() =>
@@ -41,11 +42,20 @@ Task("Build")
     Projects.ForEach(name =>
     {
         Console.WriteLine($"\nBuilding {name}");
-
-        DotNetCoreBuild($"./{name}", new DotNetCoreBuildSettings
-        {
-            Configuration = configuration
-        });
+        if(name == "Okta.AspNet.Abstractions"){
+            DotNetCoreBuild($"./{name}", new DotNetCoreBuildSettings
+            {
+                Configuration = configuration,
+                Framework = "netstandard2.0",
+            });
+        }
+        else{
+            DotNetCoreBuild($"./{name}", new DotNetCoreBuildSettings
+            {
+                Configuration = configuration
+            });
+        }
+        
     });
 });
 
