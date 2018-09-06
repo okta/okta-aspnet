@@ -1,5 +1,8 @@
 
 #!/bin/bash
+sudo apt-get install apt-transport-https
+sudo apt-get update
+sudo apt-get install dotnet-sdk-2.1
 dpkg --add-architecture i386 
 wget -nc https://dl.winehq.org/wine-builds/Release.key
 sudo apt-key add Release.key
@@ -13,3 +16,4 @@ WINEPREFIX=$HOME/winedotnet452
 WINEARCH=win32
 wineboot --init
 ./winetricks --unattended dotnet452 corefonts
+
