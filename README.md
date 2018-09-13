@@ -8,6 +8,12 @@ Okta ASP.NET middleware
 
 This package will add authentication via Okta to your ASP.NET 4.x/Core application. You can follow our instructions below, checkout our examples on GitHub or jump to our quickstarts to see how to configure Okta with your ASP.NET applications. 
 
+## What you need
+
+An Okta account (sign up for a [forever-free developer account](https://developer.okta.com/signup/))
+
+## Resources
+
 Check out the following resources:
 
 * [Quickstart ASP.NET 4.x](https://developer.okta.com/quickstart/#/okta-sign-in-page/dotnet/aspnet4)
@@ -15,6 +21,7 @@ Check out the following resources:
 * [ASP.NET 4.x samples](https://github.com/okta/samples-aspnet)
 * [ASP.NET Core samples](https://github.com/okta/samples-aspnetcore)
 * [Project documentation](https://github.com/okta/okta-aspnet/docs/)
+ 
 
 ## Contributing
 
