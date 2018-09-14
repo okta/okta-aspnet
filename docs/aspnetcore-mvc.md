@@ -20,14 +20,20 @@ Okta plugs into your OWIN Startup class with the `UseOktaMvc()` method:
 
 public void ConfigureServices(IServiceCollection services)
 {
-    var oktaMvcOptions = new OktaMvcOptions();
-    Configuration.GetSection("Okta").Bind(oktaMvcOptions);
+    var oktaMvcOptions = new OktaMvcOptions()
+    {
+        OktaDomain = Configuration.GetSection("Okta").GetValue<string>("OktaDomain"),
+        ClientId = Configuration.GetSection("Okta").GetValue<string>("ClientId"),
+        ClientSecret = Configuration.GetSection("Okta").GetValue<string>("ClientSecret"),
+        Scope = new List<string> { "openid", "profile", "email" },
+        GetClaimsFromUserInfoEndpoint = true,
+    };
 
     services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = OktaDefaults.MvcAuthenticationScheme;
     })
     .AddCookie()
     .AddOktaMvc(oktaMvcOptions);
