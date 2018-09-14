@@ -133,10 +133,15 @@ namespace Okta.AspNet
             }
 
             // Add sessionToken to provide custom login
-            if (n.ProtocolMessage.RequestType == OpenIdConnectRequestType.Authentication && n.OwinContext.Authentication.AuthenticationResponseChallenge != null)
+            if (n.ProtocolMessage.RequestType == OpenIdConnectRequestType.Authentication)
             {
-                n.OwinContext.Authentication.AuthenticationResponseChallenge.Properties.Dictionary.TryGetValue("sessionToken", out var sessionToken);
-                n.ProtocolMessage.SetParameter("sessionToken", sessionToken);
+                var sessionToken = string.Empty;
+                n.OwinContext.Authentication.AuthenticationResponseChallenge?.Properties?.Dictionary?.TryGetValue("sessionToken", out sessionToken);
+
+                if (!string.IsNullOrEmpty(sessionToken))
+                {
+                    n.ProtocolMessage.SetParameter("sessionToken", sessionToken);
+                }
             }
 
             return Task.FromResult(false);

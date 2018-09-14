@@ -76,7 +76,10 @@ namespace Okta.AspNetCore
             // Add sessionToken to provide custom login
             if (context.Properties.Items.TryGetValue("sessionToken", out var sessionToken))
             {
-                context.ProtocolMessage.SetParameter("sessionToken", sessionToken);
+                if (!string.IsNullOrEmpty(sessionToken))
+                {
+                    context.ProtocolMessage.SetParameter("sessionToken", sessionToken);
+                }
             }
 
             return Task.CompletedTask;
