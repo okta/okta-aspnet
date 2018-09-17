@@ -6,7 +6,9 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -62,9 +64,25 @@ namespace Okta.AspNetCore
                     ValidAudience = options.ClientId,
                     NameClaimType = "name",
                 };
+
+                oidcOptions.Events.OnRedirectToIdentityProvider = BeforeRedirectToIdentityProviderAsync;
             });
 
             return builder;
+        }
+
+        private static Task BeforeRedirectToIdentityProviderAsync(RedirectContext context)
+        {
+            // Add sessionToken to provide custom login
+            if (context.Properties.Items.TryGetValue("sessionToken", out var sessionToken))
+            {
+                if (!string.IsNullOrEmpty(sessionToken))
+                {
+                    context.ProtocolMessage.SetParameter("sessionToken", sessionToken);
+                }
+            }
+
+            return Task.CompletedTask;
         }
 
         public static AuthenticationBuilder AddOktaWebApi(this AuthenticationBuilder builder, OktaWebApiOptions options)
