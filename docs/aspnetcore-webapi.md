@@ -22,8 +22,8 @@ public void ConfigureServices(IServiceCollection services)
     services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = OktaDefaults.ApiAuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = OktaDefaults.ApiAuthenticationScheme;
+        options.DefaultSignInScheme = OktaDefaults.ApiAuthenticationScheme;
     })
     .AddOktaWebApi(new OktaWebApiOptions()
     {
