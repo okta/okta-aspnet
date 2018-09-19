@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNet.Abstractions", "Okta.AspNet.Abstractions\Okta.AspNet.Abstractions.csproj", "{E7947664-64B6-4314-B644-2F376187B89F}"
 EndProject
@@ -22,9 +22,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNetCore.Mvc.Integra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNetCore.WebApi.IntegrationTest", "Okta.AspNetCore.WebApi.IntegrationTest\Okta.AspNetCore.WebApi.IntegrationTest.csproj", "{0915D199-F47D-4CF2-9ECA-398BFAAC1990}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.AspNetCore.Test", "Okta.AspNetCore.Test\Okta.AspNetCore.Test.csproj", "{96C48DD2-27B9-4871-A53F-5438F18E72E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNetCore.Test", "Okta.AspNetCore.Test\Okta.AspNetCore.Test.csproj", "{96C48DD2-27B9-4871-A53F-5438F18E72E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.AspNet.Test", "Okta.AspNet.Test\Okta.AspNet.Test.csproj", "{4B8E09D6-6B40-477E-8E4C-CF90848FC0B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNet.Test", "Okta.AspNet.Test\Okta.AspNet.Test.csproj", "{4B8E09D6-6B40-477E-8E4C-CF90848FC0B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
