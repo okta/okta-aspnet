@@ -1,5 +1,8 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
+var travisEnabled = EnvironmentVariable("TRAVIS") ?? "false";
+
+Console.WriteLine($"\n Travis enabled: {travisEnabled}");
 
 // Ignoring .NET 4.5.2 projects as it is causing issues with travis.
 // https://github.com/okta/okta-aspnet/issues/40
@@ -7,11 +10,24 @@ var Projects = new List<string>()
 {
     "Okta.AspNet.Abstractions",
     "Okta.AspNet.Abstractions.Test",
-    //"Okta.AspNet",
-    //"Okta.AspNet.Test",
+    "Okta.AspNet",
+    "Okta.AspNet.Test",
     "Okta.AspNetCore",
     "Okta.AspNetCore.Test"
 };
+
+var netCoreProjects = new List<string>()
+{
+    "Okta.AspNet.Abstractions",
+    "Okta.AspNet.Abstractions.Test",
+    "Okta.AspNetCore",
+    "Okta.AspNetCore.Test"
+};
+
+if(travisEnabled == "true") 
+{
+    Projects = netCoreProjects;
+}
 Task("Clean").Does(() =>
 {
     Console.WriteLine("Removing ./artifacts");
@@ -40,10 +56,23 @@ Task("Build")
     Projects.ForEach(name =>
     {
         Console.WriteLine($"\nBuilding {name}");
-        DotNetCoreBuild($"./{name}", new DotNetCoreBuildSettings
+       
+        if(travisEnabled == "true" && name == "Okta.AspNet.Abstractions")
         {
-            Configuration = configuration
-        });
+            DotNetCoreBuild($"./{name}", new DotNetCoreBuildSettings
+            {
+                Configuration = configuration,
+                Framework = "netstandard2.0", 
+            });
+        }
+        else
+        {
+            DotNetCoreBuild($"./{name}", new DotNetCoreBuildSettings
+            {
+                Configuration = configuration,
+            });
+        }
+        
     });
 });
 Task("RunTests")
