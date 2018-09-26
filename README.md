@@ -20,7 +20,7 @@ Check out the following resources:
 * [Quickstart ASP.NET Core](https://developer.okta.com/quickstart/#/okta-sign-in-page/dotnet/aspnetcore)
 * [ASP.NET 4.x samples](https://github.com/okta/samples-aspnet)
 * [ASP.NET Core samples](https://github.com/okta/samples-aspnetcore)
-* [Project documentation](https://github.com/okta/okta-aspnet/docs/)
+* [Project documentation](https://github.com/okta/okta-aspnet/tree/master/docs)
  
 
 ## Contributing
