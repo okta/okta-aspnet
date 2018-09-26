@@ -101,6 +101,7 @@ Task("PackNuget")
         DotNetCorePack($"./{name}", new DotNetCorePackSettings
         {
             Configuration = configuration,
+            Framework = "netstandard2.0",
             OutputDirectory = "./artifacts"
         });
     });
