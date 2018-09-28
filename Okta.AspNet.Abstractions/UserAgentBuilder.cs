@@ -3,7 +3,7 @@
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 // </copyright>
 
-using System.Reflection;
+using System;
 using System.Runtime.InteropServices;
 
 namespace Okta.AspNet.Abstractions
@@ -11,25 +11,26 @@ namespace Okta.AspNet.Abstractions
     public class UserAgentBuilder
     {
         private const string VersionSeparator = "/";
+        private string _frameworkName;
+        private Version _frameworkVersion;
 
-        public static string GetUserAgent()
+        public UserAgentBuilder(string frameworkName, Version frameworkVersion)
+        {
+            _frameworkName = frameworkName;
+            _frameworkVersion = frameworkVersion;
+        }
+
+        public string GetUserAgent()
         {
             return string.Join(" ", GetOSVersion(), GetFrameworkVersion());
         }
 
-        private static string GetFrameworkVersion()
+        private string GetFrameworkVersion()
         {
-            var frameworkVersion = typeof(UserAgentBuilder).GetTypeInfo()
-               .Assembly
-               .GetName()
-               .Version;
-
-            var frameworkToken = $"okta-aspnet{VersionSeparator}{frameworkVersion.Major}.{frameworkVersion.Minor}.{frameworkVersion.Build}";
-
-            return frameworkToken;
+            return $"{_frameworkName}{VersionSeparator}{_frameworkVersion.Major}.{_frameworkVersion.Minor}.{_frameworkVersion.Build}";
         }
 
-        private static string GetOSVersion()
+        private string GetOSVersion()
         {
             return $"os-version{VersionSeparator}{RuntimeInformation.OSDescription.ToString()}{VersionSeparator}{RuntimeInformation.OSArchitecture.ToString()}";
         }
