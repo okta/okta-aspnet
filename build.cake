@@ -1,28 +1,45 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
-// Ignoring .NET 4.5.2 projects as it is causing issues with travis.
-// https://github.com/okta/okta-aspnet/issues/40
+Boolean.TryParse(EnvironmentVariable("TRAVIS"), out var travisEnabled);
+Console.WriteLine($"\n Travis enabled: {travisEnabled}");
+
 var Projects = new List<string>()
 {
     "Okta.AspNet.Abstractions",
     "Okta.AspNet.Abstractions.Test",
-    //"Okta.AspNet",
-    //"Okta.AspNet.Test",
+    "Okta.AspNet",
+    "Okta.AspNet.Test",
     "Okta.AspNetCore",
     "Okta.AspNetCore.Test"
 };
+
+// Ignoring .NET 4.5.2 projects as it is causing issues with travis.
+// https://github.com/okta/okta-aspnet/issues/40
+var netCoreProjects = new List<string>()
+{
+    "Okta.AspNet.Abstractions",
+    "Okta.AspNet.Abstractions.Test",
+    "Okta.AspNetCore",
+    "Okta.AspNetCore.Test"
+};
+
+if(travisEnabled) 
+{
+    Projects = netCoreProjects;
+}
+
 Task("Clean").Does(() =>
 {
     Console.WriteLine("Removing ./artifacts");
     CleanDirectory("./artifacts/");
-
     Console.WriteLine("Removing nested bin and obj directories");
     GetDirectories("./**/bin")
-		.Concat(GetDirectories("./**/obj"))
+	.Concat(GetDirectories("./**/obj"))
         .ToList()
         .ForEach(d => CleanDirectory(d));
 });
+
 Task("Restore")
 .IsDependentOn("Clean")
 .Does(() =>
@@ -33,6 +50,7 @@ Task("Restore")
         DotNetCoreRestore($"./{name}");
     });
 });
+
 Task("Build")
 .IsDependentOn("Restore")
 .Does(() =>
@@ -40,12 +58,26 @@ Task("Build")
     Projects.ForEach(name =>
     {
         Console.WriteLine($"\nBuilding {name}");
-        DotNetCoreBuild($"./{name}", new DotNetCoreBuildSettings
+       
+        if(travisEnabled && name == "Okta.AspNet.Abstractions")
         {
-            Configuration = configuration
-        });
+            DotNetCoreBuild($"./{name}", new DotNetCoreBuildSettings
+            {
+                Configuration = configuration,
+                Framework = "netstandard2.0", 
+            });
+        }
+        else
+        {
+            DotNetCoreBuild($"./{name}", new DotNetCoreBuildSettings
+            {
+                Configuration = configuration,
+            });
+        }
+        
     });
 });
+
 Task("RunTests")
 .IsDependentOn("Restore")
 .IsDependentOn("Build")
@@ -58,6 +90,7 @@ Task("RunTests")
         DotNetCoreTest(string.Format("./{0}/{0}.csproj", name));
     });
 });
+
 Task("PackNuget")
 .IsDependentOn("RunTests")
 .Does(() =>
@@ -68,14 +101,30 @@ Task("PackNuget")
     .ForEach(name =>
     {
         Console.WriteLine($"\nCreating NuGet package for {name}");
-
-        DotNetCorePack($"./{name}", new DotNetCorePackSettings
+        
+        if(travisEnabled && name == "Okta.AspNet.Abstractions") 
         {
-            Configuration = configuration,
-            OutputDirectory = "./artifacts"
-        });
+            var msBuildSettings = new DotNetCoreMSBuildSettings();
+            msBuildSettings.SetTargetFramework("netstandard2.0");
+
+            DotNetCorePack($"./{name}", new DotNetCorePackSettings
+            {
+                Configuration = configuration,
+                OutputDirectory = "./artifacts",
+                MSBuildSettings = msBuildSettings,
+            });
+        } 
+        else
+        {
+            DotNetCorePack($"./{name}", new DotNetCorePackSettings
+            {
+                Configuration = configuration,
+                OutputDirectory = "./artifacts",
+            });
+        }
     });
 });
+
 Task("Default")
     .IsDependentOn("Clean")
     .IsDependentOn("Restore")
