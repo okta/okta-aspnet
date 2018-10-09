@@ -12,17 +12,17 @@ namespace Okta.AspNet.Abstractions
 {
     public class UserAgentHandler : DelegatingHandler
     {
-        private UserAgentBuilder _userAgentBuilder;
+        private Lazy<string> _userAgent;
 
         public UserAgentHandler(string frameworkName, Version frameworkversion)
         {
             InnerHandler = new HttpClientHandler();
-            _userAgentBuilder = new UserAgentBuilder(frameworkName, frameworkversion);
+            _userAgent = new Lazy<string>(() => new UserAgentBuilder(frameworkName, frameworkversion).GetUserAgent());
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            request.Headers.Add("user-agent", _userAgentBuilder.GetUserAgent());
+            request.Headers.Add("user-agent", _userAgent.Value);
 
             return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }

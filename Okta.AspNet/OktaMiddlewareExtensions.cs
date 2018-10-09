@@ -50,7 +50,7 @@ namespace Okta.AspNet
         private static void AddJwtBearerAuthentication(IAppBuilder app, OktaWebApiOptions options)
         {
             var issuer = UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
-            var httpClient = new HttpClient(new UserAgentHandler("aspnet", typeof(OktaMiddlewareExtensions).Assembly.GetName().Version));
+            var httpClient = new HttpClient(new UserAgentHandler("okta-aspnet", typeof(OktaMiddlewareExtensions).Assembly.GetName().Version));
 
             var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
               issuer + "/.well-known/openid-configuration",
@@ -82,7 +82,7 @@ namespace Okta.AspNet
         private static void AddOpenIdConnectAuthentication(IAppBuilder app, OktaMvcOptions options)
         {
             var issuer = UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
-            var httpClient = new HttpClient(new UserAgentHandler("aspnet", typeof(OktaMiddlewareExtensions).Assembly.GetName().Version));
+            var httpClient = new HttpClient(new UserAgentHandler("okta-aspnet", typeof(OktaMiddlewareExtensions).Assembly.GetName().Version));
 
             var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
               issuer + "/.well-known/openid-configuration",

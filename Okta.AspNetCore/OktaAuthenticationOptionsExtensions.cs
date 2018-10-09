@@ -47,7 +47,7 @@ namespace Okta.AspNetCore
                 oidcOptions.GetClaimsFromUserInfoEndpoint = options.GetClaimsFromUserInfoEndpoint;
                 oidcOptions.SaveTokens = true;
                 oidcOptions.UseTokenLifetime = false;
-                oidcOptions.BackchannelHttpHandler = new UserAgentHandler("aspnet-core", typeof(OktaAuthenticationOptionsExtensions).Assembly.GetName().Version);
+                oidcOptions.BackchannelHttpHandler = new UserAgentHandler("okta-aspnetcore", typeof(OktaAuthenticationOptionsExtensions).Assembly.GetName().Version);
 
                 var hasDefinedScopes = options.Scope?.Any() ?? false;
                 if (hasDefinedScopes)
@@ -111,7 +111,7 @@ namespace Okta.AspNetCore
                 opt.Audience = options.Audience;
                 opt.Authority = issuer;
                 opt.TokenValidationParameters = tokenValidationParameters;
-                opt.BackchannelHttpHandler = new UserAgentHandler("aspnet-core", typeof(OktaAuthenticationOptionsExtensions).Assembly.GetName().Version);
+                opt.BackchannelHttpHandler = new UserAgentHandler("okta-aspnetcore", typeof(OktaAuthenticationOptionsExtensions).Assembly.GetName().Version);
 
                 opt.SecurityTokenValidators.Clear();
                 opt.SecurityTokenValidators.Add(new StrictSecurityTokenValidator(options));
