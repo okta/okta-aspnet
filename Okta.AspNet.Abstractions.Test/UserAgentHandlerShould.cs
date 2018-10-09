@@ -32,8 +32,10 @@ namespace Okta.AspNet.Abstractions.Test
 
             var invoker = new HttpMessageInvoker(handler);
             await invoker.SendAsync(httpRequestMessage, CancellationToken.None);
-
-            httpRequestMessage.Headers.UserAgent.Contains(ProductInfoHeaderValue.Parse($"{frameworkName}/{version.Major}.{version.Minor}.{version.Build}")).Should().BeTrue();
+            httpRequestMessage.Headers.UserAgent.ToString()
+                .IndexOf(
+                    ProductInfoHeaderValue.Parse($"{frameworkName}/{version.Major}.{version.Minor}.{version.Build}")
+                        .ToString(), StringComparison.InvariantCultureIgnoreCase).Should().BeGreaterOrEqualTo(0);
         }
     }
 }
