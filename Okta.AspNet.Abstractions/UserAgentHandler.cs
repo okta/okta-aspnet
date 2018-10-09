@@ -22,7 +22,7 @@ namespace Okta.AspNet.Abstractions
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            request.Headers.Add("user-agent", _userAgent.Value);
+            request.Headers.UserAgent.TryParseAdd(_userAgent.Value);
 
             return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
