@@ -32,7 +32,7 @@ namespace Okta.AspNet.Abstractions.Test
 
             var invoker = new HttpMessageInvoker(handler);
             await invoker.SendAsync(httpRequestMessage, CancellationToken.None);
-            Console.WriteLine("****USER-AGENT*****" + httpRequestMessage.Headers.UserAgent.ToString());
+
             httpRequestMessage.Headers.UserAgent.Contains(ProductInfoHeaderValue.Parse($"{frameworkName}/{version.Major}.{version.Minor}.{version.Build}")).Should().BeTrue();
         }
     }
