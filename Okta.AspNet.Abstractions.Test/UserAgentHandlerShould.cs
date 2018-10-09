@@ -3,7 +3,9 @@
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 // </copyright>
 
+using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -29,7 +31,7 @@ namespace Okta.AspNet.Abstractions.Test
             var invoker = new HttpMessageInvoker(handler);
             await invoker.SendAsync(httpRequestMessage, CancellationToken.None);
 
-            httpRequestMessage.Headers.GetValues("user-agent").Should().Contain($"{frameworkName}/{version.Major}.{version.Minor}.{version.Build}");
+            httpRequestMessage.Headers.UserAgent.Contains(ProductInfoHeaderValue.Parse($"{frameworkName}/{version.Major}.{version.Minor}.{version.Build}")).Should().BeTrue();
         }
     }
 }
