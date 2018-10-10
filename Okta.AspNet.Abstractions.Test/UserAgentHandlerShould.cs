@@ -25,6 +25,7 @@ namespace Okta.AspNet.Abstractions.Test
         {
             this.output = output;
         }
+
         [Theory]
         [InlineData("okta-aspnet")]
         [InlineData("okta-aspnetcore")]
@@ -36,10 +37,9 @@ namespace Okta.AspNet.Abstractions.Test
             {
                 InnerHandler = new TestHandler(),
             };
-            output.WriteLine("******* built user agent *******" + new UserAgentBuilder(frameworkName, version).GetUserAgent());
+
             var invoker = new HttpMessageInvoker(handler);
             await invoker.SendAsync(httpRequestMessage, CancellationToken.None);
-            output.WriteLine("******* user agent *******" + httpRequestMessage.Headers.UserAgent.ToString());
 
             httpRequestMessage.Headers.UserAgent.ToString()
                 .IndexOf(

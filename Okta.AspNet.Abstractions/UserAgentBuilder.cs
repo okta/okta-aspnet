@@ -22,6 +22,7 @@ namespace Okta.AspNet.Abstractions
 
         public string GetUserAgent()
         {
+            // 19:05:36 UTC 2017/X64 okta-aspnetcore/1.0.0
             return string.Join(" ", GetOSVersion(), GetFrameworkVersion());
         }
 
@@ -32,7 +33,7 @@ namespace Okta.AspNet.Abstractions
 
         private string GetOSVersion()
         {
-            return $"os-version{VersionSeparator}{RuntimeInformation.OSDescription.ToString()}{VersionSeparator}{RuntimeInformation.OSArchitecture.ToString()}";
+            return $"os-version{VersionSeparator}{Environment.OSVersion.VersionString}{VersionSeparator}{Environment.OSVersion.Platform}";
         }
     }
 }
