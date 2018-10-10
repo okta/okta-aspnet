@@ -13,11 +13,18 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Okta.AspNet.Abstractions.Test.Internal;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Okta.AspNet.Abstractions.Test
 {
     public class UserAgentHandlerShould
     {
+        private readonly ITestOutputHelper output;
+
+        public UserAgentHandlerShould(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
         [Theory]
         [InlineData("okta-aspnet")]
         [InlineData("okta-aspnetcore")]
@@ -32,6 +39,8 @@ namespace Okta.AspNet.Abstractions.Test
 
             var invoker = new HttpMessageInvoker(handler);
             await invoker.SendAsync(httpRequestMessage, CancellationToken.None);
+            output.WriteLine("******* user agent *******" + httpRequestMessage.Headers.UserAgent.ToString());
+
             httpRequestMessage.Headers.UserAgent.ToString()
                 .IndexOf(
                     ProductInfoHeaderValue.Parse($"{frameworkName}/{version.Major}.{version.Minor}.{version.Build}")
