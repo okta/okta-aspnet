@@ -4,8 +4,6 @@
 // </copyright>
 
 using System;
-using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
@@ -13,19 +11,11 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Okta.AspNet.Abstractions.Test.Internal;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Okta.AspNet.Abstractions.Test
 {
     public class UserAgentHandlerShould
     {
-        private readonly ITestOutputHelper output;
-
-        public UserAgentHandlerShould(ITestOutputHelper output)
-        {
-            this.output = output;
-        }
-
         [Theory]
         [InlineData("okta-aspnet")]
         [InlineData("okta-aspnetcore")]
