@@ -1,4 +1,4 @@
-﻿// <copyright file="StrictTokenHandlerShould.cs" company="Okta, Inc">
+﻿// <copyright file="TokenValidationShould.cs" company="Okta, Inc">
 // Copyright (c) 2018-present Okta, Inc. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 // </copyright>
@@ -13,7 +13,7 @@ using Xunit;
 
 namespace Okta.AspNet.Abstractions.Test
 {
-    public class StrictTokenHandlerShould
+    public class TokenValidationShould
     {
         [Fact]
         public void AllowGoodToken()
@@ -38,15 +38,14 @@ namespace Okta.AspNet.Abstractions.Test
                 claims: claims,
                 expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(1)),
                 signingCredentials: credentials);
-            var jwt = new JwtSecurityTokenHandler().WriteToken(jwtContents);
+
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var jwt = jwtHandler.WriteToken(jwtContents);
 
             var fakeOktaWebOptions = new OktaWebOptions
             {
-                ClientId = fakeClient,
                 OktaDomain = fakeIssuer,
             };
-
-            var handler = new StrictTokenHandler(fakeOktaWebOptions);
 
             var validationParameters = new DefaultTokenValidationParameters(fakeOktaWebOptions, fakeIssuer)
             {
@@ -54,7 +53,7 @@ namespace Okta.AspNet.Abstractions.Test
                 ValidAudience = fakeAudience,
             };
 
-            handler.ValidateToken(jwt, validationParameters, out _);
+            jwtHandler.ValidateToken(jwt, validationParameters, out _);
         }
 
         [Theory]
@@ -65,14 +64,12 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var fakeOktaWebOptions = new OktaWebOptions
             {
-                ClientId = "fake",
                 OktaDomain = "example.okta.com",
             };
+
             var fakeIssuer = "example.okta.com";
 
-            var handler = new StrictTokenHandler(fakeOktaWebOptions);
-
-            Action act = () => handler.ValidateToken(
+            Action act = () => new JwtSecurityTokenHandler().ValidateToken(
                 badToken,
                 new DefaultTokenValidationParameters(fakeOktaWebOptions, fakeIssuer),
                 out _);
@@ -103,15 +100,14 @@ namespace Okta.AspNet.Abstractions.Test
                 claims: claims,
                 expires: DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(3)), // Default clock skew of 2 minutes
                 signingCredentials: credentials);
-            var jwt = new JwtSecurityTokenHandler().WriteToken(jwtContents);
+
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var jwt = jwtHandler.WriteToken(jwtContents);
 
             var fakeOktaWebOptions = new OktaWebOptions
             {
-                ClientId = fakeClient,
                 OktaDomain = fakeIssuer,
             };
-
-            var handler = new StrictTokenHandler(fakeOktaWebOptions);
 
             var validationParameters = new DefaultTokenValidationParameters(fakeOktaWebOptions, fakeIssuer)
             {
@@ -119,7 +115,7 @@ namespace Okta.AspNet.Abstractions.Test
                 ValidAudience = fakeAudience,
             };
 
-            Action act = () => handler.ValidateToken(jwt, validationParameters, out _);
+            Action act = () => jwtHandler.ValidateToken(jwt, validationParameters, out _);
 
             act.Should().Throw<SecurityTokenExpiredException>();
         }
@@ -142,24 +138,22 @@ namespace Okta.AspNet.Abstractions.Test
                 audience: fakeAudience,
                 claims: claims,
                 expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(1)));
-                // No signing credentials!
 
-            var jwt = new JwtSecurityTokenHandler().WriteToken(jwtContents);
+            // No signing credentials!
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var jwt = jwtHandler.WriteToken(jwtContents);
 
             var fakeOktaWebOptions = new OktaWebOptions
             {
-                ClientId = fakeClient,
                 OktaDomain = fakeIssuer,
             };
-
-            var handler = new StrictTokenHandler(fakeOktaWebOptions);
 
             var validationParameters = new DefaultTokenValidationParameters(fakeOktaWebOptions, fakeIssuer)
             {
                 ValidAudience = fakeAudience,
             };
 
-            Action act = () => handler.ValidateToken(jwt, validationParameters, out _);
+            Action act = () => jwtHandler.ValidateToken(jwt, validationParameters, out _);
 
             act.Should().Throw<SecurityTokenInvalidSignatureException>();
         }
@@ -187,15 +181,14 @@ namespace Okta.AspNet.Abstractions.Test
                 claims: claims,
                 expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(1)),
                 signingCredentials: credentials);
-            var jwt = new JwtSecurityTokenHandler().WriteToken(jwtContents);
+
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var jwt = jwtHandler.WriteToken(jwtContents);
 
             var fakeOktaWebOptions = new OktaWebOptions
             {
-                ClientId = fakeClient,
                 OktaDomain = fakeIssuer,
             };
-
-            var handler = new StrictTokenHandler(fakeOktaWebOptions);
 
             var validationParameters = new DefaultTokenValidationParameters(fakeOktaWebOptions, fakeIssuer)
             {
@@ -203,53 +196,9 @@ namespace Okta.AspNet.Abstractions.Test
                 ValidAudience = fakeAudience,
             };
 
-            Action act = () => handler.ValidateToken(jwt, validationParameters, out _);
+            Action act = () => jwtHandler.ValidateToken(jwt, validationParameters, out _);
 
             act.Should().Throw<SecurityTokenInvalidIssuerException>();
-        }
-
-        [Fact]
-        public void RejectWrongClientId()
-        {
-            var fakeIssuer = "example.okta.com";
-            var fakeAudience = "aud://default";
-            var fakeClient = "fakeClient";
-
-            var claims = new Claim[]
-            {
-                new Claim("cid", "different-client"),
-            };
-
-            var credentials = new SigningCredentials(
-                new SymmetricSecurityKey(Encoding.UTF8.GetBytes("fakesigningsecret!")),
-                SecurityAlgorithms.HmacSha256);
-
-            // Create the JWT and write it to a string
-            var jwtContents = new JwtSecurityToken(
-                issuer: fakeIssuer,
-                audience: fakeAudience,
-                claims: claims,
-                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(1)),
-                signingCredentials: credentials);
-            var jwt = new JwtSecurityTokenHandler().WriteToken(jwtContents);
-
-            var fakeOktaWebOptions = new OktaWebOptions
-            {
-                ClientId = fakeClient,
-                OktaDomain = fakeIssuer,
-            };
-
-            var handler = new StrictTokenHandler(fakeOktaWebOptions);
-
-            var validationParameters = new DefaultTokenValidationParameters(fakeOktaWebOptions, fakeIssuer)
-            {
-                IssuerSigningKey = credentials.Key,
-                ValidAudience = fakeAudience,
-            };
-
-            Action act = () => handler.ValidateToken(jwt, validationParameters, out _);
-
-            act.Should().Throw<SecurityTokenValidationException>();
         }
 
         [Fact]
@@ -275,15 +224,14 @@ namespace Okta.AspNet.Abstractions.Test
                 claims: claims,
                 expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(1)),
                 signingCredentials: credentials);
-            var jwt = new JwtSecurityTokenHandler().WriteToken(jwtContents);
+
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var jwt = jwtHandler.WriteToken(jwtContents);
 
             var fakeOktaWebOptions = new OktaWebOptions
             {
-                ClientId = fakeClient,
                 OktaDomain = fakeIssuer,
             };
-
-            var handler = new StrictTokenHandler(fakeOktaWebOptions);
 
             var validationParameters = new DefaultTokenValidationParameters(fakeOktaWebOptions, fakeIssuer)
             {
@@ -291,7 +239,7 @@ namespace Okta.AspNet.Abstractions.Test
                 ValidAudience = fakeAudience,
             };
 
-            Action act = () => handler.ValidateToken(jwt, validationParameters, out _);
+            Action act = () => jwtHandler.ValidateToken(jwt, validationParameters, out _);
 
             act.Should().Throw<SecurityTokenInvalidAudienceException>();
         }

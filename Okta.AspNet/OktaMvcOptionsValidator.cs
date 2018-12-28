@@ -12,6 +12,20 @@ namespace Okta.AspNet
     {
         protected override void ValidateInternal(OktaMvcOptions options)
         {
+            if (string.IsNullOrEmpty(options.ClientId))
+            {
+                throw new ArgumentNullException(
+                    nameof(options.ClientId),
+                    "Your client ID is missing. You can copy it from the Okta Developer Console in the details for the Application you created.");
+            }
+
+            if (options.ClientId.IndexOf("{ClientId}", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                throw new ArgumentNullException(
+                    nameof(options.ClientId),
+                    "Replace {clientId} with the client ID of your Application. You can copy it from the Okta Developer Console in the details for the Application you created.");
+            }
+
             if (string.IsNullOrEmpty(options.ClientSecret))
             {
                 throw new ArgumentNullException(

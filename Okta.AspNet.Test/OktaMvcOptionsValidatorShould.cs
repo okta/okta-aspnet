@@ -16,6 +16,21 @@ namespace Okta.AspNet.Test
         [Theory]
         [InlineData(null)]
         [InlineData("")]
+        public void FailWhenClientIdIsNullOrEmpty(string clientId)
+        {
+            var options = new OktaMvcOptions()
+            {
+                OktaDomain = ValidOktaDomain,
+                ClientId = clientId,
+            };
+
+            Action action = () => new OktaMvcOptionsValidator().Validate(options);
+            action.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == nameof(OktaMvcOptions.ClientId));
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
         public void FailWhenClientSecretIsNullOrEmpty(string clientSecret)
         {
             var options = new OktaMvcOptions()
