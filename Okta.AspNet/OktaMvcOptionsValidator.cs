@@ -16,27 +16,27 @@ namespace Okta.AspNet
             {
                 throw new ArgumentNullException(
                     nameof(options.ClientId),
-                    "Your client ID is missing. You can copy it from the Okta Developer Console in the details for the Application you created.");
+                    "Your client ID is missing. You can copy it from the Okta Developer Console in the details for the Application you created. Follow these instructions to find it: https://bit.ly/finding-okta-app-credentials");
             }
 
             if (options.ClientId.IndexOf("{ClientId}", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentNullException(
                     nameof(options.ClientId),
-                    "Replace {clientId} with the client ID of your Application. You can copy it from the Okta Developer Console in the details for the Application you created.");
+                    "Replace {clientId} with the client ID of your Application. You can copy it from the Okta Developer Console in the details for the Application you created. Follow these instructions to find it: https://bit.ly/finding-okta-app-credentials");
             }
 
             if (string.IsNullOrEmpty(options.ClientSecret))
             {
                 throw new ArgumentNullException(
                     nameof(options.ClientSecret),
-                    "Your client secret is missing. You can copy it from the Okta Developer Console in the details for the Application you created.");
+                    "Your client secret is missing. You can copy it from the Okta Developer Console in the details for the Application you created. Follow these instructions to find it: https://bit.ly/finding-okta-app-credentials");
             }
 
             if (options.ClientSecret.IndexOf("{ClientSecret}", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
-                    "Replace {clientSecret} with the client secret of your Application. You can copy it from the Okta Developer Console in the details for the Application you created.",
+                    "Replace {clientSecret} with the client secret of your Application. You can copy it from the Okta Developer Console in the details for the Application you created. Follow these instructions to find it: https://bit.ly/finding-okta-app-credentials",
                     nameof(options.ClientSecret));
             }
 

@@ -13,7 +13,7 @@ namespace Okta.AspNet.Abstractions
 
         public string Audience { get; set; } = DefaultAudience;
 
-        [Obsolete("ClientId is deprecated")]
+        [Obsolete("ClientId is no longer required, and has no effect. This property will be removed in the next major release.")]
         public string ClientId { get; set; }
     }
 }
