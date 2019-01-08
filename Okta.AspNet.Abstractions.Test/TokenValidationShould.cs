@@ -22,11 +22,6 @@ namespace Okta.AspNet.Abstractions.Test
             var fakeAudience = "aud://default";
             var fakeClient = "fakeClient";
 
-            var claims = new Claim[]
-            {
-                new Claim("cid", fakeClient),
-            };
-
             var credentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes("fakesigningsecret!")),
                 SecurityAlgorithms.HmacSha256);
@@ -35,7 +30,6 @@ namespace Okta.AspNet.Abstractions.Test
             var jwtContents = new JwtSecurityToken(
                 issuer: fakeIssuer,
                 audience: fakeAudience,
-                claims: claims,
                 expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(1)),
                 signingCredentials: credentials);
 
@@ -84,11 +78,6 @@ namespace Okta.AspNet.Abstractions.Test
             var fakeAudience = "aud://default";
             var fakeClient = "fakeClient";
 
-            var claims = new Claim[]
-            {
-                new Claim("cid", fakeClient),
-            };
-
             var credentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes("fakesigningsecret!")),
                 SecurityAlgorithms.HmacSha256);
@@ -97,7 +86,6 @@ namespace Okta.AspNet.Abstractions.Test
             var jwtContents = new JwtSecurityToken(
                 issuer: fakeIssuer,
                 audience: fakeAudience,
-                claims: claims,
                 expires: DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(3)), // Default clock skew of 2 minutes
                 signingCredentials: credentials);
 
@@ -127,16 +115,10 @@ namespace Okta.AspNet.Abstractions.Test
             var fakeAudience = "aud://default";
             var fakeClient = "fakeClient";
 
-            var claims = new Claim[]
-            {
-                new Claim("cid", fakeClient),
-            };
-
             // Create the JWT and write it to a string
             var jwtContents = new JwtSecurityToken(
                 issuer: fakeIssuer,
                 audience: fakeAudience,
-                claims: claims,
                 expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(1)));
 
             // No signing credentials!
@@ -165,11 +147,6 @@ namespace Okta.AspNet.Abstractions.Test
             var fakeAudience = "aud://default";
             var fakeClient = "fakeClient";
 
-            var claims = new Claim[]
-            {
-                new Claim("cid", fakeClient),
-            };
-
             var credentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes("fakesigningsecret!")),
                 SecurityAlgorithms.HmacSha256);
@@ -178,7 +155,6 @@ namespace Okta.AspNet.Abstractions.Test
             var jwtContents = new JwtSecurityToken(
                 issuer: "different-issuer",
                 audience: fakeAudience,
-                claims: claims,
                 expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(1)),
                 signingCredentials: credentials);
 
@@ -208,11 +184,6 @@ namespace Okta.AspNet.Abstractions.Test
             var fakeAudience = "aud://default";
             var fakeClient = "fakeClient";
 
-            var claims = new Claim[]
-            {
-                new Claim("cid", fakeClient),
-            };
-
             var credentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes("fakesigningsecret!")),
                 SecurityAlgorithms.HmacSha256);
@@ -221,7 +192,6 @@ namespace Okta.AspNet.Abstractions.Test
             var jwtContents = new JwtSecurityToken(
                 issuer: fakeIssuer,
                 audience: "http://myapi",
-                claims: claims,
                 expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(1)),
                 signingCredentials: credentials);
 
