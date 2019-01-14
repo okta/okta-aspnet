@@ -75,7 +75,6 @@ namespace Okta.AspNet
             {
                 AuthenticationMode = AuthenticationMode.Active,
                 TokenValidationParameters = tokenValidationParameters,
-                TokenHandler = new StrictTokenHandler(options),
             });
         }
 

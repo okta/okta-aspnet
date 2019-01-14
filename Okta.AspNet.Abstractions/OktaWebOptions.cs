@@ -15,8 +15,6 @@ namespace Okta.AspNet.Abstractions
 
         public string OktaDomain { get; set; }
 
-        public string ClientId { get; set; }
-
         public string AuthorizationServerId { get; set; } = DefaultAuthorizationServerId;
 
         public TimeSpan ClockSkew { get; set; } = DefaultClockSkew;

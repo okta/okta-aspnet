@@ -11,6 +11,8 @@ namespace Okta.AspNetCore
     {
         public string ClientSecret { get; set; }
 
+        public string ClientId { get; set; }
+
         public string CallbackPath { get; set; } = OktaDefaults.CallbackPath;
 
         public IList<string> Scope { get; set; } = OktaDefaults.Scope;

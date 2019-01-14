@@ -21,7 +21,6 @@ namespace Okta.AspNet.WebApi.IntegrationTest
             app.UseOktaWebApi(new OktaWebApiOptions()
                 {
                     OktaDomain = oktaDomain,
-                    ClientId = clientId,
                     AuthorizationServerId = authorizationServerId,
                 });
         }

@@ -16,27 +16,11 @@ namespace Okta.AspNet.Abstractions.Test
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void FailWhenClientIdIsNullOrEmpty(string clientId)
-        {
-            var options = new OktaWebOptions()
-            {
-                OktaDomain = ValidOktaDomain,
-                ClientId = clientId,
-            };
-
-            Action action = () => new OktaWebOptionsValidator<OktaWebOptions>().Validate(options);
-            action.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == nameof(OktaWebOptions.ClientId));
-        }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
         public void FailIfOktaDomainIsNullOrEmpty(string oktaDomain)
         {
             var options = new OktaWebOptions()
             {
                 OktaDomain = oktaDomain,
-                ClientId = "ClientId",
             };
 
             Action action = () => new OktaWebOptionsValidator<OktaWebOptions>().Validate(options);
@@ -52,7 +36,6 @@ namespace Okta.AspNet.Abstractions.Test
             var options = new OktaWebOptions()
             {
                 OktaDomain = oktaDomain,
-                ClientId = "ClientId",
             };
 
             Action action = () => new OktaWebOptionsValidator<OktaWebOptions>().Validate(options);
@@ -68,7 +51,6 @@ namespace Okta.AspNet.Abstractions.Test
             var options = new OktaWebOptions()
             {
                 OktaDomain = oktaDomain,
-                ClientId = "ClientId",
             };
 
             Action action = () => new OktaWebOptionsValidator<OktaWebOptions>().Validate(options);
@@ -84,7 +66,6 @@ namespace Okta.AspNet.Abstractions.Test
             var options = new OktaWebOptions()
             {
                 OktaDomain = oktaDomain,
-                ClientId = "ClientId",
             };
 
             Action action = () => new OktaWebOptionsValidator<OktaWebOptions>().Validate(options);
@@ -99,7 +80,6 @@ namespace Okta.AspNet.Abstractions.Test
             var options = new OktaWebOptions()
             {
                 OktaDomain = oktaDomain,
-                ClientId = "ClientId",
             };
 
             Action action = () => new OktaWebOptionsValidator<OktaWebOptions>().Validate(options);

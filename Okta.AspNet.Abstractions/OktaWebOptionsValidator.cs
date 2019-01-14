@@ -27,20 +27,20 @@ namespace Okta.AspNet.Abstractions
             {
                 throw new ArgumentNullException(
                     nameof(options.OktaDomain),
-                    "Your Okta URL is missing. Okta URLs should look like: https://{yourOktaDomain}. You can copy your domain from the Okta Developer Console.");
+                    "Your Okta URL is missing. You can copy your domain from the Okta Developer Console. Follow these instructions to find it: https://bit.ly/finding-okta-domain");
             }
 
             if (!options.OktaDomain.StartsWith("https://"))
             {
                 throw new ArgumentException(
-                    "Your Okta URL must start with https. You can copy your domain from the Okta Developer Console.",
+                    $"Your Okta URL must start with https. Current value: {options.OktaDomain}. You can copy your domain from the Okta Developer Console. Follow these instructions to find it: https://bit.ly/finding-okta-domain",
                     nameof(options.OktaDomain));
             }
 
             if (options.OktaDomain.IndexOf("{yourOktaDomain}", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
-                    "Replace {yourOktaDomain} with your Okta domain. You can copy your domain from the Okta Developer Console.", nameof(options.OktaDomain));
+                    "Replace {yourOktaDomain} with your Okta domain. You can copy your domain from the Okta Developer Console. Follow these instructions to find it: https://bit.ly/finding-okta-domain", nameof(options.OktaDomain));
             }
 
             if (options.OktaDomain.IndexOf("-admin.oktapreview.com", StringComparison.OrdinalIgnoreCase) >= 0 ||
@@ -48,32 +48,13 @@ namespace Okta.AspNet.Abstractions
                 options.OktaDomain.IndexOf("-admin.okta-emea.com", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
-                    "Your Okta domain should not contain -admin. Your domain is: {valueWithoutAdmin}. You can copy your domain from the Okta Developer Console.", nameof(options.OktaDomain));
+                    $"Your Okta domain should not contain -admin. Current value: {options.OktaDomain}. You can copy your domain from the Okta Developer Console. Follow these instructions to find it: https://bit.ly/finding-okta-domain", nameof(options.OktaDomain));
             }
 
-            if (options.OktaDomain.IndexOf(".com.com", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (options.OktaDomain.IndexOf(".com.com", StringComparison.OrdinalIgnoreCase) >= 0 || Regex.Matches(options.OktaDomain, "://").Count != 1)
             {
                 throw new ArgumentException(
-                    "It looks like there's a typo in your Okta domain. You can copy your domain from the Okta Developer Console.", nameof(options.OktaDomain));
-            }
-
-            if (Regex.Matches(options.OktaDomain, "://").Count != 1)
-            {
-                throw new ArgumentNullException(nameof(options.OktaDomain), "It looks like there's a typo in your Okta domain. You can copy your domain from the Okta Developer Console.");
-            }
-
-            if (string.IsNullOrEmpty(options.ClientId))
-            {
-                throw new ArgumentNullException(
-                    nameof(options.ClientId),
-                    "Your client ID is missing. You can copy it from the Okta Developer Console in the details for the Application you created.");
-            }
-
-            if (options.ClientId.IndexOf("{ClientId}", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                throw new ArgumentNullException(
-                    nameof(options.ClientId),
-                    "Replace {clientId} with the client ID of your Application. You can copy it from the Okta Developer Console in the details for the Application you created.");
+                    $"It looks like there's a typo in your Okta domain. Current value: {options.OktaDomain}. You can copy your domain from the Okta Developer Console. Follow these instructions to find it: https://bit.ly/finding-okta-domain", nameof(options.OktaDomain));
             }
 
             ValidateInternal((T)options);
