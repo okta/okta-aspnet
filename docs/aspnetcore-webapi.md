@@ -27,7 +27,6 @@ public void ConfigureServices(IServiceCollection services)
     })
     .AddOktaWebApi(new OktaWebApiOptions()
     {
-        ClientId = Configuration["Okta:ClientId"],
         OktaDomain = Configuration["Okta:OktaDomain"],
         AuthorizationServerId = Configuration["Okta:AuthorizationServerId"]
     });
@@ -47,7 +46,7 @@ The `OktaWebApiOptions` class configures the Okta middleware. You can see all th
 | Property                  | Required?    | Details                         |
 |---------------------------|--------------|---------------------------------|
 | OktaDomain                    | **Yes**      | Your Okta domain, i.e https://dev-123456.oktapreview.com  | 
-| ClientId                  | **Yes**      | The client ID of your Okta Application |
+| ClientId                  | No      | The client ID of your Okta Application. This property is obsolete and will be removed in the next major version. |
 | AuthorizationServerId     | No           | The Okta Authorization Server to use. The default value is `default`. |
 | Audience                  | No           | The expected audience of incoming tokens. The default value is `api://default`. |
 | ClockSkew                 | No           | The clock skew allowed when validating tokens. The default value is 2 minutes. |
