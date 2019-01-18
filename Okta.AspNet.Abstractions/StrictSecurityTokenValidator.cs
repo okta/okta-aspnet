@@ -14,7 +14,7 @@ namespace Okta.AspNet.Abstractions
     {
         private readonly JwtSecurityTokenHandler _handler;
 
-        public StrictSecurityTokenValidator(OktaWebOptions options)
+        public StrictSecurityTokenValidator()
         {
             _handler = new StrictTokenHandler();
         }
