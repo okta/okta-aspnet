@@ -29,7 +29,7 @@ namespace Okta.AspNet.Abstractions
 
             if (jwtToken.Header?.Alg == null || jwtToken.Header?.Alg != SecurityAlgorithms.RsaSha256)
             {
-                throw new SecurityTokenValidationException("The alg must be RS256.");
+                throw new SecurityTokenValidationException("The JWT token's signing algorithm must be RS256.");
             }
 
             return claimsPrincipal;

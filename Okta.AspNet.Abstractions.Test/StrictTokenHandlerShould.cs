@@ -90,7 +90,7 @@ namespace Okta.AspNet.Abstractions.Test
                 validationParameters,
                 out _);
 
-            act.Should().Throw<SecurityTokenValidationException>().WithMessage("The alg must be RS256.");
+            act.Should().Throw<SecurityTokenValidationException>().WithMessage("The JWT token's signing algorithm must be RS256.");
         }
 
         [Theory]
