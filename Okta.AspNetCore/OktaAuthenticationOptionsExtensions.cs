@@ -45,6 +45,7 @@ namespace Okta.AspNetCore
                 oidcOptions.SignedOutCallbackPath = new PathString(OktaDefaults.SignOutCallbackPath);
                 oidcOptions.ResponseType = OpenIdConnectResponseType.Code;
                 oidcOptions.GetClaimsFromUserInfoEndpoint = options.GetClaimsFromUserInfoEndpoint;
+                oidcOptions.SecurityTokenValidator = new StrictSecurityTokenValidator();
                 oidcOptions.SaveTokens = true;
                 oidcOptions.UseTokenLifetime = false;
                 oidcOptions.BackchannelHttpHandler = new UserAgentHandler("okta-aspnetcore", typeof(OktaAuthenticationOptionsExtensions).Assembly.GetName().Version);
@@ -112,6 +113,9 @@ namespace Okta.AspNetCore
                 opt.Authority = issuer;
                 opt.TokenValidationParameters = tokenValidationParameters;
                 opt.BackchannelHttpHandler = new UserAgentHandler("okta-aspnetcore", typeof(OktaAuthenticationOptionsExtensions).Assembly.GetName().Version);
+
+                opt.SecurityTokenValidators.Clear();
+                opt.SecurityTokenValidators.Add(new StrictSecurityTokenValidator());
             });
 
             return builder;

@@ -20,7 +20,6 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var fakeIssuer = "example.okta.com";
             var fakeAudience = "aud://default";
-            var fakeClient = "fakeClient";
 
             var credentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes("fakesigningsecret!")),
@@ -76,7 +75,6 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var fakeIssuer = "example.okta.com";
             var fakeAudience = "aud://default";
-            var fakeClient = "fakeClient";
 
             var credentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes("fakesigningsecret!")),
@@ -113,7 +111,6 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var fakeIssuer = "example.okta.com";
             var fakeAudience = "aud://default";
-            var fakeClient = "fakeClient";
 
             // Create the JWT and write it to a string
             var jwtContents = new JwtSecurityToken(
@@ -145,7 +142,6 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var fakeIssuer = "example.okta.com";
             var fakeAudience = "aud://default";
-            var fakeClient = "fakeClient";
 
             var credentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes("fakesigningsecret!")),
@@ -182,7 +178,6 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var fakeIssuer = "example.okta.com";
             var fakeAudience = "aud://default";
-            var fakeClient = "fakeClient";
 
             var credentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes("fakesigningsecret!")),

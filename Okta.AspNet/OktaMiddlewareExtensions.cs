@@ -75,6 +75,7 @@ namespace Okta.AspNet
             {
                 AuthenticationMode = AuthenticationMode.Active,
                 TokenValidationParameters = tokenValidationParameters,
+                TokenHandler = new StrictTokenHandler(),
             });
         }
 
@@ -112,6 +113,7 @@ namespace Okta.AspNet
                 Scope = scopeString,
                 PostLogoutRedirectUri = options.PostLogoutRedirectUri,
                 TokenValidationParameters = tokenValidationParameters,
+                SecurityTokenValidator = new StrictSecurityTokenValidator(),
                 Notifications = new OpenIdConnectAuthenticationNotifications
                 {
                     AuthorizationCodeReceived = tokenExchanger.ExchangeCodeForTokenAsync,
