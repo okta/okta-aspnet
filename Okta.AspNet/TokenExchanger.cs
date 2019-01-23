@@ -12,7 +12,6 @@ using IdentityModel.Client;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.Owin.Security.Notifications;
-using Okta.AspNet.Abstractions;
 
 namespace Okta.AspNet
 {
@@ -32,8 +31,15 @@ namespace Okta.AspNet
         public async Task ExchangeCodeForTokenAsync(AuthorizationCodeReceivedNotification response)
         {
             var openIdConfiguration = await _configurationManager.GetConfigurationAsync().ConfigureAwait(false);
-            var tokenClient = new TokenClient(openIdConfiguration.TokenEndpoint, _options.ClientId, _options.ClientSecret);
-            var tokenResponse = await tokenClient.RequestAuthorizationCodeAsync(response.Code, _options.RedirectUri).ConfigureAwait(false);
+            var httpClient = new HttpClient();
+            var tokenResponse = await httpClient.RequestAuthorizationCodeTokenAsync(new AuthorizationCodeTokenRequest
+            {
+                Address = openIdConfiguration.TokenEndpoint,
+                ClientId = _options.ClientId,
+                ClientSecret = _options.ClientSecret,
+                Code = response.Code,
+                RedirectUri = _options.RedirectUri,
+            }).ConfigureAwait(false);
 
             if (tokenResponse.IsError)
             {
@@ -61,8 +67,12 @@ namespace Okta.AspNet
 
         private async Task EnrichIdentityViaUserInfoAsync(ClaimsIdentity subject, OpenIdConnectConfiguration openIdConfiguration, TokenResponse tokenResponse)
         {
-            var userInfoClient = new UserInfoClient(openIdConfiguration.UserInfoEndpoint);
-            var userInfoResponse = await userInfoClient.GetAsync(tokenResponse.AccessToken).ConfigureAwait(false);
+            var httpClient = new HttpClient();
+            var userInfoResponse = await httpClient.GetUserInfoAsync(new UserInfoRequest
+            {
+                Address = openIdConfiguration.UserInfoEndpoint,
+                Token = tokenResponse.AccessToken,
+            }).ConfigureAwait(false);
 
             // Claims returned from the UserInfoClient have issuer = "LOCAL AUTHORITY" by default
             var userInfoClaims = userInfoResponse.Claims
