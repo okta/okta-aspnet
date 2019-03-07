@@ -3,7 +3,10 @@
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace Okta.AspNetCore
 {
@@ -18,5 +21,7 @@ namespace Okta.AspNetCore
         public IList<string> Scope { get; set; } = OktaDefaults.Scope;
 
         public bool GetClaimsFromUserInfoEndpoint { get; set; } = false;
+
+        public Func<TokenValidatedContext, Task> OnTokenValidated { get; set; }
     }
 }

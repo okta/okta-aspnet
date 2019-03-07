@@ -67,6 +67,11 @@ namespace Okta.AspNetCore
                 };
 
                 oidcOptions.Events.OnRedirectToIdentityProvider = BeforeRedirectToIdentityProviderAsync;
+
+                if (options.OnTokenValidated != null)
+                {
+                    oidcOptions.Events.OnTokenValidated = options.OnTokenValidated;
+                }
             });
 
             return builder;
