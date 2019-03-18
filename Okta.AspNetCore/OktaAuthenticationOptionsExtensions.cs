@@ -43,6 +43,7 @@ namespace Okta.AspNetCore
                 oidcOptions.Authority = issuer;
                 oidcOptions.CallbackPath = new PathString(options.CallbackPath);
                 oidcOptions.SignedOutCallbackPath = new PathString(OktaDefaults.SignOutCallbackPath);
+                oidcOptions.SignedOutRedirectUri = options.PostLogoutRedirectUri;
                 oidcOptions.ResponseType = OpenIdConnectResponseType.Code;
                 oidcOptions.GetClaimsFromUserInfoEndpoint = options.GetClaimsFromUserInfoEndpoint;
                 oidcOptions.SecurityTokenValidator = new StrictSecurityTokenValidator();
