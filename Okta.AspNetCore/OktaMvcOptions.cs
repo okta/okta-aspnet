@@ -15,6 +15,8 @@ namespace Okta.AspNetCore
 
         public string CallbackPath { get; set; } = OktaDefaults.CallbackPath;
 
+        public string PostLogoutRedirectUri { get; set; }
+
         public IList<string> Scope { get; set; } = OktaDefaults.Scope;
 
         public bool GetClaimsFromUserInfoEndpoint { get; set; } = false;
