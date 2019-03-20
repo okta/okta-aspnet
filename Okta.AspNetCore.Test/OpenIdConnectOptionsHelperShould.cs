@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Okta.AspNet.Abstractions;
 using Xunit;
 
 namespace Okta.AspNetCore.Test
@@ -32,14 +33,17 @@ namespace Okta.AspNetCore.Test
 
             var oidcOptions = new OpenIdConnectOptions();
 
-            OpenIdConnectOptionsHelper.ConfigureOpenIdConnectOptions(oktaMvcOptions, "issuer", events, oidcOptions);
+            OpenIdConnectOptionsHelper.ConfigureOpenIdConnectOptions(oktaMvcOptions, events, oidcOptions);
 
             oidcOptions.ClientId.Should().Be(oktaMvcOptions.ClientId);
             oidcOptions.ClientSecret.Should().Be(oktaMvcOptions.ClientSecret);
             oidcOptions.SignedOutRedirectUri.Should().Be(oktaMvcOptions.PostLogoutRedirectUri);
             oidcOptions.GetClaimsFromUserInfoEndpoint.Should().Be(oktaMvcOptions.GetClaimsFromUserInfoEndpoint);
             oidcOptions.CallbackPath.Value.Should().Be(oktaMvcOptions.CallbackPath);
-            oidcOptions.Authority.Should().Be("issuer");
+
+            var issuer = UrlHelper.CreateIssuerUrl(oktaMvcOptions.OktaDomain, oktaMvcOptions.AuthorizationServerId);
+            oidcOptions.Authority.Should().Be(issuer);
+
             oidcOptions.Scope.ToList().Should().BeEquivalentTo(oktaMvcOptions.Scope);
             oidcOptions.CallbackPath.Value.Should().Be(oktaMvcOptions.CallbackPath);
             oidcOptions.Events.OnRedirectToIdentityProvider.Should().BeNull();

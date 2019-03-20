@@ -17,11 +17,12 @@ namespace Okta.AspNetCore
         /// Configure an OpenIdConnectOptions object based on user's configuration.
         /// </summary>
         /// <param name="oktaMvcOptions">The <see cref="OktaMvcOptions"/> options.</param>
-        /// <param name="issuer">The issuer.</param>
         /// <param name="events">The OpenIdConnect events.</param>
         /// <param name="oidcOptions">The OpenIdConnectOptions to configure.</param>
-        public static void ConfigureOpenIdConnectOptions(OktaMvcOptions oktaMvcOptions, string issuer, OpenIdConnectEvents events, OpenIdConnectOptions oidcOptions)
+        public static void ConfigureOpenIdConnectOptions(OktaMvcOptions oktaMvcOptions, OpenIdConnectEvents events, OpenIdConnectOptions oidcOptions)
         {
+            var issuer = UrlHelper.CreateIssuerUrl(oktaMvcOptions.OktaDomain, oktaMvcOptions.AuthorizationServerId);
+
             oidcOptions.ClientId = oktaMvcOptions.ClientId;
             oidcOptions.ClientSecret = oktaMvcOptions.ClientSecret;
             oidcOptions.Authority = issuer;

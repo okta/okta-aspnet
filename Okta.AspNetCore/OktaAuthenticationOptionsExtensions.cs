@@ -29,8 +29,6 @@ namespace Okta.AspNetCore
 
         private static AuthenticationBuilder AddCodeFlow(AuthenticationBuilder builder, OktaMvcOptions options)
         {
-            var issuer = UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
-
             var events = new OpenIdConnectEvents
             {
                 OnRedirectToIdentityProvider = BeforeRedirectToIdentityProviderAsync,
@@ -38,7 +36,7 @@ namespace Okta.AspNetCore
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            builder.AddOpenIdConnect(oidcOptions => OpenIdConnectOptionsHelper.ConfigureOpenIdConnectOptions(options, issuer, events, oidcOptions));
+            builder.AddOpenIdConnect(oidcOptions => OpenIdConnectOptionsHelper.ConfigureOpenIdConnectOptions(options, events, oidcOptions));
 
             return builder;
         }

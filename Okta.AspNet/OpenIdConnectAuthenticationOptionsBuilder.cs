@@ -14,9 +14,15 @@ namespace Okta.AspNet
 {
     public class OpenIdConnectAuthenticationOptionsBuilder
     {
-        public static OpenIdConnectAuthenticationOptions BuildOpenIdConnectAuthenticationOptions(OktaMvcOptions options, OpenIdConnectAuthenticationNotifications notifications)
+        /// <summary>
+        /// Creates a new instance of OpenIdConnectAuthenticationOptions.
+        /// </summary>
+        /// <param name="oktaMvcOptions">The <see cref="OktaMvcOptions"/> options.</param>
+        /// <param name="notifications">The OpenIdConnectAuthenticationNotifications notifications.</param>
+        /// <returns>A new instance of OpenIdConnectAuthenticationOptions.</returns>
+        public static OpenIdConnectAuthenticationOptions BuildOpenIdConnectAuthenticationOptions(OktaMvcOptions oktaMvcOptions, OpenIdConnectAuthenticationNotifications notifications)
         {
-            var issuer = UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
+            var issuer = UrlHelper.CreateIssuerUrl(oktaMvcOptions.OktaDomain, oktaMvcOptions.AuthorizationServerId);
             var httpClient = new HttpClient(new UserAgentHandler("okta-aspnet", typeof(OktaMiddlewareExtensions).Assembly.GetName().Version));
 
             var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
@@ -24,25 +30,25 @@ namespace Okta.AspNet
                 new OpenIdConnectConfigurationRetriever(),
                 new HttpDocumentRetriever(httpClient));
 
-            var tokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
+            var tokenValidationParameters = new DefaultTokenValidationParameters(oktaMvcOptions, issuer)
             {
                 NameClaimType = "name",
-                ValidAudience = options.ClientId,
+                ValidAudience = oktaMvcOptions.ClientId,
             };
 
-            var tokenExchanger = new TokenExchanger(options, issuer, configurationManager);
-            var definedScopes = options.Scope?.ToArray() ?? OktaDefaults.Scope;
+            var tokenExchanger = new TokenExchanger(oktaMvcOptions, issuer, configurationManager);
+            var definedScopes = oktaMvcOptions.Scope?.ToArray() ?? OktaDefaults.Scope;
             var scopeString = string.Join(" ", definedScopes);
 
             return new OpenIdConnectAuthenticationOptions
             {
-                ClientId = options.ClientId,
-                ClientSecret = options.ClientSecret,
+                ClientId = oktaMvcOptions.ClientId,
+                ClientSecret = oktaMvcOptions.ClientSecret,
                 Authority = issuer,
-                RedirectUri = options.RedirectUri,
+                RedirectUri = oktaMvcOptions.RedirectUri,
                 ResponseType = OpenIdConnectResponseType.CodeIdToken,
                 Scope = scopeString,
-                PostLogoutRedirectUri = options.PostLogoutRedirectUri,
+                PostLogoutRedirectUri = oktaMvcOptions.PostLogoutRedirectUri,
                 TokenValidationParameters = tokenValidationParameters,
                 SecurityTokenValidator = new StrictSecurityTokenValidator(),
                 Notifications = new OpenIdConnectAuthenticationNotifications
