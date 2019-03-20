@@ -34,41 +34,14 @@ namespace Okta.AspNetCore
         {
             var issuer = UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
 
+            var events = new OpenIdConnectEvents
+            {
+                OnRedirectToIdentityProvider = BeforeRedirectToIdentityProviderAsync,
+            };
+
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            builder.AddOpenIdConnect(oidcOptions =>
-            {
-                oidcOptions.ClientId = options.ClientId;
-                oidcOptions.ClientSecret = options.ClientSecret;
-                oidcOptions.Authority = issuer;
-                oidcOptions.CallbackPath = new PathString(options.CallbackPath);
-                oidcOptions.SignedOutCallbackPath = new PathString(OktaDefaults.SignOutCallbackPath);
-                oidcOptions.SignedOutRedirectUri = options.PostLogoutRedirectUri;
-                oidcOptions.ResponseType = OpenIdConnectResponseType.Code;
-                oidcOptions.GetClaimsFromUserInfoEndpoint = options.GetClaimsFromUserInfoEndpoint;
-                oidcOptions.SecurityTokenValidator = new StrictSecurityTokenValidator();
-                oidcOptions.SaveTokens = true;
-                oidcOptions.UseTokenLifetime = false;
-                oidcOptions.BackchannelHttpHandler = new UserAgentHandler("okta-aspnetcore", typeof(OktaAuthenticationOptionsExtensions).Assembly.GetName().Version);
-
-                var hasDefinedScopes = options.Scope?.Any() ?? false;
-                if (hasDefinedScopes)
-                {
-                    oidcOptions.Scope.Clear();
-                    foreach (var scope in options.Scope)
-                    {
-                        oidcOptions.Scope.Add(scope);
-                    }
-                }
-
-                oidcOptions.TokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
-                {
-                    ValidAudience = options.ClientId,
-                    NameClaimType = "name",
-                };
-
-                oidcOptions.Events.OnRedirectToIdentityProvider = BeforeRedirectToIdentityProviderAsync;
-            });
+            builder.AddOpenIdConnect(oidcOptions => OpenIdConnectOptionsHelper.ConfigureOpenIdConnectOptions(options, issuer, events, oidcOptions));
 
             return builder;
         }
