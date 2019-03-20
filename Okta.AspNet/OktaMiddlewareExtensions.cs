@@ -81,45 +81,15 @@ namespace Okta.AspNet
 
         private static void AddOpenIdConnectAuthentication(IAppBuilder app, OktaMvcOptions options)
         {
-            var issuer = UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
-            var httpClient = new HttpClient(new UserAgentHandler("okta-aspnet", typeof(OktaMiddlewareExtensions).Assembly.GetName().Version));
-
-            var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
-              issuer + "/.well-known/openid-configuration",
-              new OpenIdConnectConfigurationRetriever(),
-              new HttpDocumentRetriever(httpClient));
-
-            var tokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
-            {
-                NameClaimType = "name",
-                ValidAudience = options.ClientId,
-            };
-
-            var tokenExchanger = new TokenExchanger(options, issuer, configurationManager);
-
             // Stop the default behavior of remapping JWT claim names to legacy MS/SOAP claim names
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            var definedScopes = options.Scope?.ToArray() ?? OktaDefaults.Scope;
-            var scopeString = string.Join(" ", definedScopes);
-
-            app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptions
+            var notifications = new OpenIdConnectAuthenticationNotifications
             {
-                ClientId = options.ClientId,
-                ClientSecret = options.ClientSecret,
-                Authority = issuer,
-                RedirectUri = options.RedirectUri,
-                ResponseType = OpenIdConnectResponseType.CodeIdToken,
-                Scope = scopeString,
-                PostLogoutRedirectUri = options.PostLogoutRedirectUri,
-                TokenValidationParameters = tokenValidationParameters,
-                SecurityTokenValidator = new StrictSecurityTokenValidator(),
-                Notifications = new OpenIdConnectAuthenticationNotifications
-                {
-                    AuthorizationCodeReceived = tokenExchanger.ExchangeCodeForTokenAsync,
-                    RedirectToIdentityProvider = BeforeRedirectToIdentityProviderAsync,
-                },
-            });
+                RedirectToIdentityProvider = BeforeRedirectToIdentityProviderAsync,
+            };
+
+            app.UseOpenIdConnectAuthentication(OpenIdConnectAuthenticationOptionsBuilder.BuildOpenIdConnectAuthenticationOptions(options, notifications));
         }
 
         private static Task BeforeRedirectToIdentityProviderAsync(RedirectToIdentityProviderNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions> n)

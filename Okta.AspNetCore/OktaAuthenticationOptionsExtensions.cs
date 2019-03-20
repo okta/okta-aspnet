@@ -5,13 +5,10 @@
 
 using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Okta.AspNet.Abstractions;
 
 namespace Okta.AspNetCore
@@ -32,42 +29,14 @@ namespace Okta.AspNetCore
 
         private static AuthenticationBuilder AddCodeFlow(AuthenticationBuilder builder, OktaMvcOptions options)
         {
-            var issuer = UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
+            var events = new OpenIdConnectEvents
+            {
+                OnRedirectToIdentityProvider = BeforeRedirectToIdentityProviderAsync,
+            };
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            builder.AddOpenIdConnect(oidcOptions =>
-            {
-                oidcOptions.ClientId = options.ClientId;
-                oidcOptions.ClientSecret = options.ClientSecret;
-                oidcOptions.Authority = issuer;
-                oidcOptions.CallbackPath = new PathString(options.CallbackPath);
-                oidcOptions.SignedOutCallbackPath = new PathString(OktaDefaults.SignOutCallbackPath);
-                oidcOptions.ResponseType = OpenIdConnectResponseType.Code;
-                oidcOptions.GetClaimsFromUserInfoEndpoint = options.GetClaimsFromUserInfoEndpoint;
-                oidcOptions.SecurityTokenValidator = new StrictSecurityTokenValidator();
-                oidcOptions.SaveTokens = true;
-                oidcOptions.UseTokenLifetime = false;
-                oidcOptions.BackchannelHttpHandler = new UserAgentHandler("okta-aspnetcore", typeof(OktaAuthenticationOptionsExtensions).Assembly.GetName().Version);
-
-                var hasDefinedScopes = options.Scope?.Any() ?? false;
-                if (hasDefinedScopes)
-                {
-                    oidcOptions.Scope.Clear();
-                    foreach (var scope in options.Scope)
-                    {
-                        oidcOptions.Scope.Add(scope);
-                    }
-                }
-
-                oidcOptions.TokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
-                {
-                    ValidAudience = options.ClientId,
-                    NameClaimType = "name",
-                };
-
-                oidcOptions.Events.OnRedirectToIdentityProvider = BeforeRedirectToIdentityProviderAsync;
-            });
+            builder.AddOpenIdConnect(oidcOptions => OpenIdConnectOptionsHelper.ConfigureOpenIdConnectOptions(options, events, oidcOptions));
 
             return builder;
         }
