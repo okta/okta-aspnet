@@ -15,5 +15,7 @@ namespace Okta.AspNet.Abstractions
 
         [Obsolete("ClientId is no longer required, and has no effect. This property will be removed in the next major release.")]
         public string ClientId { get; set; }
+
+        public JwtBearerEvents Events { get; set; }
     }
 }

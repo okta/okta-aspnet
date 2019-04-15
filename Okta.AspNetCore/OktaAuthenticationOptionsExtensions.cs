@@ -85,6 +85,8 @@ namespace Okta.AspNetCore
 
                 opt.SecurityTokenValidators.Clear();
                 opt.SecurityTokenValidators.Add(new StrictSecurityTokenValidator());
+
+                opt.Events = options.Events;
             });
 
             return builder;
