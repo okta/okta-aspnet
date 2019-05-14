@@ -46,3 +46,12 @@ The `OktaWebApiOptions` class configures the Okta middleware. You can see all th
 | ClockSkew                 | No           | The clock skew allowed when validating tokens. The default value is 2 minutes. |
 
 You can store these values in the `Web.config`.
+
+# Troubleshooting
+
+If you are using .NET framework <4.6 or you are getting the following error: `The request was aborted: Could not create SSL/TLS secure channel`. Make sure to include the following code in the `Application_Start` or `Startup`:
+
+```csharp
+// Enable TLS 1.2
+ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
+```
