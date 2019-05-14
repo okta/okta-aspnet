@@ -54,6 +54,14 @@ namespace Okta.AspNet
                     tokenResponse).ConfigureAwait(false);
             }
 
+            // get subject claim and duplicate it to MSFT's NameIdentifier to support the .NET MVC antiforgery provider
+            var sub = response.AuthenticationTicket.Identity.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+            if (sub != null)
+            {
+                response.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, sub));
+                response.AuthenticationTicket.Identity.AddClaim(new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"));
+            }
+
             response.AuthenticationTicket.Identity.AddClaim(new Claim("id_token", tokenResponse.IdentityToken));
             response.AuthenticationTicket.Identity.AddClaim(new Claim("access_token", tokenResponse.AccessToken));
 
