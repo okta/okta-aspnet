@@ -115,5 +115,5 @@ $ git push origin :feature_x
 Code of Conduct
 ---------------
 
-This project and everyone participating in it is governed by the [Okta Code of Conduct](https://github.com/okta/okta-aspnet/tree/master/CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to devex@okta.com.
+This project and everyone participating in it is governed by the [Okta Code of Conduct](https://github.com/okta/okta-aspnet/tree/master/CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to developers@okta.com.
 
