@@ -21,11 +21,10 @@ Check out the following resources:
 * [ASP.NET 4.x samples](https://github.com/okta/samples-aspnet)
 * [ASP.NET Core samples](https://github.com/okta/samples-aspnetcore)
 * [Project documentation](https://github.com/okta/okta-aspnet/tree/master/docs)
- 
 
 ## Contributing
 
-Issues and Pull Requests are welcome! To build the project, clone and build it with Visual Studio 2017 or newer.
+Issues and Pull Requests are welcome! To build the project, clone and build it with Visual Studio 2017 or newer. Check out the [Contributing Guide](https://github.com/okta/okta-aspnet/tree/master/CONTRIBUTING.md).
 
 ## Getting help
 
