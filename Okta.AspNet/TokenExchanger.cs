@@ -54,13 +54,7 @@ namespace Okta.AspNet
                     tokenResponse).ConfigureAwait(false);
             }
 
-            // get subject claim and duplicate it to MSFT's NameIdentifier to support the .NET MVC antiforgery provider
-            var sub = response.AuthenticationTicket.Identity.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
-            if (sub != null)
-            {
-                response.AuthenticationTicket.Identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, sub));
-                response.AuthenticationTicket.Identity.AddClaim(new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider", "ASP.NET Identity", "http://www.w3.org/2001/XMLSchema#string"));
-            }
+            FillNameIdentifierClaimOnIdentity(response.AuthenticationTicket.Identity);
 
             response.AuthenticationTicket.Identity.AddClaim(new Claim("id_token", tokenResponse.IdentityToken));
             response.AuthenticationTicket.Identity.AddClaim(new Claim("access_token", tokenResponse.AccessToken));
@@ -72,6 +66,23 @@ namespace Okta.AspNet
 
             return;
         }
+
+        /// <summary>
+        /// For compatibility with the .NET MVC antiforgery provider, make sure the old-style NameIdentifier is filled.
+        /// If not, get subject claim and duplicate it to MSFT's NameIdentifier.
+        /// </summary>
+        /// <param name="identity">The <see cref="ClaimsIdentity"/> to modify in place.</param>
+        private void FillNameIdentifierClaimOnIdentity(ClaimsIdentity identity)
+        {
+            var currentNameIdentifier = identity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var sub = identity.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+            
+            if (currentNameIdentifier == null && sub != null)
+            {
+                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, sub));				
+            }
+        }
+
 
         private async Task EnrichIdentityViaUserInfoAsync(ClaimsIdentity subject, OpenIdConnectConfiguration openIdConfiguration, TokenResponse tokenResponse)
         {
