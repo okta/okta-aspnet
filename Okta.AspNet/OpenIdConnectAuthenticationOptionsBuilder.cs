@@ -40,7 +40,7 @@ namespace Okta.AspNet
             var definedScopes = oktaMvcOptions.Scope?.ToArray() ?? OktaDefaults.Scope;
             var scopeString = string.Join(" ", definedScopes);
 
-            return new OpenIdConnectAuthenticationOptions
+            var oidcOptions = new OpenIdConnectAuthenticationOptions
             {
                 ClientId = oktaMvcOptions.ClientId,
                 ClientSecret = oktaMvcOptions.ClientSecret,
@@ -57,6 +57,13 @@ namespace Okta.AspNet
                     RedirectToIdentityProvider = notifications.RedirectToIdentityProvider,
                 },
             };
+
+            if (oktaMvcOptions.SecurityTokenValidated != null)
+            {
+                oidcOptions.Notifications.SecurityTokenValidated = oktaMvcOptions.SecurityTokenValidated;
+            }
+
+            return oidcOptions;
         }
     }
 }
