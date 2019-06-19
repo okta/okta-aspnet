@@ -52,12 +52,12 @@ namespace Okta.AspNetCore
         /// Gets or sets the event invoked when an IdToken has been validated and produced an AuthenticationTicket.
         /// </summary>
         /// <value>The OnTokenValidated event.</value>
-        public Func<TokenValidatedContext, Task> OnTokenValidated { get; set; }
+        public Func<TokenValidatedContext, Task> OnTokenValidated { get; set; } = context => Task.CompletedTask;
 
         /// <summary>
         /// Gets or sets the event invoked when user information is retrieved from the UserInfoEndpoint. The <see cref="GetClaimsFromUserInfoEndpoint"/> value must be true when using this event.
         /// </summary>
         /// <value>The OnUserInformationReceived event.</value>
-        public Func<UserInformationReceivedContext, Task> OnUserInformationReceived { get; set; }
+        public Func<UserInformationReceivedContext, Task> OnUserInformationReceived { get; set; } = context => Task.CompletedTask;
     }
 }

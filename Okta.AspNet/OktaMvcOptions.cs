@@ -51,10 +51,6 @@ namespace Okta.AspNet
         /// Gets or sets the event invoked after the security token has passed validation and a ClaimsIdentity has been generated.
         /// </summary>
         /// <value>The SecurityTokenValidated event.</value>
-        public Func<SecurityTokenValidatedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions>, Task> SecurityTokenValidated
-        {
-            get;
-            set;
-        }
+        public Func<SecurityTokenValidatedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions>, Task> SecurityTokenValidated { get; set; } = notification => Task.FromResult(0);
     }
 }
