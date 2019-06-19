@@ -3,10 +3,13 @@
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using NSubstitute;
 using Okta.AspNet.Abstractions;
 using Xunit;
 
@@ -14,9 +17,14 @@ namespace Okta.AspNetCore.Test
 {
     public class OpenIdConnectOptionsHelperShould
     {
-        [Fact]
-        public void SetOpenIdConnectsOptionsCorrectly()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void SetOpenIdConnectsOptionsCorrectly(bool getClaimsFromUserInfoEndpoint)
         {
+            var mockTokenValidatedEvent = Substitute.For<Func<TokenValidatedContext, Task>>();
+            var mockUserInfoReceivedEvent = Substitute.For<Func<UserInformationReceivedContext, Task>>();
+
             var oktaMvcOptions = new OktaMvcOptions
             {
                 PostLogoutRedirectUri = "http://foo.postlogout.com",
@@ -24,9 +32,11 @@ namespace Okta.AspNetCore.Test
                 ClientId = "foo",
                 ClientSecret = "baz",
                 OktaDomain = "http://myoktadomain.com",
-                GetClaimsFromUserInfoEndpoint = true,
+                GetClaimsFromUserInfoEndpoint = getClaimsFromUserInfoEndpoint,
                 CallbackPath = "/somecallbackpath",
                 Scope = new List<string> { "openid", "profile", "email" },
+                OnTokenValidated = mockTokenValidatedEvent,
+                OnUserInformationReceived = mockUserInfoReceivedEvent,
             };
 
             var events = new OpenIdConnectEvents() { OnRedirectToIdentityProvider = null };
@@ -47,6 +57,14 @@ namespace Okta.AspNetCore.Test
             oidcOptions.Scope.ToList().Should().BeEquivalentTo(oktaMvcOptions.Scope);
             oidcOptions.CallbackPath.Value.Should().Be(oktaMvcOptions.CallbackPath);
             oidcOptions.Events.OnRedirectToIdentityProvider.Should().BeNull();
+
+            // Check the event was call once with a null parameter
+            oidcOptions.Events.OnTokenValidated(null);
+            mockTokenValidatedEvent.Received(1).Invoke(null);
+
+            // Check the event was call once with a null parameter
+            oidcOptions.Events.OnUserInformationReceived(null);
+            mockUserInfoReceivedEvent.Received(1).Invoke(null);
         }
     }
 }
