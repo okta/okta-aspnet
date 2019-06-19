@@ -62,9 +62,13 @@ namespace Okta.AspNetCore.Test
             oidcOptions.Events.OnTokenValidated(null);
             mockTokenValidatedEvent.Received(1).Invoke(null);
 
-            // Check the event was call once with a null parameter
-            oidcOptions.Events.OnUserInformationReceived(null);
-            mockUserInfoReceivedEvent.Received(1).Invoke(null);
+            // UserInfo event is mapped only when GetClaimsFromUserInfoEndpoint = true
+            if (oidcOptions.GetClaimsFromUserInfoEndpoint)
+            {
+                // Check the event was call once with a null parameter
+                oidcOptions.Events.OnUserInformationReceived(null);
+                mockUserInfoReceivedEvent.Received(1).Invoke(null);
+            }
         }
     }
 }
