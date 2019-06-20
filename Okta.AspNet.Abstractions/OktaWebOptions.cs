@@ -22,7 +22,7 @@ namespace Okta.AspNet.Abstractions
         public string OktaDomain { get; set; }
 
         /// <summary>
-        /// Gets or sets the Okta Authorization Server to use. The default value is default.
+        /// Gets or sets the Okta Authorization Server to use. The default value is <c>default</c>.
         /// </summary>
         /// <value>
         /// The Okta Authorization Server.
