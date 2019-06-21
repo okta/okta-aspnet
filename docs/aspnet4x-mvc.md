@@ -56,10 +56,11 @@ The `OktaMvcOptions` class configures the Okta middleware. You can see all the a
 | AuthorizationServerId     | No           | The Okta Authorization Server to use. The default value is `default`. |
 | PostLogoutRedirectUri     | No           | The location Okta should redirect to after logout. If blank, Okta will redirect to the Okta login page. |
 | Scope                     | No           | The OAuth 2.0/OpenID Connect scopes to request when logging in. The default value is `openid profile`. |
-| GetClaimsFromUserInfoEndpoint | No       | Whether to retrieve additional claims from the UserInfo endpoint after login (not usually necessary). The default value is `false`. |
+| GetClaimsFromUserInfoEndpoint | No       | This property has been deprecated and will be no longer supported. |
 | ClockSkew                 | No           | The clock skew allowed when validating tokens. The default value is 2 minutes. |
+| SecurityTokenValidated                 | No           | The event invoked after the security token has passed validation and a `ClaimsIdentity` has been generated. |
 
-You can store these values in the `Web.config`, but be careful when checking in the client secret to the source control.
+You can store these values (except the Token event) in the `Web.config`, but be careful when checking in the client secret to the source control.
 
 # Troubleshooting
 

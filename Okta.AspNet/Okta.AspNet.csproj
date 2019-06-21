@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Official Okta middleware for ASP.NET 4.5+. Easily add authentication and authorization to ASP.NET applications.</Description>
     <Copyright>(c) 2019 Okta, Inc.</Copyright>
-    <VersionPrefix>1.1.6</VersionPrefix>
+    <VersionPrefix>1.2.0</VersionPrefix>
     <Authors>Okta, Inc.</Authors>
     <TargetFramework>net452</TargetFramework>
     <AssemblyName>Okta.AspNet</AssemblyName>
@@ -29,9 +29,9 @@
 
   <PropertyGroup>
     <CodeAnalysisRuleSet>..\OktaSdk.ruleset</CodeAnalysisRuleSet>
-    <AssemblyVersion>1.1.6.0</AssemblyVersion>
-    <FileVersion>1.1.6.0</FileVersion>
-    <Version>1.1.6</Version>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
+    <Version>1.2.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
