@@ -4,6 +4,7 @@
 // </copyright>
 
 using System.Linq;
+using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -55,6 +56,21 @@ namespace Okta.AspNetCore
             };
 
             oidcOptions.Events.OnRedirectToIdentityProvider = events.OnRedirectToIdentityProvider;
+
+            if (oktaMvcOptions.OnTokenValidated != null)
+            {
+                oidcOptions.Events.OnTokenValidated = oktaMvcOptions.OnTokenValidated;
+            }
+
+            if (oktaMvcOptions.GetClaimsFromUserInfoEndpoint && oktaMvcOptions.OnUserInformationReceived != null)
+            {
+                oidcOptions.Events.OnUserInformationReceived = oktaMvcOptions.OnUserInformationReceived;
+            }
+
+            if (oktaMvcOptions.GetClaimsFromUserInfoEndpoint)
+            {
+                oidcOptions.ClaimActions.Add(new MapAllClaimsAction());
+            }
         }
     }
 }

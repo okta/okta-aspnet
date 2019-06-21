@@ -46,14 +46,6 @@ namespace Okta.AspNet
                 throw new Exception(tokenResponse.Error);
             }
 
-            if (_options.GetClaimsFromUserInfoEndpoint)
-            {
-                await EnrichIdentityViaUserInfoAsync(
-                    response.AuthenticationTicket.Identity,
-                    openIdConfiguration,
-                    tokenResponse).ConfigureAwait(false);
-            }
-
             FillNameIdentifierClaimOnIdentity(response.AuthenticationTicket.Identity);
 
             response.AuthenticationTicket.Identity.AddClaim(new Claim("id_token", tokenResponse.IdentityToken));
@@ -76,38 +68,11 @@ namespace Okta.AspNet
         {
             var currentNameIdentifier = identity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             var sub = identity.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
-            
+
             if (currentNameIdentifier == null && sub != null)
             {
-                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, sub));				
+                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, sub));
             }
-        }
-
-
-        private async Task EnrichIdentityViaUserInfoAsync(ClaimsIdentity subject, OpenIdConnectConfiguration openIdConfiguration, TokenResponse tokenResponse)
-        {
-            var userInfoResponse = await _httpClient.GetUserInfoAsync(new UserInfoRequest
-            {
-                Address = openIdConfiguration.UserInfoEndpoint,
-                Token = tokenResponse.AccessToken,
-            }).ConfigureAwait(false);
-
-            // Claims returned from the UserInfoClient have issuer = "LOCAL AUTHORITY" by default
-            var userInfoClaims = userInfoResponse.Claims
-                .Select(x => new Claim(x.Type, x.Value, x.ValueType, _issuer, _issuer, subject))
-                .ToArray();
-
-            // Update ID token claims with fresh data from the /userinfo response
-            var duplicateClaims = subject.Claims
-                .Where(x => userInfoClaims.Any(y => y.Type == x.Type))
-                .ToArray();
-
-            foreach (var claim in duplicateClaims)
-            {
-                subject.RemoveClaim(claim);
-            }
-
-            subject.AddClaims(userInfoResponse.Claims);
         }
     }
 }
