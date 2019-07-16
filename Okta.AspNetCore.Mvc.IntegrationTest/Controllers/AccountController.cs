@@ -1,8 +1,6 @@
-﻿// <copyright file="AccountController.cs" company="Okta, Inc">
-// Copyright (c) 2018-present Okta, Inc. All rights reserved.
-// Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
-// </copyright>
-
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -12,29 +10,27 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Okta.AspNetCore.Mvc.IntegrationTest.Controllers
 {
+    [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
-        public IActionResult Login()
-        {
-            if (!HttpContext.User.Identity.IsAuthenticated)
-            {
-                return Challenge(OpenIdConnectDefaults.AuthenticationScheme);
-            }
-
-            return RedirectToAction("Index", "Home");
-        }
-
-        [HttpPost]
-        public IActionResult Logout()
-        {
-            return new SignOutResult(new[] { OpenIdConnectDefaults.AuthenticationScheme, CookieAuthenticationDefaults.AuthenticationScheme });
-        }
-
-        [Authorize]
         [HttpGet]
-        public IActionResult Claims()
+        public IActionResult SignIn()
         {
-            return View(HttpContext.User.Claims);
+            var redirectUrl = Url.Page("/Index");
+            return Challenge(
+                new AuthenticationProperties { RedirectUri = redirectUrl },
+                OpenIdConnectDefaults.AuthenticationScheme
+            );
+        }
+
+        [HttpGet]
+        public IActionResult SignOut()
+        {
+            var callbackUrl = Url.Page("/Account/SignedOut", pageHandler: null, values: null, protocol: Request.Scheme);
+            return SignOut(
+                new AuthenticationProperties { RedirectUri = callbackUrl },
+                CookieAuthenticationDefaults.AuthenticationScheme, OpenIdConnectDefaults.AuthenticationScheme
+            );
         }
     }
 }
