@@ -38,7 +38,7 @@ namespace OktaAspMvcNetTest
             oidcOptions.ClientId = oktaMvcOptions.ClientId;
             oidcOptions.ClientSecret = oktaMvcOptions.ClientSecret;
             oidcOptions.Authority = domain;
-            oidcOptions.CallbackPath = new PathString("/");
+            oidcOptions.CallbackPath = new PathString("");
             oidcOptions.PostLogoutRedirectUri = oktaMvcOptions.PostLogoutRedirectUri;
             oidcOptions.ResponseType = "code id_token";
             oidcOptions.SecurityTokenValidator = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
@@ -67,8 +67,9 @@ namespace OktaAspMvcNetTest
             };
             var oidOptions = new OpenIdConnectAuthenticationOptions();
             ConfigureOpenIdConnectOptions(opt, oidOptions);
-            app.UseOpenIdConnectAuthentication(oidOptions);
             LogSettings(oidOptions);
+
+            app.UseOpenIdConnectAuthentication(oidOptions);
 
         }
 

@@ -1,4 +1,4 @@
-﻿@if (Request.IsAuthenticated)
+﻿@if (Request.RequestContext.HttpContext.User.Identity.IsAuthenticated)
 {
     <text>
         <ul class="nav navbar-nav navbar-right">
