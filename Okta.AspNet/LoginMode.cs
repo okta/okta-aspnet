@@ -5,9 +5,9 @@
 
 namespace Okta.AspNet
 {
-     /// <summary>
-     /// LoginMode controls the behavior of the middleware.
-     /// </summary>
+    /// <summary>
+    /// LoginMode controls the login redirect behavior of the middleware.
+    /// </summary>
     public enum LoginMode
     {
         /// <summary>
