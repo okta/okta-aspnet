@@ -44,6 +44,12 @@ namespace Okta.AspNet
         /// <value>The scope.</value>
         public IList<string> Scope { get; set; } = OktaDefaults.Scope;
 
+        /// <summary>
+        /// Gets or sets the <see cref="LoginMode"/>.
+        /// </summary>
+        /// <value>The login mode.</value>
+        public LoginMode LoginMode { get; set; } = LoginMode.OktaHosted;
+
         [Obsolete("This property has been deprecated and it will be no longer supported.", false)]
         public bool GetClaimsFromUserInfoEndpoint { get; set; } = false;
 
