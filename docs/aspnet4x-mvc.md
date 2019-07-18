@@ -12,7 +12,14 @@ Or, you can use the `dotnet` command:
 ```
 dotnet add package Okta.AspNet
 ```
-# Usage example
+# Usage guide
+
+These examples will help you to understand how to use this library. You can also check out our ASP.NET samples:
+
+* [ASP.NET MVC Samples](https://github.com/okta/samples-aspnet)
+* [ASP.NET Web Forms Samples](https://github.com/okta/samples-aspnet-webforms)
+
+## Basic configuration
 
 Okta plugs into your OWIN Startup class with the `UseOktaMvc()` method:
 
@@ -36,11 +43,40 @@ public class Startup
     }
 }
 ```
-## That's it!
+### That's it!
 
 Placing the `[Authorize]` attribute on your controllers or actions will check whether the user is logged in, and redirect them to Okta if necessary.
 
 ASP.NET automatically populates `HttpContext.User` with the information Okta sends back about the user. You can check whether the user is logged in with `User.Identity.IsAuthenticated` in your actions or views.
+
+## Self-Hosted login configuration
+
+```csharp
+public class Startup
+{
+    public void Configuration(IAppBuilder app)
+    {
+        app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
+        app.UseCookieAuthentication(new CookieAuthenticationOptions()
+            {
+                LoginPath = new PathString("/Account/Login"),
+            });
+
+        app.UseOktaMvc(new OktaMvcOptions
+        {
+            OktaDomain = "https://{yourOktaDomain}",
+            ClientId = "{clientId}",
+            ClientSecret = "{clientSecret}",
+            AuthorizationServerId = "default",
+            RedirectUri = "http://localhost:8080/authorization-code/callback",
+            PostLogoutRedirectUri = "http://localhost:8080/Home",
+            LoginMode = LoginMode.SelfHosted
+        });
+    }
+}
+```
+
+> Note: If you are using role-based authorization and you need to redirect not-authorized users to an access-denied page or similar, check out [CookieAuthenticationProvider.ApplyRedirect](https://docs.microsoft.com/en-us/previous-versions/aspnet/mt152260(v%3Dvs.113)).
 
 # Configuration Reference
 
@@ -56,6 +92,7 @@ The `OktaMvcOptions` class configures the Okta middleware. You can see all the a
 | AuthorizationServerId     | No           | The Okta Authorization Server to use. The default value is `default`. |
 | PostLogoutRedirectUri     | No           | The location Okta should redirect to after logout. If blank, Okta will redirect to the Okta login page. |
 | Scope                     | No           | The OAuth 2.0/OpenID Connect scopes to request when logging in. The default value is `openid profile`. |
+| LoginMode                     | No           | LoginMode controls the login redirect behavior of the middleware. The default value is `OktaHosted`. |
 | GetClaimsFromUserInfoEndpoint | No       | This property has been deprecated and will be no longer supported. |
 | ClockSkew                 | No           | The clock skew allowed when validating tokens. The default value is 2 minutes. |
 | SecurityTokenValidated                 | No           | The event invoked after the security token has passed validation and a `ClaimsIdentity` has been generated. |
