@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Okta.AspNet.Abstractions;
 
@@ -51,6 +52,7 @@ namespace Okta.AspNet
                 PostLogoutRedirectUri = oktaMvcOptions.PostLogoutRedirectUri,
                 TokenValidationParameters = tokenValidationParameters,
                 SecurityTokenValidator = new StrictSecurityTokenValidator(),
+                AuthenticationMode = (oktaMvcOptions.LoginMode == LoginMode.SelfHosted) ? AuthenticationMode.Passive : AuthenticationMode.Active,
                 Notifications = new OpenIdConnectAuthenticationNotifications
                 {
                     AuthorizationCodeReceived = tokenExchanger.ExchangeCodeForTokenAsync,
