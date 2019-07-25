@@ -16,6 +16,7 @@ An Okta account (sign up for a [forever-free developer account](https://develope
 
 Check out the following resources:
 
+* [Guides](https://developer.okta.com/docs/guides/)
 * [Quickstart ASP.NET 4.x](https://developer.okta.com/quickstart/#/okta-sign-in-page/dotnet/aspnet4)
 * [Quickstart ASP.NET Core](https://developer.okta.com/quickstart/#/okta-sign-in-page/dotnet/aspnetcore)
 * [ASP.NET 4.x samples](https://github.com/okta/samples-aspnet)

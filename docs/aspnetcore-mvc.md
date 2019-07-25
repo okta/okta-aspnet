@@ -12,7 +12,11 @@ Or, you can use the `dotnet` command:
 dotnet add package Okta.AspNetCore
 ```
 
-# Usage example
+# Usage guide
+
+These examples will help you to understand how to use this library. You can also check out our [ASP.NET Core samples](https://github.com/okta/samples-aspnetcore).
+
+## Basic configuration
 
 Okta plugs into your OWIN Startup class with the `UseOktaMvc()` method:
 
@@ -41,11 +45,41 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-## That's it!
+### That's it!
 
 Placing the `[Authorize]` attribute on your controllers or actions will check whether the user is logged in, and redirect them to Okta if necessary.
 
 ASP.NET automatically populates `HttpContext.User` with the information Okta sends back about the user. You can check whether the user is logged in with `User.Identity.IsAuthenticated` in your actions or views.
+
+## Self-Hosted login configuration
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    var oktaMvcOptions = new OktaMvcOptions()
+    {
+        OktaDomain = Configuration.GetSection("Okta").GetValue<string>("OktaDomain"),
+        ClientId = Configuration.GetSection("Okta").GetValue<string>("ClientId"),
+        ClientSecret = Configuration.GetSection("Okta").GetValue<string>("ClientSecret"),
+        Scope = new List<string> { "openid", "profile", "email" },
+    };
+
+    services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    })
+    .AddCookie(options =>
+    {
+        options.LoginPath = new PathString("/Account/SignIn");
+    })
+    .AddOktaMvc(oktaMvcOptions);
+
+    services.AddMvc();
+}
+```
+> Note: If you are using role-based authorization and you need to redirect unauthorized users to an access-denied page or similar, check out [CookieAuthenticationOptions.AccessDeniedPath](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.cookies.cookieauthenticationoptions.accessdeniedpath?view=aspnetcore-2.2).
 
 # Configuration Reference 
 
