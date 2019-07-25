@@ -79,7 +79,7 @@ public void ConfigureServices(IServiceCollection services)
     services.AddMvc();
 }
 ```
-> Note: If you are using role-based authorization and you need to redirect not-authorized users to an access-denied page or similar, check out [CookieAuthenticationOptions.AccessDeniedPath](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.cookies.cookieauthenticationoptions.accessdeniedpath?view=aspnetcore-2.2).
+> Note: If you are using role-based authorization and you need to redirect unauthorized users to an access-denied page or similar, check out [CookieAuthenticationOptions.AccessDeniedPath](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.cookies.cookieauthenticationoptions.accessdeniedpath?view=aspnetcore-2.2).
 
 # Configuration Reference 
 
