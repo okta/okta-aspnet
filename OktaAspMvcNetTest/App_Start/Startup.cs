@@ -19,7 +19,7 @@ namespace OktaAspMvcNetTest
     {
         internal static void LogSettings(OpenIdConnectAuthenticationOptions openIdOptions, string folder=null)
         {
-            folder = folder ?? Environment.CurrentDirectory;
+            folder = folder ?? Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
             var props = openIdOptions.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).OrderBy(o => o.Name);
             var dics = new Dictionary<string, string>();
             foreach (var prop in props)

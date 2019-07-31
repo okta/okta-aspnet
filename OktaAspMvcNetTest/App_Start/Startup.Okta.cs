@@ -24,6 +24,7 @@ namespace OktaAspMvcNetTest
         private static readonly string domain = ConfigurationManager.AppSettings["Okta:Domain"];
         private static readonly string clientSecret = ConfigurationManager.AppSettings["Okta:ClientSecret"];
         private static readonly string postLogoutRedirectUri = ConfigurationManager.AppSettings["Okta:PostLogoutRedirectUri"];
+        private static readonly string redirectUri = ConfigurationManager.AppSettings["Okta:RedirectUri"];
 
         public void ConfigureAuth(IAppBuilder app)
         {
@@ -36,17 +37,33 @@ namespace OktaAspMvcNetTest
                 ClientSecret = clientSecret,
                 ClientId = clientId,
                 OktaDomain = domain,
-                PostLogoutRedirectUri = postLogoutRedirectUri
+                PostLogoutRedirectUri = postLogoutRedirectUri,
+                RedirectUri = redirectUri
             };
             var oidOptions = new OpenIdConnectAuthenticationOptions();
             ConfigureOpenIdConnectOptions(opt, oidOptions);
-            //LogSettings(oidOptions);
+            LogSettings(oidOptions);
 
             app.UseOpenIdConnectAuthentication(oidOptions);
 
         }
 
-        public static void ConfigureOpenIdConnectOptions(OktaMvcOptions oktaMvcOptions,
+        private static string EnsureTrailingSlash(string value)
+        {
+            if (value == null)
+            {
+                value = string.Empty;
+            }
+
+            if (!value.EndsWith("/", StringComparison.Ordinal))
+            {
+                return value + "/";
+            }
+
+            return value;
+        }
+
+        private static void ConfigureOpenIdConnectOptions(OktaMvcOptions oktaMvcOptions,
             OpenIdConnectAuthenticationOptions oidcOptions)
         {
             oidcOptions.ClientId = oktaMvcOptions.ClientId;
@@ -57,12 +74,12 @@ namespace OktaAspMvcNetTest
             oidcOptions.ResponseType = "code id_token";
             oidcOptions.SecurityTokenValidator = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
             oidcOptions.UseTokenLifetime = true;
-            oidcOptions.RedirectUri = "https://localhost:44365/";
+            oidcOptions.RedirectUri = EnsureTrailingSlash(oktaMvcOptions.RedirectUri);
             oidcOptions.Scope = "openid profile";
             oidcOptions.TokenValidationParameters = new DefaultTokenValidationParameters(oktaMvcOptions, "Okta")
             {
                 ValidAudience = oktaMvcOptions.ClientId,
-                NameClaimType = "name",
+                NameClaimType = "preferred_username",
             };
         }
 
