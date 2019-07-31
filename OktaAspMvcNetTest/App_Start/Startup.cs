@@ -17,8 +17,9 @@ namespace OktaAspMvcNetTest
 {
     public partial class Startup
     {
-        internal static void LogSettings(OpenIdConnectAuthenticationOptions openIdOptions)
+        internal static void LogSettings(OpenIdConnectAuthenticationOptions openIdOptions, string folder=null)
         {
+            folder = folder ?? Environment.CurrentDirectory;
             var props = openIdOptions.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).OrderBy(o => o.Name);
             var dics = new Dictionary<string, string>();
             foreach (var prop in props)
@@ -36,9 +37,9 @@ namespace OktaAspMvcNetTest
             }
             JsonSerializer serializer = new JsonSerializer();
 #if Okta
-            using (StreamWriter sw = new StreamWriter(@"C:\\Users\\jabil.100004892\\Desktop\\okta-aspnet\\okta-aspnet\\OktaAspMvcNetTest\\Okta.json"))
+            using (StreamWriter sw = new StreamWriter($@"{folder}\\Okta.json"))
 #else
-            using (StreamWriter sw = new StreamWriter(@"C:\\Users\\jabil.100004892\\Desktop\\okta-aspnet\\okta-aspnet\\OktaAspMvcNetTest\\AzureAD.json"))
+            using (StreamWriter sw = new StreamWriter($@"{folder}\\AzureAD.json"))
 
 #endif
             using (JsonWriter writer = new JsonTextWriter(sw))
