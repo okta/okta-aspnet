@@ -113,6 +113,14 @@ namespace Okta.AspNet
                 {
                     n.ProtocolMessage.SetParameter("sessionToken", sessionToken);
                 }
+
+                var idpId = string.Empty;
+                n.OwinContext.Authentication.AuthenticationResponseChallenge?.Properties?.Dictionary?.TryGetValue("idp", out idpId);
+
+                if (!string.IsNullOrEmpty(idpId))
+                {
+                    n.ProtocolMessage.SetParameter("idp", idpId);
+                }
             }
 
             return Task.FromResult(false);
