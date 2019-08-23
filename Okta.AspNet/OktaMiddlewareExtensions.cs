@@ -92,26 +92,34 @@ namespace Okta.AspNet
             app.UseOpenIdConnectAuthentication(OpenIdConnectAuthenticationOptionsBuilder.BuildOpenIdConnectAuthenticationOptions(options, notifications));
         }
 
-        private static Task BeforeRedirectToIdentityProviderAsync(RedirectToIdentityProviderNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions> n)
+        private static Task BeforeRedirectToIdentityProviderAsync(RedirectToIdentityProviderNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions> redirectToIdentityProviderNotification)
         {
             // If signing out, add the id_token_hint
-            if (n.ProtocolMessage.RequestType == OpenIdConnectRequestType.Logout)
+            if (redirectToIdentityProviderNotification.ProtocolMessage.RequestType == OpenIdConnectRequestType.Logout)
             {
-                if (n.OwinContext.Authentication.User.FindFirst("id_token") != null)
+                if (redirectToIdentityProviderNotification.OwinContext.Authentication.User.FindFirst("id_token") != null)
                 {
-                    n.ProtocolMessage.IdTokenHint = n.OwinContext.Authentication.User.FindFirst("id_token").Value;
+                    redirectToIdentityProviderNotification.ProtocolMessage.IdTokenHint = redirectToIdentityProviderNotification.OwinContext.Authentication.User.FindFirst("id_token").Value;
                 }
             }
 
             // Add sessionToken to provide custom login
-            if (n.ProtocolMessage.RequestType == OpenIdConnectRequestType.Authentication)
+            if (redirectToIdentityProviderNotification.ProtocolMessage.RequestType == OpenIdConnectRequestType.Authentication)
             {
                 var sessionToken = string.Empty;
-                n.OwinContext.Authentication.AuthenticationResponseChallenge?.Properties?.Dictionary?.TryGetValue("sessionToken", out sessionToken);
+                redirectToIdentityProviderNotification.OwinContext.Authentication.AuthenticationResponseChallenge?.Properties?.Dictionary?.TryGetValue("sessionToken", out sessionToken);
 
                 if (!string.IsNullOrEmpty(sessionToken))
                 {
-                    n.ProtocolMessage.SetParameter("sessionToken", sessionToken);
+                    redirectToIdentityProviderNotification.ProtocolMessage.SetParameter("sessionToken", sessionToken);
+                }
+
+                var idpId = string.Empty;
+                redirectToIdentityProviderNotification.OwinContext.Authentication.AuthenticationResponseChallenge?.Properties?.Dictionary?.TryGetValue("idp", out idpId);
+
+                if (!string.IsNullOrEmpty(idpId))
+                {
+                    redirectToIdentityProviderNotification.ProtocolMessage.SetParameter("idp", idpId);
                 }
             }
 

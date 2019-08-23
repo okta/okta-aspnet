@@ -49,6 +49,19 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
             }
         }
 
+        [Fact]
+        public async Task IncludeIdpInAuthorizeUrlAsync()
+        {
+            var loginWithIdpEndpoint = string.Format("{0}/Account/LoginWithIdp", BaseUrl);
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, loginWithIdpEndpoint);
+            using (var client = _server.CreateClient())
+            {
+                var response = await client.GetAsync(loginWithIdpEndpoint);
+                Assert.True(response.StatusCode == System.Net.HttpStatusCode.Found);
+                Assert.Contains("idp=foo", response.Headers.Location.AbsoluteUri);
+            }
+        }
+
         public void Dispose()
         {
             _server.Dispose();

@@ -52,6 +52,14 @@ namespace Okta.AspNetCore
                 }
             }
 
+            if (context.Properties.Items.TryGetValue("idp", out var idpId))
+            {
+                if (!string.IsNullOrEmpty(idpId))
+                {
+                    context.ProtocolMessage.SetParameter("idp", idpId);
+                }
+            }
+
             return Task.CompletedTask;
         }
 
