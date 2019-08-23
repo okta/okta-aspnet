@@ -81,6 +81,28 @@ public void ConfigureServices(IServiceCollection services)
 ```
 > Note: If you are using role-based authorization and you need to redirect unauthorized users to an access-denied page or similar, check out [CookieAuthenticationOptions.AccessDeniedPath](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.cookies.cookieauthenticationoptions.accessdeniedpath?view=aspnetcore-2.2).
 
+## Login with an external identity provider
+
+Add the following action in your controller: 
+
+```csharp
+public IActionResult SignInWithIdp(string idp)
+{
+    if (!HttpContext.User.Identity.IsAuthenticated)
+    {
+        var properties = new AuthenticationProperties();
+        properties.Items.Add("idp", idp);
+        properties.RedirectUri = "/Home/";
+
+        return Challenge(properties, OktaDefaults.MvcAuthenticationScheme);
+    }
+
+    return RedirectToAction("Index", "Home");
+}
+```
+
+The Okta.AspNetCore library will include your identity provider id in the authorize URL and the user will prompted with the identity provider login. For more information, check out our guides to [add an external identity provider](https://developer.okta.com/docs/guides/add-an-external-idp/).
+
 # Configuration Reference 
 
 The `OktaMvcOptions` class configures the Okta middleware. You can see all the available options in the table below:
