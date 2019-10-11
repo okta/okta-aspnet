@@ -43,6 +43,7 @@ namespace Okta.AspNet
 
             var oidcOptions = new OpenIdConnectAuthenticationOptions
             {
+                AuthenticationType = oktaMvcOptions.AuthenticationType,
                 ClientId = oktaMvcOptions.ClientId,
                 ClientSecret = oktaMvcOptions.ClientSecret,
                 Authority = issuer,

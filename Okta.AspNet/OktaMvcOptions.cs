@@ -15,6 +15,12 @@ namespace Okta.AspNet
     public class OktaMvcOptions : Abstractions.OktaWebOptions
     {
         /// <summary>
+        ///  Gets or sets the authentication type that can be used as a identifier in multi tenancy scenarios.
+        /// </summary>
+        /// <value>The identifier for the tenant</value>
+        public string AuthenticationType { get; set; }
+
+        /// <summary>
         /// Gets or sets the client secret of your Okta Application.
         /// </summary>
         /// <value>The client secret.</value>

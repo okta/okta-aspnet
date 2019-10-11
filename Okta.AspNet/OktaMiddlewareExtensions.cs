@@ -4,6 +4,7 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
@@ -30,6 +31,18 @@ namespace Okta.AspNet
 
             new OktaMvcOptionsValidator().Validate(options);
             AddOpenIdConnectAuthentication(app, options);
+
+            return app;
+        }
+
+        public static IAppBuilder UseOktaMvc(this IAppBuilder app, List<OktaMvcOptions> optionsList)
+        {
+            if (app == null)
+            {
+                throw new ArgumentNullException(nameof(app));
+            }
+
+            AddOpenIdConnectAuthentication(app, optionsList);
 
             return app;
         }
@@ -77,6 +90,23 @@ namespace Okta.AspNet
                 TokenValidationParameters = tokenValidationParameters,
                 TokenHandler = new StrictTokenHandler(),
             });
+        }
+
+        private static void AddOpenIdConnectAuthentication(IAppBuilder app,  List<OktaMvcOptions> optionsList)
+        {
+            // Stop the default behavior of remapping JWT claim names to legacy MS/SOAP claim names
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            var notifications = new OpenIdConnectAuthenticationNotifications
+            {
+                RedirectToIdentityProvider = BeforeRedirectToIdentityProviderAsync,
+            };
+
+            foreach (var options in optionsList)
+            {
+                new OktaMvcOptionsValidator().Validate(options);
+                app.UseOpenIdConnectAuthentication(OpenIdConnectAuthenticationOptionsBuilder.BuildOpenIdConnectAuthenticationOptions(options, notifications));
+            }
         }
 
         private static void AddOpenIdConnectAuthentication(IAppBuilder app, OktaMvcOptions options)
