@@ -4,6 +4,7 @@
 // </copyright>
 
 using System;
+using System.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -27,7 +28,7 @@ namespace Okta.AspNet.Abstractions.Test
                 RSAParameters rsaKeyInfo = rsaCryptoServiceProvider.ExportParameters(true);
                 var rsaSecurityKey = new RsaSecurityKey(rsaKeyInfo);
 
-                var signingCredentials = new SigningCredentials(rsaSecurityKey, SecurityAlgorithms.RsaSha256);
+                var signingCredentials = new Microsoft.IdentityModel.Tokens.SigningCredentials(rsaSecurityKey, SecurityAlgorithms.RsaSha256);
 
                 var jwtContents = new JwtSecurityToken(
                     issuer: fakeIssuer,
