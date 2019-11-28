@@ -1,20 +1,15 @@
-﻿// <copyright file="MiddlewareShould.cs" company="Okta, Inc">
-// Copyright (c) 2018-present Okta, Inc. All rights reserved.
-// Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
-// </copyright>
-
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Configuration;
 using Xunit;
 
 namespace Okta.AspNetCore.WebApi.IntegrationTest
 {
-    public class MiddlewareShould : IDisposable
+    public class OktaMiddlewareShould : IDisposable
     {
         private readonly TestServer _server;
 
@@ -24,7 +19,7 @@ namespace Okta.AspNetCore.WebApi.IntegrationTest
 
         public IConfiguration Configuration { get; set; }
 
-        public MiddlewareShould()
+        public OktaMiddlewareShould()
         {
             Configuration = TestConfiguration.GetConfiguration();
             BaseUrl = "http://localhost:58533";
