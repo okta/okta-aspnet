@@ -12,8 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNet", "Okta.AspNet\Okta.AspNet.csproj", "{E183845F-6656-458C-8B7A-B1C4007FBD86}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNet.Abstractions.Test", "Okta.AspNet.Abstractions.Test\Okta.AspNet.Abstractions.Test.csproj", "{776245CD-6358-4B4A-8A43-D2275CEADA15}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.AspNet.WebApi.IntegrationTest", "Okta.AspNet.WebApi.IntegrationTest\Okta.AspNet.WebApi.IntegrationTest.csproj", "{E8E7FD29-C41F-4FBD-936E-12B7AF8DBA44}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNet.Test", "Okta.AspNet.Test\Okta.AspNet.Test.csproj", "{4B8E09D6-6B40-477E-8E4C-CF90848FC0B9}"
@@ -22,9 +20,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNetCore", "Okta.Asp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNetCore.Test", "Okta.AspNetCore.Test\Okta.AspNetCore.Test.csproj", "{C3157EED-029C-4F5C-88FC-9948E8A5A773}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.AspNetCore.Mvc.IntegrationTest", "Okta.AspNetCore.Mvc.IntegrationTest\Okta.AspNetCore.Mvc.IntegrationTest.csproj", "{1EB5B0C3-67BF-43C4-8414-5C73A6F2C18F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNetCore.Mvc.IntegrationTest", "Okta.AspNetCore.Mvc.IntegrationTest\Okta.AspNetCore.Mvc.IntegrationTest.csproj", "{1EB5B0C3-67BF-43C4-8414-5C73A6F2C18F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.AspNetCore.WebApi.IntegrationTest", "Okta.AspNetCore.WebApi.IntegrationTest\Okta.AspNetCore.WebApi.IntegrationTest.csproj", "{C15647D6-77FC-43D6-86AD-888025A0326F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNetCore.WebApi.IntegrationTest", "Okta.AspNetCore.WebApi.IntegrationTest\Okta.AspNetCore.WebApi.IntegrationTest.csproj", "{C15647D6-77FC-43D6-86AD-888025A0326F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.AspNet.Abstractions.Test", "Okta.AspNet.Abstractions.Test\Okta.AspNet.Abstractions.Test.csproj", "{265F81BE-5E48-4D90-851E-659FF93D4FC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,10 +40,6 @@ Global
 		{E183845F-6656-458C-8B7A-B1C4007FBD86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E183845F-6656-458C-8B7A-B1C4007FBD86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E183845F-6656-458C-8B7A-B1C4007FBD86}.Release|Any CPU.Build.0 = Release|Any CPU
-		{776245CD-6358-4B4A-8A43-D2275CEADA15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{776245CD-6358-4B4A-8A43-D2275CEADA15}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{776245CD-6358-4B4A-8A43-D2275CEADA15}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{776245CD-6358-4B4A-8A43-D2275CEADA15}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E8E7FD29-C41F-4FBD-936E-12B7AF8DBA44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E8E7FD29-C41F-4FBD-936E-12B7AF8DBA44}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8E7FD29-C41F-4FBD-936E-12B7AF8DBA44}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -68,6 +64,10 @@ Global
 		{C15647D6-77FC-43D6-86AD-888025A0326F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C15647D6-77FC-43D6-86AD-888025A0326F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C15647D6-77FC-43D6-86AD-888025A0326F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{265F81BE-5E48-4D90-851E-659FF93D4FC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{265F81BE-5E48-4D90-851E-659FF93D4FC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{265F81BE-5E48-4D90-851E-659FF93D4FC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{265F81BE-5E48-4D90-851E-659FF93D4FC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
