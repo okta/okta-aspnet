@@ -14,7 +14,7 @@
     <PackageTags>okta,token,authentication,authorization</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/okta/okta-sdk-dotnet/master/icon.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/okta/okta-aspnet</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/okta/okta-aspnet/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/okta/okta-aspnet</RepositoryUrl>
   </PropertyGroup>
   
