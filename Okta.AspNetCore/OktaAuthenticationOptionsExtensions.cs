@@ -1,15 +1,29 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.Extensions.DependencyInjection;
-using Okta.AspNet.Abstractions;
+﻿// <copyright file="OktaAuthenticationOptionsExtensions.cs" company="Okta, Inc">
+// Copyright (c) 2018-present Okta, Inc. All rights reserved.
+// Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
+// </copyright>
+
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Extensions.DependencyInjection;
+using Okta.AspNet.Abstractions;
 
 namespace Okta.AspNetCore
 {
+    /// <summary>
+    /// Okta OIDC extension methods.
+    /// </summary>
     public static class OktaAuthenticationOptionsExtensions
     {
+        /// <summary>
+        /// Configures Okta for MVC applications.
+        /// </summary>
+        /// <param name="builder">The application builder.</param>
+        /// <param name="options">The Okta MVC options.</param>
+        /// <returns>The authentication builder.</returns>
         public static AuthenticationBuilder AddOktaMvc(this AuthenticationBuilder builder, OktaMvcOptions options)
         {
             if (builder == null)
@@ -20,6 +34,24 @@ namespace Okta.AspNetCore
             new OktaMvcOptionsValidator().Validate(options);
 
             return AddCodeFlow(builder, options);
+        }
+
+        /// <summary>
+        /// Configures Okta for Web API apps.
+        /// </summary>
+        /// <param name="builder">The application builder.</param>
+        /// <param name="options">The Okta Web API options.</param>
+        /// <returns>The authentication builder.</returns>
+        public static AuthenticationBuilder AddOktaWebApi(this AuthenticationBuilder builder, OktaWebApiOptions options)
+        {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            new OktaWebApiOptionsValidator().Validate(options);
+
+            return AddJwtValidation(builder, options);
         }
 
         private static AuthenticationBuilder AddCodeFlow(AuthenticationBuilder builder, OktaMvcOptions options)
@@ -56,18 +88,6 @@ namespace Okta.AspNetCore
             }
 
             return Task.CompletedTask;
-        }
-
-        public static AuthenticationBuilder AddOktaWebApi(this AuthenticationBuilder builder, OktaWebApiOptions options)
-        {
-            if (builder == null)
-            {
-                throw new ArgumentNullException(nameof(builder));
-            }
-
-            new OktaWebApiOptionsValidator().Validate(options);
-
-            return AddJwtValidation(builder, options);
         }
 
         private static AuthenticationBuilder AddJwtValidation(AuthenticationBuilder builder, OktaWebApiOptions options)

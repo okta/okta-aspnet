@@ -7,8 +7,15 @@ using System;
 
 namespace Okta.AspNetCore
 {
+    /// <summary>
+    /// Validates Okta configuration.
+    /// </summary>
     public sealed class OktaMvcOptionsValidator : AspNet.Abstractions.OktaWebOptionsValidator<OktaMvcOptions>
     {
+        /// <summary>
+        /// Validates MVC configuration.
+        /// </summary>
+        /// <param name="options">The Okta MVC options.</param>
         protected override void ValidateInternal(OktaMvcOptions options)
         {
             if (string.IsNullOrEmpty(options.ClientId))

@@ -11,7 +11,7 @@ namespace Okta.AspNetCore.WebApi.IntegrationTest.Controllers
     [ApiController]
     [Produces("application/json")]
     [Authorize]
-    public class MessageController : Controller
+    public class MessageController : ControllerBase
     {
         [HttpGet]
         [Route("~/api/messages")]
