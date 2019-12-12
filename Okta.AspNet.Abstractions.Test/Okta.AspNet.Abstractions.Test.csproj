@@ -1,25 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
-    <PackageReference Include="FluentAssertions" Version="5.3.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
-    <PackageReference Include="xunit" Version="2.3.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
-    <ProjectReference Include="..\Okta.AspNet.Abstractions\Okta.AspNet.Abstractions.csproj" />
-    <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta007" />
-    <AdditionalFiles Include="..\stylecop.json" />
+    <PackageReference Include="FluentAssertions" Version="5.9.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+    <PackageReference Include="xunit" Version="2.4.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
+    <PackageReference Include="coverlet.collector" Version="1.0.1" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <CodeAnalysisRuleSet>..\OktaSdk.Tests.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Okta.AspNet.Abstractions\Okta.AspNet.Abstractions.csproj" />
+  </ItemGroup>
 
 </Project>

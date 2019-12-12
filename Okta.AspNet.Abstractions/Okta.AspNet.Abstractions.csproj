@@ -2,14 +2,14 @@
 
   <PropertyGroup>
     <TargetFrameworks>net452;netstandard2.0</TargetFrameworks>
-    <Version>3.0.2</Version>
+    <Version>3.0.3</Version>
   </PropertyGroup>
 
   <PropertyGroup>
     <Description>Interfaces and configuration objects for the Okta ASP.NET packages.</Description>
     <RepositoryUrl>https://github.com/okta/okta-aspnet</RepositoryUrl>
     <PackageProjectUrl>https://github.com/okta/okta-aspnet</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/okta/okta-aspnet/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Authors>Okta, Inc.</Authors>
     <PackageIconUrl>https://raw.githubusercontent.com/okta/okta-sdk-dotnet/master/icon.png</PackageIconUrl>
   </PropertyGroup>
@@ -17,7 +17,7 @@
   <ItemGroup>
     <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003" PrivateAssets="All" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.6.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" PrivateAssets="All" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.6.0" />
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
     <AdditionalFiles Include="..\stylecop.json" />

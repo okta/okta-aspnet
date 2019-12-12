@@ -13,8 +13,17 @@ using Okta.AspNet.Abstractions;
 
 namespace Okta.AspNetCore
 {
+    /// <summary>
+    /// Okta OIDC extension methods.
+    /// </summary>
     public static class OktaAuthenticationOptionsExtensions
     {
+        /// <summary>
+        /// Configures Okta for MVC applications.
+        /// </summary>
+        /// <param name="builder">The application builder.</param>
+        /// <param name="options">The Okta MVC options.</param>
+        /// <returns>The authentication builder.</returns>
         public static AuthenticationBuilder AddOktaMvc(this AuthenticationBuilder builder, OktaMvcOptions options)
         {
             if (builder == null)
@@ -25,6 +34,24 @@ namespace Okta.AspNetCore
             new OktaMvcOptionsValidator().Validate(options);
 
             return AddCodeFlow(builder, options);
+        }
+
+        /// <summary>
+        /// Configures Okta for Web API apps.
+        /// </summary>
+        /// <param name="builder">The application builder.</param>
+        /// <param name="options">The Okta Web API options.</param>
+        /// <returns>The authentication builder.</returns>
+        public static AuthenticationBuilder AddOktaWebApi(this AuthenticationBuilder builder, OktaWebApiOptions options)
+        {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            new OktaWebApiOptionsValidator().Validate(options);
+
+            return AddJwtValidation(builder, options);
         }
 
         private static AuthenticationBuilder AddCodeFlow(AuthenticationBuilder builder, OktaMvcOptions options)
@@ -61,18 +88,6 @@ namespace Okta.AspNetCore
             }
 
             return Task.CompletedTask;
-        }
-
-        public static AuthenticationBuilder AddOktaWebApi(this AuthenticationBuilder builder, OktaWebApiOptions options)
-        {
-            if (builder == null)
-            {
-                throw new ArgumentNullException(nameof(builder));
-            }
-
-            new OktaWebApiOptionsValidator().Validate(options);
-
-            return AddJwtValidation(builder, options);
         }
 
         private static AuthenticationBuilder AddJwtValidation(AuthenticationBuilder builder, OktaWebApiOptions options)

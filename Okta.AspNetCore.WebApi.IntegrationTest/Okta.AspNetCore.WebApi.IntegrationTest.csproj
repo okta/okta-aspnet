@@ -1,45 +1,27 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
-	 <GenerateProgramFile>false</GenerateProgramFile>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\index.html" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta007" />
-    <PackageReference Include="xunit" Version="2.3.1" />
-    <PackageReference Include="Xunit.AspNetCore.Integration" Version="1.0.3" />
-    <PackageReference Include="xunit.runner.console" Version="2.3.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Okta.AspNet.Abstractions\Okta.AspNet.Abstractions.csproj" />
     <ProjectReference Include="..\Okta.AspNetCore\Okta.AspNetCore.csproj" />
-    <AdditionalFiles Include="..\stylecop.json" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-
-  <PropertyGroup>
-    <CodeAnalysisRuleSet>..\OktaSdk.Tests.ruleset</CodeAnalysisRuleSet>
-    <ApplicationIcon />
-    <OutputType>Library</OutputType>
-    <StartupObject />
-  </PropertyGroup>
 
 </Project>

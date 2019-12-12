@@ -1,35 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Official Okta middleware for ASP.NET Core 2.0+. Easily add authentication and authorization to ASP.NET Core applications.</Description>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <Description>Official Okta middleware for ASP.NET Core 3.0+. Easily add authentication and authorization to ASP.NET Core applications.</Description>
     <Copyright>(c) 2019 Okta, Inc.</Copyright>
-    <VersionPrefix>1.3.0</VersionPrefix>
+    <VersionPrefix>3.0.0</VersionPrefix>
     <Authors>Okta, Inc.</Authors>
-    <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Okta.AspNetCore</AssemblyName>
     <PackageId>Okta.AspNetCore</PackageId>
     <PackageTags>okta,token,authentication,authorization</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/okta/okta-sdk-dotnet/master/icon.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/okta/okta-aspnet</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/okta/okta-aspnet/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/okta/okta-aspnet</RepositoryUrl>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <ProjectReference Include="..\Okta.AspNet.Abstractions\Okta.AspNet.Abstractions.csproj" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="2.2.0" />
-    <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003" PrivateAssets="All" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.0.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <AdditionalFiles Include="..\stylecop.json" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <CodeAnalysisRuleSet>..\OktaSdk.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile></DocumentationFile>
-  </PropertyGroup>
-
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Okta.AspNet.Abstractions\Okta.AspNet.Abstractions.csproj" />
+  </ItemGroup>
 </Project>

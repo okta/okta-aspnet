@@ -12,6 +12,9 @@ using Okta.AspNet.Abstractions;
 
 namespace Okta.AspNetCore
 {
+    /// <summary>
+    /// Utility methods for OpenIdConnect options.
+    /// </summary>
     public class OpenIdConnectOptionsHelper
     {
         /// <summary>

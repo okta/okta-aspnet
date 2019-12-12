@@ -1,14 +1,10 @@
-﻿// <copyright file="Startup.cs" company="Okta, Inc">
-// Copyright (c) 2018-present Okta, Inc. All rights reserved.
-// Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
-// </copyright>
-
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Okta.AspNetCore.Mvc.IntegrationTest
 {
@@ -24,6 +20,7 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthentication(options =>
@@ -39,30 +36,28 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
                 ClientSecret = Configuration["Okta:ClientSecret"],
                 OktaDomain = Configuration["Okta:OktaDomain"],
             });
-
-            services.AddMvc();
+            services.AddAuthorization();
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
 
-            app.UseStaticFiles();
+            app.UseRouting();
+
             app.UseAuthentication();
-            app.UseMvc(routes =>
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                   name: "default",
+                   pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
