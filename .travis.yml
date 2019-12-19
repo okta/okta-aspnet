@@ -2,7 +2,7 @@ language: csharp
 mono: latest
 sudo: required
 dist: xenial
-dotnet: 3.0 # .NET Core
+dotnet: 3.1 # .NET Core
 script:
   - ./build.sh
 
