@@ -55,7 +55,7 @@ If you want to build an ASP.NET MVC application we highly recommend you to check
 * [Getting started with ASP.NET Core MVC](https://github.com/okta/okta-aspnet/blob/master/docs/aspnetcore-mvc.md)
 
 
-Also, if you want to build an ASP.NET Web API check out [this guide](https://developer.okta.com/docs/guides/protect-your-api/aspnet/before-you-begin/) to see how to protect your endpoints using the Okta ASP.NET SDK. You can also check out the following resources:
+Also, if you want to build an ASP.NET Web API application check out [this guide](https://developer.okta.com/docs/guides/protect-your-api/aspnet/before-you-begin/) to see how to protect your endpoints using the Okta ASP.NET SDK. You can also check out the following resources:
 
 * [Getting started with ASP.NET Web API](https://github.com/okta/okta-aspnet/blob/master/docs/aspnet4x-webapi.md)
 * [Getting started with ASP.NET Core Web API](https://github.com/okta/okta-aspnet/blob/master/docs/aspnetcore-webapi.md)
