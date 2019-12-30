@@ -9,11 +9,10 @@ Okta ASP.NET middleware
 * [Need help?](#need-help)
 * [What you need](#what-you-need)
 * [Getting started](#getting-started)
-* [Resources](#resources)
 * [Contributing](#contributing)
 
 
-This package will add authentication via Okta to your ASP.NET or ASP.NET Core application. You can follow our instructions below, checkout our examples on GitHub or jump to our guides to see how to configure Okta with your ASP.NET applications. 
+This package will enable your ASP.NET application to to work with Okta via OAuth 2.0/OIDC. You can follow our instructions below, check out our examples on GitHub or [jump to our guides](https://developer.okta.com/docs/guides/) to see how to configure Okta with your ASP.NET applications. 
 
 We also publish these other libraries for .NET:
  
@@ -26,7 +25,7 @@ This library uses semantic versioning and follows Okta's [library version policy
 
 :heavy_check_mark: The current stable major version series is: 1.x
 
-|Library| Version | Status                    | Compatibility| Branch |
+|Package| Version | Status                    | Compatibility| Branch |
 | ------- | ------- | ------------------------- | ----------------------- | -------------------- |
 |`Okta.AspNet.Abstractions`| 3.x   | :heavy_check_mark: Stable | .NET Standard 2.0 and .NET Framework 4.5.2 or higher.| master |
 |`Okta.AspNet`| 1.x | :heavy_check_mark: Stable | .NET Framework 4.5.2 | master |
@@ -48,16 +47,26 @@ If you run into problems using the SDK, you can
 
 An Okta account (sign up for a [forever-free developer account](https://developer.okta.com/signup/))
 
-## Resources
+## Getting Started
 
-Learn how to build applications using the Okta ASP.NET SDK with the following resources:
+If you want to build an ASP.NET MVC application we highly recommend you to check out [this guide](https://developer.okta.com/docs/guides/sign-into-web-app/aspnet/before-you-begin/) to see what you need to get started and how sign users in your web application using the Okta ASP.NET SDK. You can also check out the following resources:
+
+* [Getting started with ASP.NET MVC](https://github.com/okta/okta-aspnet/blob/master/docs/aspnet4x-mvc.md)
+* [Getting started with ASP.NET Core MVC](https://github.com/okta/okta-aspnet/blob/master/docs/aspnetcore-mvc.md)
+
+
+Also, if you want to build an ASP.NET Web API check out [this guide](https://developer.okta.com/docs/guides/protect-your-api/aspnet/before-you-begin/) to see how to protect your endpoints using the Okta ASP.NET SDK. You can also check out the following resources:
+
+* [Getting started with ASP.NET Web API](https://github.com/okta/okta-aspnet/blob/master/docs/aspnet4x-webapi.md)
+* [Getting started with ASP.NET Core Web API](https://github.com/okta/okta-aspnet/blob/master/docs/aspnetcore-webapi.md)
+
+To learn more about this library you can explore the following additional resources:
 
 * [Guides](https://developer.okta.com/docs/guides/)
-* [Quickstart ASP.NET 4.x](https://developer.okta.com/quickstart/#/okta-sign-in-page/dotnet/aspnet4)
-* [Quickstart ASP.NET Core](https://developer.okta.com/quickstart/#/okta-sign-in-page/dotnet/aspnetcore)
 * [ASP.NET 4.x samples](https://github.com/okta/samples-aspnet)
+* [ASP.NET Web Forms samples](https://github.com/okta/samples-aspnet-webforms/)
 * [ASP.NET Core samples](https://github.com/okta/samples-aspnetcore)
-* [Project documentation](https://github.com/okta/okta-aspnet/tree/master/docs)
+* [Project Documentation](https://github.com/okta/okta-aspnet/tree/master/docs)
 
 ## Contributing
 
