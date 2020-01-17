@@ -1,3 +1,5 @@
+#addin nuget:?package=Cake.Figlet&version=1.3.1
+
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
@@ -125,11 +127,23 @@ Task("PackNuget")
     });
 });
 
+Task("Info")
+.Does(() => 
+{
+    Information(Figlet("Okta.AspNet"));
+
+    var cakeVersion = typeof(ICakeContext).Assembly.GetName().Version.ToString();
+
+    Information("Building using {0} version of Cake", cakeVersion);
+});
+
 Task("Default")
+    .IsDependentOn("Info")
     .IsDependentOn("Clean")
     .IsDependentOn("Restore")
     .IsDependentOn("Build")
     .IsDependentOn("RunTests")
     .IsDependentOn("PackNuget");
+    
 // Run the specified (or default) target
 RunTarget(target);
