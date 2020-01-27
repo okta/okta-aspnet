@@ -67,21 +67,21 @@ namespace Okta.AspNetCore
         public Func<UserInformationReceivedContext, Task> OnUserInformationReceived { get; set; } = context => Task.CompletedTask;
 
         /// <summary>
-        /// Gets or sets the event invoked when an IdToken has been validated and produced an AuthenticationTicket.
+        /// Gets or sets the event invoked when the AuthenticationTicket has been recieved and remote login is complete.
         /// </summary>
-        /// <value>The OnTokenValidated event.</value>
+        /// <value>The OnTickedReceived event.</value>
         public Func<TokenValidatedContext, Task> OnTickedReceived { get; set; } = context => Task.CompletedTask;
 
         /// <summary>
-        /// Gets or sets the event invoked when an IdToken has been validated and produced an AuthenticationTicket.
+        /// Gets or sets the event invoked when redirecting to Identity Provider for sign in.
         /// </summary>
-        /// <value>The OnTokenValidated event.</value>
+        /// <value>The OnRedirectToIdentityProvider event.</value>
         public Func<TokenValidatedContext, Task> OnRedirectToIdentityProvider { get; set; } = context => Task.CompletedTask;
 
         /// <summary>
-        /// Gets or sets the event invoked when an IdToken has been validated and produced an AuthenticationTicket.
+        /// Gets or sets the event invoked when redirecting to Identity Provider for sign out.
         /// </summary>
-        /// <value>The OnTokenValidated event.</value>
+        /// <value>The OnRedirectToIdentityProviderForSignOut event.</value>
         public Func<TokenValidatedContext, Task> OnRedirectToIdentityProviderForSignOut { get; set; } = context => Task.CompletedTask;
     }
 }
