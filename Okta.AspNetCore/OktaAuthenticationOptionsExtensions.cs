@@ -31,7 +31,35 @@ namespace Okta.AspNetCore
         {
             var events = new OpenIdConnectEvents
             {
-                OnRedirectToIdentityProvider = BeforeRedirectToIdentityProviderAsync,
+                OnRedirectToIdentityProvider = (context) =>
+                {
+                    BeforeRedirectToIdentityProviderAsync(context);
+
+                    if (options.CallbackUri != string.Empty)
+                    {
+                        context.ProtocolMessage.RedirectUri = options.CallbackUri + options.CallbackPath;
+                    }
+
+                    return Task.CompletedTask;
+                },
+                OnRedirectToIdentityProviderForSignOut = (context) =>
+                {
+                    if (options.CallbackUri != string.Empty)
+                    {
+                        context.ProtocolMessage.RedirectUri = options.CallbackUri + OktaDefaults.SignOutCallbackPath;
+                    }
+
+                    return Task.CompletedTask;
+                },
+                OnTicketReceived = (context) =>
+                {
+                    if (options.CallbackUri != string.Empty)
+                    {
+                        context.ReturnUri = options.CallbackUri;
+                    }
+
+                    return Task.CompletedTask;
+                },
             };
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();

@@ -31,6 +31,12 @@ namespace Okta.AspNetCore
         public string CallbackPath { get; set; } = OktaDefaults.CallbackPath;
 
         /// <summary>
+        /// Gets or sets the Uri Okta should redirect to process a login.
+        /// </summary>
+        /// <value>The base Uri. Configure path in CallbackPath.</value>
+        public string CallbackUri { get; set; } = OktaDefaults.CallbackUri;
+
+        /// <summary>
         /// Gets or sets the location Okta should redirect to after logout. If blank, Okta will redirect to the Okta login page.
         /// </summary>
         /// <value>The post-logout redirect URI.</value>
@@ -59,5 +65,23 @@ namespace Okta.AspNetCore
         /// </summary>
         /// <value>The OnUserInformationReceived event.</value>
         public Func<UserInformationReceivedContext, Task> OnUserInformationReceived { get; set; } = context => Task.CompletedTask;
+
+        /// <summary>
+        /// Gets or sets the event invoked when an IdToken has been validated and produced an AuthenticationTicket.
+        /// </summary>
+        /// <value>The OnTokenValidated event.</value>
+        public Func<TokenValidatedContext, Task> OnTickedReceived { get; set; } = context => Task.CompletedTask;
+
+        /// <summary>
+        /// Gets or sets the event invoked when an IdToken has been validated and produced an AuthenticationTicket.
+        /// </summary>
+        /// <value>The OnTokenValidated event.</value>
+        public Func<TokenValidatedContext, Task> OnRedirectToIdentityProvider { get; set; } = context => Task.CompletedTask;
+
+        /// <summary>
+        /// Gets or sets the event invoked when an IdToken has been validated and produced an AuthenticationTicket.
+        /// </summary>
+        /// <value>The OnTokenValidated event.</value>
+        public Func<TokenValidatedContext, Task> OnRedirectToIdentityProviderForSignOut { get; set; } = context => Task.CompletedTask;
     }
 }
