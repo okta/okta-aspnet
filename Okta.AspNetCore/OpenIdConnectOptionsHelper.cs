@@ -56,8 +56,12 @@ namespace Okta.AspNetCore
             };
 
             oidcOptions.Events.OnRedirectToIdentityProvider = events.OnRedirectToIdentityProvider;
-            oidcOptions.Events.OnRedirectToIdentityProviderForSignOut = events.OnRedirectToIdentityProviderForSignOut;
-            oidcOptions.Events.OnTicketReceived = events.OnTicketReceived;
+
+            if (oktaMvcOptions.CallbackUri != string.Empty)
+            {
+                oidcOptions.Events.OnRedirectToIdentityProviderForSignOut = events.OnRedirectToIdentityProviderForSignOut;
+                oidcOptions.Events.OnTicketReceived = events.OnTicketReceived;
+            }
 
             if (oktaMvcOptions.OnTokenValidated != null)
             {
