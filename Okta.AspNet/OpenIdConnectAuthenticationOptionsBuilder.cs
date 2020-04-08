@@ -5,9 +5,12 @@
 
 using System.Linq;
 using System.Net.Http;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Notifications;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Okta.AspNet.Abstractions;
 
@@ -15,57 +18,134 @@ namespace Okta.AspNet
 {
     public class OpenIdConnectAuthenticationOptionsBuilder
     {
+        private OktaMvcOptions _oktaMvcOptions;
+        private IUserInformationProvider _userInformationProvider;
+        private string _issuer;
+        private ConfigurationManager<OpenIdConnectConfiguration> _configurationManager;
+        private HttpClient _httpClient;
+
+        public OpenIdConnectAuthenticationOptionsBuilder(OktaMvcOptions oktaMvcOptions, IUserInformationProvider userInformationProvider = null)
+        {
+            _oktaMvcOptions = oktaMvcOptions;
+            _issuer = UrlHelper.CreateIssuerUrl(oktaMvcOptions.OktaDomain, oktaMvcOptions.AuthorizationServerId);
+            _httpClient = new HttpClient(new UserAgentHandler("okta-aspnet", typeof(OktaMiddlewareExtensions).Assembly.GetName().Version));
+            _configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
+                    _issuer + "/.well-known/openid-configuration",
+                    new OpenIdConnectConfigurationRetriever(),
+                    new HttpDocumentRetriever(_httpClient));
+
+            _userInformationProvider = userInformationProvider ?? new UserInformationProvider(oktaMvcOptions, _issuer, _configurationManager);
+        }
+
         /// <summary>
         /// Creates a new instance of OpenIdConnectAuthenticationOptions.
         /// </summary>
         /// <param name="oktaMvcOptions">The <see cref="OktaMvcOptions"/> options.</param>
-        /// <param name="notifications">The OpenIdConnectAuthenticationNotifications notifications.</param>
         /// <returns>A new instance of OpenIdConnectAuthenticationOptions.</returns>
-        public static OpenIdConnectAuthenticationOptions BuildOpenIdConnectAuthenticationOptions(OktaMvcOptions oktaMvcOptions, OpenIdConnectAuthenticationNotifications notifications)
+        public OpenIdConnectAuthenticationOptions BuildOpenIdConnectAuthenticationOptions()
         {
-            var issuer = UrlHelper.CreateIssuerUrl(oktaMvcOptions.OktaDomain, oktaMvcOptions.AuthorizationServerId);
-            var httpClient = new HttpClient(new UserAgentHandler("okta-aspnet", typeof(OktaMiddlewareExtensions).Assembly.GetName().Version));
-
-            var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
-                issuer + "/.well-known/openid-configuration",
-                new OpenIdConnectConfigurationRetriever(),
-                new HttpDocumentRetriever(httpClient));
-
-            var tokenValidationParameters = new DefaultTokenValidationParameters(oktaMvcOptions, issuer)
+            var tokenValidationParameters = new DefaultTokenValidationParameters(_oktaMvcOptions, _issuer)
             {
                 NameClaimType = "name",
-                ValidAudience = oktaMvcOptions.ClientId,
+                ValidAudience = _oktaMvcOptions.ClientId,
             };
 
-            var tokenExchanger = new TokenExchanger(oktaMvcOptions, issuer, configurationManager);
-            var definedScopes = oktaMvcOptions.Scope?.ToArray() ?? OktaDefaults.Scope;
+            var userInfoProvider = new UserInformationProvider(_oktaMvcOptions, _issuer, _configurationManager);
+            var definedScopes = _oktaMvcOptions.Scope?.ToArray() ?? OktaDefaults.Scope;
             var scopeString = string.Join(" ", definedScopes);
 
             var oidcOptions = new OpenIdConnectAuthenticationOptions
             {
-                ClientId = oktaMvcOptions.ClientId,
-                ClientSecret = oktaMvcOptions.ClientSecret,
-                Authority = issuer,
-                RedirectUri = oktaMvcOptions.RedirectUri,
-                ResponseType = OpenIdConnectResponseType.CodeIdToken,
+                ClientId = _oktaMvcOptions.ClientId,
+                ClientSecret = _oktaMvcOptions.ClientSecret,
+                Authority = _issuer,
+                RedirectUri = _oktaMvcOptions.RedirectUri,
+                ResponseType = OpenIdConnectResponseType.Code,
+                RedeemCode = true,
                 Scope = scopeString,
-                PostLogoutRedirectUri = oktaMvcOptions.PostLogoutRedirectUri,
+                PostLogoutRedirectUri = _oktaMvcOptions.PostLogoutRedirectUri,
                 TokenValidationParameters = tokenValidationParameters,
                 SecurityTokenValidator = new StrictSecurityTokenValidator(),
-                AuthenticationMode = (oktaMvcOptions.LoginMode == LoginMode.SelfHosted) ? AuthenticationMode.Passive : AuthenticationMode.Active,
+                AuthenticationMode = (_oktaMvcOptions.LoginMode == LoginMode.SelfHosted) ? AuthenticationMode.Passive : AuthenticationMode.Active,
+                SaveTokens = true,
                 Notifications = new OpenIdConnectAuthenticationNotifications
                 {
-                    AuthorizationCodeReceived = tokenExchanger.ExchangeCodeForTokenAsync,
-                    RedirectToIdentityProvider = notifications.RedirectToIdentityProvider,
+                    RedirectToIdentityProvider = BeforeRedirectToIdentityProviderAsync,
+                    SecurityTokenValidated = SecurityTokenValidatedAsync,
                 },
             };
 
-            if (oktaMvcOptions.SecurityTokenValidated != null)
+            return oidcOptions;
+        }
+
+        private Task BeforeRedirectToIdentityProviderAsync(RedirectToIdentityProviderNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions> redirectToIdentityProviderNotification)
+        {
+            // If signing out, add the id_token_hint
+            if (redirectToIdentityProviderNotification.ProtocolMessage.RequestType == OpenIdConnectRequestType.Logout)
             {
-                oidcOptions.Notifications.SecurityTokenValidated = oktaMvcOptions.SecurityTokenValidated;
+                if (redirectToIdentityProviderNotification.OwinContext.Authentication.User.FindFirst("id_token") != null)
+                {
+                    redirectToIdentityProviderNotification.ProtocolMessage.IdTokenHint = redirectToIdentityProviderNotification.OwinContext.Authentication.User.FindFirst("id_token").Value;
+                }
             }
 
-            return oidcOptions;
+            // Add sessionToken to provide custom login
+            if (redirectToIdentityProviderNotification.ProtocolMessage.RequestType == OpenIdConnectRequestType.Authentication)
+            {
+                var sessionToken = string.Empty;
+                redirectToIdentityProviderNotification.OwinContext.Authentication.AuthenticationResponseChallenge?.Properties?.Dictionary?.TryGetValue("sessionToken", out sessionToken);
+
+                if (!string.IsNullOrEmpty(sessionToken))
+                {
+                    redirectToIdentityProviderNotification.ProtocolMessage.SetParameter("sessionToken", sessionToken);
+                }
+
+                var idpId = string.Empty;
+                redirectToIdentityProviderNotification.OwinContext.Authentication.AuthenticationResponseChallenge?.Properties?.Dictionary?.TryGetValue("idp", out idpId);
+
+                if (!string.IsNullOrEmpty(idpId))
+                {
+                    redirectToIdentityProviderNotification.ProtocolMessage.SetParameter("idp", idpId);
+                }
+            }
+
+            return Task.FromResult(false);
+        }
+
+        private async Task SecurityTokenValidatedAsync(SecurityTokenValidatedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions> context)
+        {
+            context.AuthenticationTicket.Identity.AddClaim(new Claim("id_token", context.ProtocolMessage.IdToken));
+            context.AuthenticationTicket.Identity.AddClaim(new Claim("access_token", context.ProtocolMessage.AccessToken));
+
+            if (!string.IsNullOrEmpty(context.ProtocolMessage.RefreshToken))
+            {
+                context.AuthenticationTicket.Identity.AddClaim(new Claim("refresh_token", context.ProtocolMessage.RefreshToken));
+            }
+
+            FillNameIdentifierClaimOnIdentity(context.AuthenticationTicket.Identity);
+
+            if (_oktaMvcOptions.GetClaimsFromUserInfoEndpoint)
+            {
+                await _userInformationProvider.EnrichIdentityViaUserInfoAsync(context.AuthenticationTicket.Identity, context.ProtocolMessage.AccessToken).ConfigureAwait(false);
+            }
+
+            await _oktaMvcOptions.SecurityTokenValidated(context).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// For compatibility with the .NET MVC antiforgery provider, make sure the old-style NameIdentifier is filled.
+        /// If not, get subject claim and duplicate it to MSFT's NameIdentifier.
+        /// </summary>
+        /// <param name="identity">The <see cref="ClaimsIdentity"/> to modify in place.</param>
+        private void FillNameIdentifierClaimOnIdentity(ClaimsIdentity identity)
+        {
+            var currentNameIdentifier = identity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var sub = identity.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+
+            if (currentNameIdentifier == null && sub != null)
+            {
+                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, sub));
+            }
         }
     }
 }
