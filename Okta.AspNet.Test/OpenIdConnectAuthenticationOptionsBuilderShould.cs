@@ -53,13 +53,13 @@ namespace Okta.AspNet.Test
             SecurityTokenValidatedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions> context = new SecurityTokenValidatedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions>(null, null);
             context.AuthenticationTicket = new AuthenticationTicket(new ClaimsIdentity(), null);
             context.ProtocolMessage = new OpenIdConnectMessage() { AccessToken = "foo", IdToken = "bar" };
-            // Check the event was call once with a null parameter
+            // Check the event was call once with the corresponding context
             oidcOptions.Notifications.SecurityTokenValidated(context);
             mockTokenEvent.Received(1).Invoke(context);
         }
 
         [Fact]
-        public void AddClaimsFromUserInfoEnpointIfGetClaimsFromUserInfoEndpointIsTrue()
+        public void CallUserInformationProviderWhenGetClaimsFromUserInfoEndpointIsTrue()
         {
             var oktaMvcOptions = new OktaMvcOptions()
             {
