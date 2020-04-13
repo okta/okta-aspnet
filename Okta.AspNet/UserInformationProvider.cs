@@ -52,7 +52,7 @@ namespace Okta.AspNet
                 subject.RemoveClaim(claim);
             }
 
-            subject.AddClaims(userInfoResponse.Claims);
+            subject.AddClaims(userInfoClaims);
         }
     }
 }
