@@ -18,11 +18,11 @@ namespace Okta.AspNet
 {
     public class OpenIdConnectAuthenticationOptionsBuilder
     {
-        private OktaMvcOptions _oktaMvcOptions;
-        private IUserInformationProvider _userInformationProvider;
-        private string _issuer;
-        private ConfigurationManager<OpenIdConnectConfiguration> _configurationManager;
-        private HttpClient _httpClient;
+        private readonly OktaMvcOptions _oktaMvcOptions;
+        private readonly IUserInformationProvider _userInformationProvider;
+        private readonly string _issuer;
+        private readonly ConfigurationManager<OpenIdConnectConfiguration> _configurationManager;
+        private readonly HttpClient _httpClient;
 
         public OpenIdConnectAuthenticationOptionsBuilder(OktaMvcOptions oktaMvcOptions, IUserInformationProvider userInformationProvider = null)
         {

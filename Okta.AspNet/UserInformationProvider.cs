@@ -44,15 +44,14 @@ namespace Okta.AspNet
 
             // Update ID token claims with fresh data from the /userinfo response
             var duplicateClaims = subject.Claims
-                .Where(x => userInfoClaims.Any(y => y.Type == x.Type))
-                .ToArray();
+                .Where(x => userInfoClaims.Any(y => y.Type == x.Type));
 
             foreach (var claim in duplicateClaims)
             {
                 subject.RemoveClaim(claim);
             }
 
-            subject.AddClaims(userInfoResponse.Claims);
+            subject.AddClaims(userInfoClaims);
         }
     }
 }
