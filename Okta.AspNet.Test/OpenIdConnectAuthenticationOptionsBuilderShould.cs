@@ -5,6 +5,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -33,16 +35,10 @@ namespace Okta.AspNet.Test
                 RedirectUri = "/redirectUri",
                 Scope = new List<string> { "openid", "profile", "email" },
                 SecurityTokenValidated = mockTokenEvent,
+                GetClaimsFromUserInfoEndpoint = false,
             };
 
-            var notifications = new OpenIdConnectAuthenticationNotifications
-            {
-                RedirectToIdentityProvider = null,
-            };
-
-            var oidcOptions = OpenIdConnectAuthenticationOptionsBuilder.BuildOpenIdConnectAuthenticationOptions(
-                oktaMvcOptions,
-                notifications);
+            var oidcOptions = new OpenIdConnectAuthenticationOptionsBuilder(oktaMvcOptions).BuildOpenIdConnectAuthenticationOptions();
 
             oidcOptions.ClientId.Should().Be(oktaMvcOptions.ClientId);
             oidcOptions.ClientSecret.Should().Be(oktaMvcOptions.ClientSecret);
@@ -54,9 +50,51 @@ namespace Okta.AspNet.Test
             oidcOptions.RedirectUri.Should().Be(oktaMvcOptions.RedirectUri);
             oidcOptions.Scope.Should().Be(string.Join(" ", oktaMvcOptions.Scope));
 
-            // Check the event was call once with a null parameter
-            oidcOptions.Notifications.SecurityTokenValidated(null);
-            mockTokenEvent.Received(1).Invoke(null);
+            SecurityTokenValidatedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions> context = new SecurityTokenValidatedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions>(null, null);
+            context.AuthenticationTicket = new AuthenticationTicket(new ClaimsIdentity(), null);
+            context.ProtocolMessage = new OpenIdConnectMessage() { AccessToken = "foo", IdToken = "bar" };
+            // Check the event was call once with the corresponding context
+            oidcOptions.Notifications.SecurityTokenValidated(context);
+            mockTokenEvent.Received(1).Invoke(context);
+        }
+
+        [Fact]
+        public void CallUserInformationProviderWhenGetClaimsFromUserInfoEndpointIsTrue()
+        {
+            var oktaMvcOptions = new OktaMvcOptions()
+            {
+                PostLogoutRedirectUri = "http://postlogout.com",
+                OktaDomain = "http://myoktadomain.com",
+                ClientId = "foo",
+                ClientSecret = "bar",
+                RedirectUri = "/redirectUri",
+                Scope = new List<string> { "openid", "profile", "email" },
+                GetClaimsFromUserInfoEndpoint = true,
+            };
+
+            List<Claim> claims = new List<Claim>();
+            claims.Add(new Claim("testClaimType", "testClaimValue"));
+
+            var oidcOptions = new OpenIdConnectAuthenticationOptionsBuilder(oktaMvcOptions, new MockUserInformationProvider(claims)).BuildOpenIdConnectAuthenticationOptions();
+
+            oidcOptions.ClientId.Should().Be(oktaMvcOptions.ClientId);
+            oidcOptions.ClientSecret.Should().Be(oktaMvcOptions.ClientSecret);
+            oidcOptions.PostLogoutRedirectUri.Should().Be(oktaMvcOptions.PostLogoutRedirectUri);
+            oidcOptions.AuthenticationMode.Should().Be(AuthenticationMode.Active);
+
+            var issuer = UrlHelper.CreateIssuerUrl(oktaMvcOptions.OktaDomain, oktaMvcOptions.AuthorizationServerId);
+            oidcOptions.Authority.Should().Be(issuer);
+            oidcOptions.RedirectUri.Should().Be(oktaMvcOptions.RedirectUri);
+            oidcOptions.Scope.Should().Be(string.Join(" ", oktaMvcOptions.Scope));
+
+            SecurityTokenValidatedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions> context = new SecurityTokenValidatedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions>(null, null);
+            context.AuthenticationTicket = new AuthenticationTicket(new ClaimsIdentity(), null);
+            context.ProtocolMessage = new OpenIdConnectMessage() { AccessToken = "foo", IdToken = "bar" };
+
+            // This event should call UserInformationProvider.EnrichIdentityViaUserInfoAsync
+            oidcOptions.Notifications.SecurityTokenValidated(context);
+
+            context.AuthenticationTicket.Identity.Claims.Where(x => x.Type == "testClaimType").Count().Should().Be(1);
         }
 
         [Fact]
@@ -73,14 +111,7 @@ namespace Okta.AspNet.Test
                 LoginMode = LoginMode.SelfHosted,
             };
 
-            var notifications = new OpenIdConnectAuthenticationNotifications
-            {
-                RedirectToIdentityProvider = null,
-            };
-
-            var oidcOptions = OpenIdConnectAuthenticationOptionsBuilder.BuildOpenIdConnectAuthenticationOptions(
-                oktaMvcOptions,
-                notifications);
+            var oidcOptions = new OpenIdConnectAuthenticationOptionsBuilder(oktaMvcOptions).BuildOpenIdConnectAuthenticationOptions();
 
             oidcOptions.AuthenticationMode.Should().Be(AuthenticationMode.Passive);
         }

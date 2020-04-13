@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Official Okta middleware for ASP.NET 4.5+. Easily add authentication and authorization to ASP.NET applications.</Description>
     <Copyright>(c) 2019 Okta, Inc.</Copyright>
-    <VersionPrefix>1.4.0</VersionPrefix>
+    <VersionPrefix>1.5.0</VersionPrefix>
     <Authors>Okta, Inc.</Authors>
     <TargetFramework>net452</TargetFramework>
     <AssemblyName>Okta.AspNet</AssemblyName>
@@ -18,12 +18,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Okta.AspNet.Abstractions\Okta.AspNet.Abstractions.csproj" />
     <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003" PrivateAssets="All" />
-    <PackageReference Include="IdentityModel" Version="3.10.5" />
-    <PackageReference Include="Microsoft.Owin.Security" Version="4.0.0" />
-    <PackageReference Include="Microsoft.Owin.Security.Jwt" Version="4.0.0" />
-    <PackageReference Include="Microsoft.Owin.Security.OpenIdConnect" Version="4.0.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" PrivateAssets="All" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.6.0" />
+    <PackageReference Include="IdentityModel" Version="3.10.10" />
+    <PackageReference Include="Microsoft.Owin.Security" Version="4.1.0" />
+    <PackageReference Include="Microsoft.Owin.Security.Jwt" Version="4.1.0" />
+    <PackageReference Include="Microsoft.Owin.Security.OpenIdConnect" Version="4.1.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.0" />
     <AdditionalFiles Include="..\stylecop.json" />
   </ItemGroup>
 

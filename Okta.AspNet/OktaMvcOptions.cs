@@ -50,8 +50,11 @@ namespace Okta.AspNet
         /// <value>The login mode.</value>
         public LoginMode LoginMode { get; set; } = LoginMode.OktaHosted;
 
-        [Obsolete("This property has been deprecated and it will be no longer supported.", false)]
-        public bool GetClaimsFromUserInfoEndpoint { get; set; } = false;
+        /// <summary>
+        /// Gets or sets a value indicating whether to retrieve additional claims from the UserInfo endpoint after login.
+        /// </summary>
+        /// <value>The GetClaimsFromUserInfoEndpoint flag.</value>
+        public bool GetClaimsFromUserInfoEndpoint { get; set; } = true;
 
         /// <summary>
         /// Gets or sets the event invoked after the security token has passed validation and a ClaimsIdentity has been generated.

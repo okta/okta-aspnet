@@ -84,46 +84,7 @@ namespace Okta.AspNet
             // Stop the default behavior of remapping JWT claim names to legacy MS/SOAP claim names
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            var notifications = new OpenIdConnectAuthenticationNotifications
-            {
-                RedirectToIdentityProvider = BeforeRedirectToIdentityProviderAsync,
-            };
-
-            app.UseOpenIdConnectAuthentication(OpenIdConnectAuthenticationOptionsBuilder.BuildOpenIdConnectAuthenticationOptions(options, notifications));
-        }
-
-        private static Task BeforeRedirectToIdentityProviderAsync(RedirectToIdentityProviderNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions> redirectToIdentityProviderNotification)
-        {
-            // If signing out, add the id_token_hint
-            if (redirectToIdentityProviderNotification.ProtocolMessage.RequestType == OpenIdConnectRequestType.Logout)
-            {
-                if (redirectToIdentityProviderNotification.OwinContext.Authentication.User.FindFirst("id_token") != null)
-                {
-                    redirectToIdentityProviderNotification.ProtocolMessage.IdTokenHint = redirectToIdentityProviderNotification.OwinContext.Authentication.User.FindFirst("id_token").Value;
-                }
-            }
-
-            // Add sessionToken to provide custom login
-            if (redirectToIdentityProviderNotification.ProtocolMessage.RequestType == OpenIdConnectRequestType.Authentication)
-            {
-                var sessionToken = string.Empty;
-                redirectToIdentityProviderNotification.OwinContext.Authentication.AuthenticationResponseChallenge?.Properties?.Dictionary?.TryGetValue("sessionToken", out sessionToken);
-
-                if (!string.IsNullOrEmpty(sessionToken))
-                {
-                    redirectToIdentityProviderNotification.ProtocolMessage.SetParameter("sessionToken", sessionToken);
-                }
-
-                var idpId = string.Empty;
-                redirectToIdentityProviderNotification.OwinContext.Authentication.AuthenticationResponseChallenge?.Properties?.Dictionary?.TryGetValue("idp", out idpId);
-
-                if (!string.IsNullOrEmpty(idpId))
-                {
-                    redirectToIdentityProviderNotification.ProtocolMessage.SetParameter("idp", idpId);
-                }
-            }
-
-            return Task.FromResult(false);
+            app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptionsBuilder(options).BuildOpenIdConnectAuthenticationOptions());
         }
     }
 }
