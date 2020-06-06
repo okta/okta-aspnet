@@ -28,7 +28,10 @@ namespace Okta.AspNet
         {
             _oktaMvcOptions = oktaMvcOptions;
             _issuer = UrlHelper.CreateIssuerUrl(oktaMvcOptions.OktaDomain, oktaMvcOptions.AuthorizationServerId);
-            _httpClient = new HttpClient(new UserAgentHandler("okta-aspnet", typeof(OktaMiddlewareExtensions).Assembly.GetName().Version));
+            _httpClient = new HttpClient(new UserAgentHandler("okta-aspnet", typeof(OktaMiddlewareExtensions).Assembly.GetName().Version)
+            {
+                InnerHandler = oktaMvcOptions.BackchannelHttpHandler,
+            });
             _configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
                     _issuer + "/.well-known/openid-configuration",
                     new OpenIdConnectConfigurationRetriever(),

@@ -4,6 +4,7 @@
 // </copyright>
 
 using System;
+using System.Net.Http;
 
 namespace Okta.AspNet.Abstractions
 {
@@ -20,6 +21,12 @@ namespace Okta.AspNet.Abstractions
         /// The Okta domain.
         /// </value>
         public string OktaDomain { get; set; }
+
+        /// <summary>
+        /// Gets or sets the BackchannelHttpHandler to be used when communicating with the Okta Domain.
+        /// </summary>
+        /// <value>The BackchannelHttpHandler.</value>
+        public HttpMessageHandler BackchannelHttpHandler { get; set; } = new HttpClientHandler();
 
         /// <summary>
         /// Gets or sets the Okta Authorization Server to use. The default value is <c>default</c>.

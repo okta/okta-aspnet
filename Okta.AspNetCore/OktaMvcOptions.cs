@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
@@ -59,5 +60,11 @@ namespace Okta.AspNetCore
         /// </summary>
         /// <value>The OnUserInformationReceived event.</value>
         public Func<UserInformationReceivedContext, Task> OnUserInformationReceived { get; set; } = context => Task.CompletedTask;
+
+        /// <summary>
+        /// Gets or sets the BackchannelHttpHandler to be used when communicating with the Okta Domain.
+        /// </summary>
+        /// <value>The BackchannelHttpHandler.</value>
+        public HttpMessageHandler BackchannelHttpHandler { get; set; } = new HttpClientHandler();
     }
 }

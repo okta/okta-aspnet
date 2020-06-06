@@ -46,6 +46,13 @@ namespace Okta.AspNet
                     nameof(options.RedirectUri),
                     "Your Okta Application redirect URI is missing. You can find it in the Okta Developer Console in the details for the Application you created.");
             }
+
+            if (options.BackchannelHttpHandler == null)
+            {
+                throw new ArgumentNullException(
+                    nameof(options.BackchannelHttpHandler),
+                    "The BackchannelHttpHandler must be set");
+            }
         }
     }
 }

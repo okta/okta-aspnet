@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.Owin.Security.Notifications;
@@ -61,5 +62,11 @@ namespace Okta.AspNet
         /// </summary>
         /// <value>The SecurityTokenValidated event.</value>
         public Func<SecurityTokenValidatedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions>, Task> SecurityTokenValidated { get; set; } = notification => Task.FromResult(0);
+
+        /// <summary>
+        /// Gets or sets the BackchannelHttpHandler to be used when communicating with the Okta Endpoint.
+        /// </summary>
+        /// <value>The BackchannelHttpHandler.</value>
+        public HttpMessageHandler BackchannelHttpHandler { get; set; } = new HttpClientHandler();
     }
 }

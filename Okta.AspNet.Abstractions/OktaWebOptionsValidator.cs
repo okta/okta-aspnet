@@ -57,6 +57,12 @@ namespace Okta.AspNet.Abstractions
                     $"It looks like there's a typo in your Okta domain. Current value: {options.OktaDomain}. You can copy your domain from the Okta Developer Console. Follow these instructions to find it: https://bit.ly/finding-okta-domain", nameof(options.OktaDomain));
             }
 
+            if (options.BackchannelHttpHandler == null)
+            {
+                throw new ArgumentNullException(
+                    nameof(options.BackchannelHttpHandler));
+            }
+
             ValidateInternal((T)options);
         }
     }

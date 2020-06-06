@@ -104,7 +104,10 @@ namespace Okta.AspNetCore
                 opt.Audience = options.Audience;
                 opt.Authority = issuer;
                 opt.TokenValidationParameters = tokenValidationParameters;
-                opt.BackchannelHttpHandler = new UserAgentHandler("okta-aspnetcore", typeof(OktaAuthenticationOptionsExtensions).Assembly.GetName().Version);
+                opt.BackchannelHttpHandler = new UserAgentHandler("okta-aspnetcore", typeof(OktaAuthenticationOptionsExtensions).Assembly.GetName().Version)
+                {
+                    InnerHandler = options.BackchannelHttpHandler,
+                };
 
                 opt.SecurityTokenValidators.Clear();
                 opt.SecurityTokenValidators.Add(new StrictSecurityTokenValidator());

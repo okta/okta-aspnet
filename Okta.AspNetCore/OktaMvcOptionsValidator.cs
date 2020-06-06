@@ -52,6 +52,12 @@ namespace Okta.AspNetCore
                     nameof(options.CallbackPath),
                     "Your Okta Application callback path is missing. It should match the path of the redirect URI you specified in the Okta Developer Console for this application.");
             }
+
+            if (options.BackchannelHttpHandler == null)
+            {
+                throw new ArgumentNullException(
+                    nameof(options.BackchannelHttpHandler));
+            }
         }
     }
 }

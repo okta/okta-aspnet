@@ -40,7 +40,10 @@ namespace Okta.AspNetCore
             oidcOptions.UseTokenLifetime = false;
             oidcOptions.BackchannelHttpHandler = new UserAgentHandler(
                 "okta-aspnetcore",
-                typeof(OktaAuthenticationOptionsExtensions).Assembly.GetName().Version);
+                typeof(OktaAuthenticationOptionsExtensions).Assembly.GetName().Version)
+            {
+                InnerHandler = oktaMvcOptions.BackchannelHttpHandler,
+            };
 
             var hasDefinedScopes = oktaMvcOptions.Scope?.Any() ?? false;
             if (hasDefinedScopes)
