@@ -72,6 +72,7 @@ namespace Okta.AspNet
                 {
                     RedirectToIdentityProvider = BeforeRedirectToIdentityProviderAsync,
                     SecurityTokenValidated = SecurityTokenValidatedAsync,
+                    AuthenticationFailed = _oktaMvcOptions.AuthenticationFailed,
                 },
             };
 

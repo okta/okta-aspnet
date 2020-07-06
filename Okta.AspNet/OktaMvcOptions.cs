@@ -61,5 +61,10 @@ namespace Okta.AspNet
         /// </summary>
         /// <value>The SecurityTokenValidated event.</value>
         public Func<SecurityTokenValidatedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions>, Task> SecurityTokenValidated { get; set; } = notification => Task.FromResult(0);
+
+        /// <summary>
+        /// Gets or sets the event invoked if exceptions are thrown during request processing.
+        /// </summary>
+        public Func<AuthenticationFailedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions>, Task> AuthenticationFailed { get; set; } = notification => Task.FromResult(0);
     }
 }

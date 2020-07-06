@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace Okta.AspNetCore
@@ -59,5 +60,15 @@ namespace Okta.AspNetCore
         /// </summary>
         /// <value>The OnUserInformationReceived event.</value>
         public Func<UserInformationReceivedContext, Task> OnUserInformationReceived { get; set; } = context => Task.CompletedTask;
+
+        /// <summary>
+        /// Gets or sets the event invoked when a failure occurs within the Okta api.
+        /// </summary>
+        public Func<RemoteFailureContext, Task> OnOktaException { get; set; } = context => Task.CompletedTask;
+
+        /// <summary>
+        /// Gets or sets the event invoked if exceptions are thrown during request processing.
+        /// </summary>
+        public Func<AuthenticationFailedContext, Task> OnAuthenticationFailed { get; set; } = context => Task.CompletedTask;
     }
 }
