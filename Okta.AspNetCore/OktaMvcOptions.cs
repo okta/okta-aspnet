@@ -64,7 +64,7 @@ namespace Okta.AspNetCore
         /// <summary>
         /// Gets or sets the event invoked when a failure occurs within the Okta api.
         /// </summary>
-        public Func<RemoteFailureContext, Task> OnOktaException { get; set; } = context => Task.CompletedTask;
+        public Func<RemoteFailureContext, Task> OnOktaApiFailure { get; set; } = context => Task.CompletedTask;
 
         /// <summary>
         /// Gets or sets the event invoked if exceptions are thrown during request processing.

@@ -75,9 +75,9 @@ namespace Okta.AspNetCore
                 oidcOptions.ClaimActions.Add(new MapAllClaimsAction());
             }
 
-            if (oktaMvcOptions.OnOktaException != null)
+            if (oktaMvcOptions.OnOktaApiFailure != null)
             {
-                oidcOptions.Events.OnRemoteFailure = oktaMvcOptions.OnOktaException;
+                oidcOptions.Events.OnRemoteFailure = oktaMvcOptions.OnOktaApiFailure;
             }
 
             if (oktaMvcOptions.OnAuthenticationFailed != null)

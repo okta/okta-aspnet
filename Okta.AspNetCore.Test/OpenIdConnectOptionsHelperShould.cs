@@ -41,7 +41,7 @@ namespace Okta.AspNetCore.Test
                 OnTokenValidated = mockTokenValidatedEvent,
                 OnUserInformationReceived = mockUserInfoReceivedEvent,
                 OnAuthenticationFailed = mockAuthenticationFailedEvent,
-                OnOktaException = mockOktaExceptionEvent,
+                OnOktaApiFailure = mockOktaExceptionEvent,
             };
 
             var events = new OpenIdConnectEvents() { OnRedirectToIdentityProvider = null };

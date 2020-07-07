@@ -101,6 +101,44 @@ public IActionResult SignInWithIdp(string idp)
 }
 ```
 
+# Handling failures
+
+In the event a failure occurs, the Okta.AspNetCore library provides the `OnOktaApiFailure` and `OnAuthenticationFailed` delegates defined on the `OktaMvcOptions` class. The following is an example of how to use `OnOktaApiFailure` and `OnAuthenticationFailed` to handle failures:
+
+```csharp
+public class Startup
+{
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddOktaMvc(new OktaMvcOptions
+        {
+            // ... other configuration options removed for brevity ...
+            OnOktaApiFailure = OnOktaApiFailure,
+            OnAuthenticationFailed = OnAuthenticationFailed,
+        });
+    }
+
+    public async Task OnOktaApiFailure(RemoteFailureContext context)
+    {
+        await Task.Run(() =>
+        {
+            context.Response.Redirect("{YOUR-EXCEPTION-HANDLING-ENDPOINT}?" + context.Failure.Message);
+            context.HandleResponse();
+        });
+    }
+
+    public async Task OnAuthenticationFailed(AuthenticationFailedContext context)
+    {
+        await Task.Run(()=>
+        {
+            context.Response.Redirect("{YOUR-EXCEPTION-HANDLING-ENDPOINT}?" + context.Exception.Message);
+            context.HttpContext.Session.Set("OktaException", model.GetBytes());
+            context.HandleResponse();
+        });
+    }
+}
+```
+
 The Okta.AspNetCore library will include your identity provider id in the authorize URL and the user will prompted with the identity provider login. For more information, check out our guides to [add an external identity provider](https://developer.okta.com/docs/guides/add-an-external-idp/).
 
 # Configuration Reference 
