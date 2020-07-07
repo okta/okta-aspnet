@@ -148,6 +148,7 @@ The `OktaMvcOptions` class configures the Okta middleware. You can see all the a
 | GetClaimsFromUserInfoEndpoint | No       | Whether to retrieve additional claims from the UserInfo endpoint after login. The default value is `true`. |
 | ClockSkew                 | No           | The clock skew allowed when validating tokens. The default value is 2 minutes. |
 | SecurityTokenValidated                 | No           | The event invoked after the security token has passed validation and a `ClaimsIdentity` has been generated. |
+| OnAuthenticationFailed    | No           | The event invoked if exceptions are thrown during request processing. |
 
 You can store these values (except the Token event) in the `Web.config`, but be careful when checking in the client secret to the source control.
 

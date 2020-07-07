@@ -129,7 +129,7 @@ public class Startup
 
     public async Task OnAuthenticationFailed(AuthenticationFailedContext context)
     {
-        await Task.Run(()=>
+        await Task.Run(() =>
         {
             context.Response.Redirect("{YOUR-EXCEPTION-HANDLING-ENDPOINT}?message=" + context.Exception.Message);
             context.HandleResponse();
@@ -158,5 +158,7 @@ The `OktaMvcOptions` class configures the Okta middleware. You can see all the a
 | ClockSkew                 | No           | The clock skew allowed when validating tokens. The default value is 2 minutes. |
 | OnTokenValidated                 | No           | The event invoked after the security token has passed validation and a ClaimsIdentity has been generated. |
 | OnUserInformationReceived                 | No           | The event invoked when user information is retrieved from the UserInfoEndpoint. The `GetClaimsFromUserInfoEndpoint` value must be `true` when using this event. |
+| OnOktaApiFailure          | No           | The event invoked when a failure occurs within the Okta API. |
+| OnAuthenticationFailed    | No           | The event invoked if exceptions are thrown during request processing. |
 
 You can store these values (except the events) in the `appsettings.json`, but be careful when checking in the client secret to the source control.
