@@ -132,7 +132,6 @@ public class Startup
         await Task.Run(()=>
         {
             context.Response.Redirect("{YOUR-EXCEPTION-HANDLING-ENDPOINT}?" + context.Exception.Message);
-            context.HttpContext.Session.Set("OktaException", model.GetBytes());
             context.HandleResponse();
         });
     }
