@@ -122,7 +122,7 @@ public class Startup
     {
         await Task.Run(() =>
         {
-            context.Response.Redirect("{YOUR-EXCEPTION-HANDLING-ENDPOINT}?" + context.Failure.Message);
+            context.Response.Redirect("{YOUR-EXCEPTION-HANDLING-ENDPOINT}?message=" + context.Failure.Message);
             context.HandleResponse();
         });
     }
@@ -131,7 +131,7 @@ public class Startup
     {
         await Task.Run(()=>
         {
-            context.Response.Redirect("{YOUR-EXCEPTION-HANDLING-ENDPOINT}?" + context.Exception.Message);
+            context.Response.Redirect("{YOUR-EXCEPTION-HANDLING-ENDPOINT}?message=" + context.Exception.Message);
             context.HandleResponse();
         });
     }
