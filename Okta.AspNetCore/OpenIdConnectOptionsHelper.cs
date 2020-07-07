@@ -74,6 +74,16 @@ namespace Okta.AspNetCore
             {
                 oidcOptions.ClaimActions.Add(new MapAllClaimsAction());
             }
+
+            if (oktaMvcOptions.OnOktaApiFailure != null)
+            {
+                oidcOptions.Events.OnRemoteFailure = oktaMvcOptions.OnOktaApiFailure;
+            }
+
+            if (oktaMvcOptions.OnAuthenticationFailed != null)
+            {
+                oidcOptions.Events.OnAuthenticationFailed = oktaMvcOptions.OnAuthenticationFailed;
+            }
         }
     }
 }

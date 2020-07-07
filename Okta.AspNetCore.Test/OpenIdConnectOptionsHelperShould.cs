@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using NSubstitute;
 using Okta.AspNet.Abstractions;
@@ -24,6 +25,8 @@ namespace Okta.AspNetCore.Test
         {
             var mockTokenValidatedEvent = Substitute.For<Func<TokenValidatedContext, Task>>();
             var mockUserInfoReceivedEvent = Substitute.For<Func<UserInformationReceivedContext, Task>>();
+            var mockOktaExceptionEvent = Substitute.For<Func<RemoteFailureContext, Task>>();
+            var mockAuthenticationFailedEvent = Substitute.For<Func<AuthenticationFailedContext, Task>>();
 
             var oktaMvcOptions = new OktaMvcOptions
             {
@@ -37,6 +40,8 @@ namespace Okta.AspNetCore.Test
                 Scope = new List<string> { "openid", "profile", "email" },
                 OnTokenValidated = mockTokenValidatedEvent,
                 OnUserInformationReceived = mockUserInfoReceivedEvent,
+                OnAuthenticationFailed = mockAuthenticationFailedEvent,
+                OnOktaApiFailure = mockOktaExceptionEvent,
             };
 
             var events = new OpenIdConnectEvents() { OnRedirectToIdentityProvider = null };
@@ -61,6 +66,10 @@ namespace Okta.AspNetCore.Test
             // Check the event was call once with a null parameter
             oidcOptions.Events.OnTokenValidated(null);
             mockTokenValidatedEvent.Received(1).Invoke(null);
+            oidcOptions.Events.OnAuthenticationFailed(null);
+            mockAuthenticationFailedEvent.Received(1).Invoke(null);
+            oidcOptions.Events.OnRemoteFailure(null);
+            mockOktaExceptionEvent.Received(1).Invoke(null);
 
             // UserInfo event is mapped only when GetClaimsFromUserInfoEndpoint = true
             if (oidcOptions.GetClaimsFromUserInfoEndpoint)

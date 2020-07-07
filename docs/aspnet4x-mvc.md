@@ -103,6 +103,33 @@ public ActionResult LoginWithIdp(string idp)
 
 The Okta.AspNet library will include your identity provider id in the authorize URL and the user will prompted with the identity provider login. For more information, check out our guides to [add an external identity provider](https://developer.okta.com/docs/guides/add-an-external-idp/).
 
+# Handling failures
+
+In the event a failure occurs, the Okta.AspNet library provides the `OnAuthenticationFailed` delegate defined on the `OktaMvcOptions` class. The following is an example of how to use `OnAuthenticationFailed` to handle authentication failures:
+
+```csharp
+public class Startup
+{
+    public void Configuration(IAppBuilder app)
+    {
+        app.UseOktaMvc(new OktaMvcOptions()
+        {
+            // ... other configuration options removed for brevity ...
+            AuthenticationFailed = OnAuthenticationFailed,
+        });
+    }
+
+    public async Task OnAuthenticationFailed(AuthenticationFailedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions> notification)
+    {
+        await Task.Run(() =>
+        {
+            notification.Response.Redirect("{YOUR-EXCEPTION-HANDLING-ENDPOINT}?message=" + notification.Exception.Message);
+            notification.HandleResponse();
+        });
+    }
+}
+```
+
 # Configuration Reference
 
 The `OktaMvcOptions` class configures the Okta middleware. You can see all the available options in the table below:
@@ -121,6 +148,7 @@ The `OktaMvcOptions` class configures the Okta middleware. You can see all the a
 | GetClaimsFromUserInfoEndpoint | No       | Whether to retrieve additional claims from the UserInfo endpoint after login. The default value is `true`. |
 | ClockSkew                 | No           | The clock skew allowed when validating tokens. The default value is 2 minutes. |
 | SecurityTokenValidated                 | No           | The event invoked after the security token has passed validation and a `ClaimsIdentity` has been generated. |
+| OnAuthenticationFailed    | No           | The event invoked if exceptions are thrown during request processing. |
 
 You can store these values (except the Token event) in the `Web.config`, but be careful when checking in the client secret to the source control.
 
