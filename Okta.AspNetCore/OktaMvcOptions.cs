@@ -62,7 +62,7 @@ namespace Okta.AspNetCore
         public Func<UserInformationReceivedContext, Task> OnUserInformationReceived { get; set; } = context => Task.CompletedTask;
 
         /// <summary>
-        /// Gets or sets the event invoked when a failure occurs within the Okta api.
+        /// Gets or sets the event invoked when a failure occurs within the Okta API.
         /// </summary>
         public Func<RemoteFailureContext, Task> OnOktaApiFailure { get; set; } = context => Task.CompletedTask;
 
