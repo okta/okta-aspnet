@@ -60,14 +60,14 @@ namespace Okta.AspNet
             // Stop the default behavior of remapping JWT claim names to legacy MS/SOAP claim names
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            var signingKeyProvider = new DiscoveryDocumentSigningKeyProvider(configurationManager);
+            var signingKeyCachingProvider = new DiscoveryDocumentCachingSigningKeyProvider(new DiscoveryDocumentSigningKeyProvider(configurationManager));
+
             var tokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
             {
                 ValidAudience = options.Audience,
                 IssuerSigningKeyResolver = (token, securityToken, keyId, validationParameters) =>
                 {
-                    var signingKeys = signingKeyProvider.GetSigningKeysAsync().GetAwaiter().GetResult();
-                    return signingKeys.Where(x => x.KeyId == keyId);
+                    return signingKeyCachingProvider.SigningKeys.Where(x => x.KeyId == keyId);
                 },
             };
 
