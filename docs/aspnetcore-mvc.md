@@ -103,9 +103,14 @@ public IActionResult SignInWithIdp(string idp)
 
 ## Accessing OIDC Tokens
 
-To access OIDC tokens, AspNet Core provides the HttpContext.GetTokenAsync(...) extension method.  The following is an example of how to access OIDC tokens from your HomeController:
+To access OIDC tokens, AspNet Core provides the [`HttpContext.GetTokenAsync(...)`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.authenticationtokenextensions.gettokenasync) extension method.  The following is an example of how to access OIDC tokens from your `HomeController`:
 
 ```csharp
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
 public class TokenModel
 {
     public string Name { get; set; }
@@ -116,9 +121,9 @@ public class TokenModel
 public class HomeController : Controller
 {
     [Authorize]
-    public ActionResult OIDCToken(string tokenName)
+    public async Task<ActionResult> OIDCToken(string tokenName)
     {
-        var tokenValue = HttpContext.GetTokenAsync(tokenName).Result;
+        var tokenValue = await HttpContext.GetTokenAsync(tokenName);
         return View(new TokenModel { Name = tokenName, Value = tokenValue });
     }
 }

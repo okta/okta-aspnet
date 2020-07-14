@@ -113,7 +113,7 @@ public class HomeController : Controller
     [Authorize]
     public ActionResult Claim(string claimType)
     {
-        var claim = HttpContext.GetOwinContext().Authentication.User.Claims.First(claim => claim.Type == claimType);
+        var claim = HttpContext.GetOwinContext().Authentication.User.Claims.First(c => c.Type == claimType);
         return View(claim);
     } 
 }
