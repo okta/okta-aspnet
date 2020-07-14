@@ -101,7 +101,32 @@ public IActionResult SignInWithIdp(string idp)
 }
 ```
 
-# Handling failures
+## Accessing OIDC Tokens
+
+To access OIDC tokens, AspNet Core provides the HttpContext.GetTokenAsync(...) extension method.  The following is an example of how to access OIDC tokens from your HomeController:
+
+```csharp
+public class TokenModel
+{
+    public string Name { get; set; }
+
+    public string Value { get; set; }
+}
+
+public class HomeController : Controller
+{
+    [Authorize]
+    public ActionResult OIDCToken(string tokenName)
+    {
+        var tokenValue = HttpContext.GetTokenAsync(tokenName).Result;
+        return View(new TokenModel { Name = tokenName, Value = tokenValue });
+    }
+}
+```
+
+This example assumes you have a view called `OIDCToken` whose model is of type `TokenModel`. The OIDC tokens are `id_token` and `access_token` as well as `refresh_token` if available.
+
+## Handling failures
 
 In the event a failure occurs, the Okta.AspNetCore library provides the `OnOktaApiFailure` and `OnAuthenticationFailed` delegates defined on the `OktaMvcOptions` class. The following is an example of how to use `OnOktaApiFailure` and `OnAuthenticationFailed` to handle failures:
 

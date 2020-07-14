@@ -103,7 +103,25 @@ public ActionResult LoginWithIdp(string idp)
 
 The Okta.AspNet library will include your identity provider id in the authorize URL and the user will prompted with the identity provider login. For more information, check out our guides to [add an external identity provider](https://developer.okta.com/docs/guides/add-an-external-idp/).
 
-# Handling failures
+## Accessing OIDC Tokens
+
+For your convenience, the Okta.AspNet library makes OIDC tokens available as user claims accessible from a controller in your application.  The following is an example of how to access OIDC tokens from your HomeController:
+
+```csharp
+public class HomeController : Controller
+{
+    [Authorize]
+    public ActionResult Claim(string claimType)
+    {
+        var claim = HttpContext.GetOwinContext().Authentication.User.Claims.First(claim => claim.Type == claimType);
+        return View(claim);
+    } 
+}
+```
+
+This example assumes you have a view called `Claim` whose model is of type `System.Security.Claims.Claim`. The claim types for OIDC tokens are `id_token` and `access_token` as well as `refresh_token` if available.
+
+## Handling failures
 
 In the event a failure occurs, the Okta.AspNet library provides the `OnAuthenticationFailed` delegate defined on the `OktaMvcOptions` class. The following is an example of how to use `OnAuthenticationFailed` to handle authentication failures:
 
