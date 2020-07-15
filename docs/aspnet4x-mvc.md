@@ -111,7 +111,7 @@ For your convenience, the Okta.AspNet library makes OIDC tokens available as use
 public class HomeController : Controller
 {
     [Authorize]
-    public ActionResult Claim(string claimType)
+    public async Task<ActionResult> Claim(string claimType)
     {
         var claim = HttpContext.GetOwinContext().Authentication.User.Claims.First(c => c.Type == claimType);
         return View(claim);
