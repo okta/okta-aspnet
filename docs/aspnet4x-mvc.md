@@ -105,7 +105,7 @@ The Okta.AspNet library will include your identity provider id in the authorize 
 
 ## Accessing OIDC Tokens
 
-For your convenience, the Okta.AspNet library makes OIDC tokens available as user claims accessible from a controller in your application.  The following is an example of how to access OIDC tokens from your HomeController:
+For your convenience, the Okta.AspNet library makes OIDC tokens available as user claims accessible from a controller in your application.  The following is an example of how to access OIDC tokens from your `HomeController`:
 
 ```csharp
 public class HomeController : Controller
