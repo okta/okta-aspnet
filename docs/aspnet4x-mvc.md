@@ -170,6 +170,8 @@ The `OktaMvcOptions` class configures the Okta middleware. You can see all the a
 
 You can store these values (except the Token event) in the `Web.config`, but be careful when checking in the client secret to the source control.
 
+> Note: You can use the [The Org Authorization Server](https://developer.okta.com/docs/concepts/auth-servers/#org-authorization-server) for common use cases such as adding authentication to your MVC Application or checking user's profile, but the access token issued by this Authorization Server cannot be used or validated by your own applications.  Check out the [Okta documentation](https://developer.okta.com/docs/concepts/auth-servers/#org-authorization-server) to learn more.
+
 # Troubleshooting
 
 If you are using .NET framework <4.6 or you are getting the following error: `The request was aborted: Could not create SSL/TLS secure channel`. Make sure to include the following code in the `Application_Start` or `Startup`:
