@@ -23,7 +23,7 @@ namespace Okta.AspNet.Abstractions.Test
         {
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "http://foo.com");
             var version = typeof(UserAgentHandlerShould).Assembly.GetName().Version;
-            var handler = new UserAgentHandler(frameworkName, version)
+            var handler = new OktaHttpMessageHandler(frameworkName, version)
             {
                 InnerHandler = new TestHandler(),
             };

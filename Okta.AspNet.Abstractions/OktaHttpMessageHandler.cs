@@ -1,23 +1,28 @@
-﻿// <copyright file="UserAgentHandler.cs" company="Okta, Inc">
+﻿// <copyright file="OktaHttpMessageHandler.cs" company="Okta, Inc">
 // Copyright (c) 2018-present Okta, Inc. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 // </copyright>
 
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Okta.AspNet.Abstractions
 {
-    public class UserAgentHandler : DelegatingHandler
+    public class OktaHttpMessageHandler : DelegatingHandler
     {
-        private Lazy<string> _userAgent;
+        private readonly Lazy<string> _userAgent;
 
-        public UserAgentHandler(string frameworkName, Version frameworkversion)
+        public OktaHttpMessageHandler(string frameworkName, Version frameworkVersion, OktaWebOptions oktaWebOptions = null)
         {
+            _userAgent = new Lazy<string>(() => new UserAgentBuilder(frameworkName, frameworkVersion).GetUserAgent());
             InnerHandler = new HttpClientHandler();
-            _userAgent = new Lazy<string>(() => new UserAgentBuilder(frameworkName, frameworkversion).GetUserAgent());
+            if (oktaWebOptions?.Proxy != null)
+            {
+                ((HttpClientHandler)InnerHandler).Proxy = new DefaultProxy(oktaWebOptions.Proxy);
+            }
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)

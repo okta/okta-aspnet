@@ -3,9 +3,9 @@
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
 using FluentAssertions;
 using Okta.AspNet.Abstractions;
-using System;
 using Xunit;
 
 namespace Okta.AspNet.Test

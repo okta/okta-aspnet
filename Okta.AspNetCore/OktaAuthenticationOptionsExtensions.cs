@@ -5,6 +5,7 @@
 
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -104,7 +105,7 @@ namespace Okta.AspNetCore
                 opt.Audience = options.Audience;
                 opt.Authority = issuer;
                 opt.TokenValidationParameters = tokenValidationParameters;
-                opt.BackchannelHttpHandler = new UserAgentHandler("okta-aspnetcore", typeof(OktaAuthenticationOptionsExtensions).Assembly.GetName().Version);
+                opt.BackchannelHttpHandler = new OktaHttpMessageHandler("okta-aspnetcore", typeof(OktaAuthenticationOptionsExtensions).Assembly.GetName().Version, options);
 
                 opt.SecurityTokenValidators.Clear();
                 opt.SecurityTokenValidators.Add(new StrictSecurityTokenValidator());

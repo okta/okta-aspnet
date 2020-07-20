@@ -38,9 +38,10 @@ namespace Okta.AspNetCore
             oidcOptions.SecurityTokenValidator = new StrictSecurityTokenValidator();
             oidcOptions.SaveTokens = true;
             oidcOptions.UseTokenLifetime = false;
-            oidcOptions.BackchannelHttpHandler = new UserAgentHandler(
+            oidcOptions.BackchannelHttpHandler = new OktaHttpMessageHandler(
                 "okta-aspnetcore",
-                typeof(OktaAuthenticationOptionsExtensions).Assembly.GetName().Version);
+                typeof(OktaAuthenticationOptionsExtensions).Assembly.GetName().Version,
+                oktaMvcOptions);
 
             var hasDefinedScopes = oktaMvcOptions.Scope?.Any() ?? false;
             if (hasDefinedScopes)
