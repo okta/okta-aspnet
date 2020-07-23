@@ -16,12 +16,10 @@ namespace Okta.AspNet.WebApi.IntegrationTest
         public void Configuration(IAppBuilder app)
         {
             var oktaDomain = Environment.GetEnvironmentVariable("okta:OktaDomain");
-            var clientId = Environment.GetEnvironmentVariable("okta:ClientId");
-            var authorizationServerId = Environment.GetEnvironmentVariable("okta:AuthorizationServerId");
+
             app.UseOktaWebApi(new OktaWebApiOptions()
                 {
                     OktaDomain = oktaDomain,
-                    AuthorizationServerId = authorizationServerId,
                 });
         }
     }
