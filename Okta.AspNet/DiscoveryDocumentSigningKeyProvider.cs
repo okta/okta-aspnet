@@ -11,7 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Okta.AspNet
 {
-    internal sealed class DiscoveryDocumentSigningKeyProvider
+    internal sealed class DiscoveryDocumentSigningKeyProvider : IDiscoveryDocumentSigningKeyProvider
     {
         private readonly ConfigurationManager<OpenIdConnectConfiguration> _configurationManager;
 
@@ -21,9 +21,15 @@ namespace Okta.AspNet
             _configurationManager = configurationManager;
         }
 
-        public async Task<ICollection<SecurityKey>> GetSigningKeysAsync()
+        public async Task<IEnumerable<SecurityKey>> GetSigningKeysAsync()
         {
             var discoveryDocument = await _configurationManager.GetConfigurationAsync().ConfigureAwait(false);
+            return discoveryDocument.SigningKeys;
+        }
+
+        public IEnumerable<SecurityKey> GetSigningKeys()
+        {
+            var discoveryDocument = _configurationManager.GetConfigurationAsync().Result;
             return discoveryDocument.SigningKeys;
         }
     }
