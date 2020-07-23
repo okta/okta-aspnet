@@ -101,7 +101,37 @@ public IActionResult SignInWithIdp(string idp)
 }
 ```
 
-# Handling failures
+## Accessing OIDC Tokens
+
+To access OIDC tokens, AspNet Core provides the [`HttpContext.GetTokenAsync(...)`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.authenticationtokenextensions.gettokenasync) extension method.  The following is an example of how to access OIDC tokens from your `HomeController`:
+
+```csharp
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+public class TokenModel
+{
+    public string Name { get; set; }
+
+    public string Value { get; set; }
+}
+
+public class HomeController : Controller
+{
+    [Authorize]
+    public async Task<ActionResult> OIDCToken(string tokenName)
+    {
+        var tokenValue = await HttpContext.GetTokenAsync(tokenName);
+        return View(new TokenModel { Name = tokenName, Value = tokenValue });
+    }
+}
+```
+
+This example assumes you have a view called `OIDCToken` whose model is of type `TokenModel`. The OIDC tokens are `id_token` and `access_token` as well as `refresh_token` if available.
+
+## Handling failures
 
 In the event a failure occurs, the Okta.AspNetCore library provides the `OnOktaApiFailure` and `OnAuthenticationFailed` delegates defined on the `OktaMvcOptions` class. The following is an example of how to use `OnOktaApiFailure` and `OnAuthenticationFailed` to handle failures:
 
@@ -162,3 +192,5 @@ The `OktaMvcOptions` class configures the Okta middleware. You can see all the a
 | OnAuthenticationFailed    | No           | The event invoked if exceptions are thrown during request processing. |
 
 You can store these values (except the events) in the `appsettings.json`, but be careful when checking in the client secret to the source control.
+
+> Note: You can use the [The Org Authorization Server](https://developer.okta.com/docs/concepts/auth-servers/#org-authorization-server) for common use cases such as adding authentication to your MVC Application or checking user's profile, but the access token issued by this Authorization Server cannot be used or validated by your own applications.  Check out the [Okta documentation](https://developer.okta.com/docs/concepts/auth-servers/#org-authorization-server) to learn more.
