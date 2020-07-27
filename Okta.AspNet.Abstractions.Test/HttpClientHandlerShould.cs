@@ -14,7 +14,7 @@ using Xunit;
 
 namespace Okta.AspNet.Abstractions.Test
 {
-    public class UserAgentHandlerShould
+    public class HttpClientHandlerShould
     {
         [Theory]
         [InlineData("okta-aspnet")]
@@ -22,7 +22,7 @@ namespace Okta.AspNet.Abstractions.Test
         public async Task BuildUserAgent(string frameworkName)
         {
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "http://foo.com");
-            var version = typeof(UserAgentHandlerShould).Assembly.GetName().Version;
+            var version = typeof(HttpClientHandlerShould).Assembly.GetName().Version;
             var handler = new OktaHttpMessageHandler(frameworkName, version)
             {
                 InnerHandler = new TestHandler(),
