@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace Okta.AspNet.Abstractions
 {
+    /// <summary>
+    /// A delegating message handler used to make Okta specific modifications to requests.
+    /// </summary>
     public class OktaHttpMessageHandler : DelegatingHandler
     {
         private readonly Lazy<string> _userAgent;

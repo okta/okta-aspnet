@@ -34,14 +34,11 @@ namespace Okta.AspNet.Abstractions
             }
 
             var host = proxyConfiguration.Host;
-
-            if (!host.Contains(":"))
-            {
-                var port = proxyConfiguration?.Port ?? 8080;
-                host = $"{host}:{port}";
-            }
-
             _proxyUri = new Uri(host, UriKind.Absolute);
+            if (proxyConfiguration.Port > 0)
+            {
+                _proxyUri = new Uri($"{_proxyUri.Scheme}://{_proxyUri.Host}:{proxyConfiguration.Port}");
+            }
         }
 
         /// <inheritdoc/>
