@@ -38,7 +38,7 @@ namespace Okta.AspNet.Abstractions
         public TimeSpan ClockSkew { get; set; } = DefaultClockSkew;
 
         /// <summary>
-        /// Gets or sets the uri of your organization's proxy server.  The default is null.
+        /// Gets or sets the URI of your organization's proxy server.  The default is <c>null</c>.
         /// </summary>
         public ProxyConfiguration Proxy { get; set; }
     }
