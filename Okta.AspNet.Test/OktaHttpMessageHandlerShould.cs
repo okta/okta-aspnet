@@ -80,7 +80,7 @@ namespace Okta.AspNet.Test
                 var testProxyAddress = "http://test.cxm/";
                 var testUserName = "testUserName";
                 var testPassword = "testPassword";
-                var testFrameworkName = $"{nameof(SetInnerHandlerWebProxy)}_testFrameworkName";
+                var testFrameworkName = $"{nameof(SetInnerHandlerWebProxyCredentials)}_testFrameworkName";
                 var version = typeof(OktaHttpMessageHandlerShould).Assembly.GetName().Version;
                 var oktaHandler = new OktaHttpMessageHandler(testFrameworkName, version, new OktaMvcOptions
                 {
