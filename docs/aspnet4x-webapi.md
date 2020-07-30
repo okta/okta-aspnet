@@ -29,6 +29,31 @@ public class Startup
 }
 ```
 
+## Proxy configuration
+
+If your application requires proxy server settings, specify the `Proxy` property on `OktaWebApiOptions`.
+
+```csharp
+public class Startup
+{
+    public void Configuration(IAppBuilder app)
+    {
+        app.UseOktaWebApi(new OktaWebApiOptions
+        {
+            // ... other configuration removed for brevity
+
+            Proxy = new ProxyConfiguration
+            {
+                Host = "http://{yourProxyHostNameOrIp}",
+                Port = 3128, // Replace this value with the port that your proxy server listens on
+                Username = "{yourProxyServerUserName}",
+                Password = "{yourProxyServerPassword}",
+            }
+        });
+    }
+}
+```
+
 ## That's it!
 
 Placing the `[Authorize]` attribute on your controllers or actions will require a valid access token for those routes. This package will [parse and validate the access token](https://developer.okta.com/blog/2017/06/21/what-the-heck-is-oauth#oauth-flows) and populate `Http.Context` with a limited set of user information.

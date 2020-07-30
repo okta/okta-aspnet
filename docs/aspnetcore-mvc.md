@@ -45,6 +45,41 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
+## Proxy configuration
+
+If your application requires proxy server settings, specify the `Proxy` property on `OktaMvcOptions`.
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    var oktaMvcOptions = new OktaMvcOptions()
+    {
+        OktaDomain = Configuration.GetSection("Okta").GetValue<string>("OktaDomain"),
+        ClientId = Configuration.GetSection("Okta").GetValue<string>("ClientId"),
+        ClientSecret = Configuration.GetSection("Okta").GetValue<string>("ClientSecret"),
+        Scope = new List<string> { "openid", "profile", "email" },
+        Proxy = new ProxyConfiguration
+        {
+            Host = "http://{yourProxyHostNameOrIp}",
+            Port = 3128, // Replace this value with the port that your proxy server listens on
+            Username = "{yourProxyServerUserName}",
+            Password = "{yourProxyServerPassword}",
+        }
+    };
+
+    services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = OktaDefaults.MvcAuthenticationScheme;
+    })
+    .AddCookie()
+    .AddOktaMvc(oktaMvcOptions);
+
+    services.AddMvc();
+}
+```
+
 ### That's it!
 
 Placing the `[Authorize]` attribute on your controllers or actions will check whether the user is logged in, and redirect them to Okta if necessary.

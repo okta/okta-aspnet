@@ -34,6 +34,35 @@ public void ConfigureServices(IServiceCollection services)
     services.AddMvc();
 }
 ```
+## Proxy configuration
+
+If your application requires proxy server settings, specify the `Proxy` property on `OktaWebApiOptions`.
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = OktaDefaults.ApiAuthenticationScheme;
+        options.DefaultChallengeScheme = OktaDefaults.ApiAuthenticationScheme;
+        options.DefaultSignInScheme = OktaDefaults.ApiAuthenticationScheme;
+    })
+    .AddOktaWebApi(new OktaWebApiOptions()
+    {
+        OktaDomain = Configuration["Okta:OktaDomain"],
+        AuthorizationServerId = Configuration["Okta:AuthorizationServerId"],
+        Proxy = new ProxyConfiguration
+        {
+            Host = "http://{yourProxyHostNameOrIp}",
+            Port = 3128, // Replace this value with the port that your proxy server listens on
+            Username = "{yourProxyServerUserName}",
+            Password = "{yourProxyServerPassword}",
+        }
+    });
+
+    services.AddMvc();
+}
+```
 
 ## That's it!
 

@@ -43,6 +43,32 @@ public class Startup
     }
 }
 ```
+
+## Proxy configuration
+
+If your application requires proxy server settings, specify the `Proxy` property on `OktaMvcOptions`.
+
+```csharp
+public class Startup
+{
+    public void Configuration(IAppBuilder app)
+    {
+        app.UseOktaMvc(new OktaMvcOptions
+        {
+            // ... other configuration removed for brevity
+
+            Proxy = new ProxyConfiguration
+            {
+                Host = "http://{yourProxyHostNameOrIp}",
+                Port = 3128, // Replace this value with the port that your proxy server listens on
+                Username = "{yourProxyServerUserName}",
+                Password = "{yourProxyServerPassword}",
+            }
+        });
+    }
+}
+```
+
 ### That's it!
 
 Placing the `[Authorize]` attribute on your controllers or actions will check whether the user is logged in, and redirect them to Okta if necessary.
