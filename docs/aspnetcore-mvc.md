@@ -51,6 +51,41 @@ Placing the `[Authorize]` attribute on your controllers or actions will check wh
 
 ASP.NET automatically populates `HttpContext.User` with the information Okta sends back about the user. You can check whether the user is logged in with `User.Identity.IsAuthenticated` in your actions or views.
 
+## Proxy configuration
+
+If your application requires proxy server settings, specify the `Proxy` property on `OktaMvcOptions`.
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    var oktaMvcOptions = new OktaMvcOptions()
+    {
+        OktaDomain = Configuration.GetSection("Okta").GetValue<string>("OktaDomain"),
+        ClientId = Configuration.GetSection("Okta").GetValue<string>("ClientId"),
+        ClientSecret = Configuration.GetSection("Okta").GetValue<string>("ClientSecret"),
+        Scope = new List<string> { "openid", "profile", "email" },
+        Proxy = new ProxyConfiguration
+        {
+            Host = "http://{yourProxyHostNameOrIp}",
+            Port = 3128, // Replace this value with the port that your proxy server listens on
+            Username = "{yourProxyServerUserName}",
+            Password = "{yourProxyServerPassword}",
+        }
+    };
+
+    services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = OktaDefaults.MvcAuthenticationScheme;
+    })
+    .AddCookie()
+    .AddOktaMvc(oktaMvcOptions);
+
+    services.AddMvc();
+}
+```
+
 ## Self-Hosted login configuration
 
 ```csharp
@@ -190,6 +225,7 @@ The `OktaMvcOptions` class configures the Okta middleware. You can see all the a
 | OnUserInformationReceived                 | No           | The event invoked when user information is retrieved from the UserInfoEndpoint. The `GetClaimsFromUserInfoEndpoint` value must be `true` when using this event. |
 | OnOktaApiFailure          | No           | The event invoked when a failure occurs within the Okta API. |
 | OnAuthenticationFailed    | No           | The event invoked if exceptions are thrown during request processing. |
+| Proxy                     | No           | An object describing proxy server configuration.  Properties are `Host`, `Port`, `Username` and `Password` |
 
 You can store these values (except the events) in the `appsettings.json`, but be careful when checking in the client secret to the source control.
 

@@ -43,11 +43,37 @@ public class Startup
     }
 }
 ```
+
 ### That's it!
 
 Placing the `[Authorize]` attribute on your controllers or actions will check whether the user is logged in, and redirect them to Okta if necessary.
 
 ASP.NET automatically populates `HttpContext.User` with the information Okta sends back about the user. You can check whether the user is logged in with `User.Identity.IsAuthenticated` in your actions or views.
+
+## Proxy configuration
+
+If your application requires proxy server settings, specify the `Proxy` property on `OktaMvcOptions`.
+
+```csharp
+public class Startup
+{
+    public void Configuration(IAppBuilder app)
+    {
+        app.UseOktaMvc(new OktaMvcOptions
+        {
+            // ... other configuration removed for brevity
+
+            Proxy = new ProxyConfiguration
+            {
+                Host = "http://{yourProxyHostNameOrIp}",
+                Port = 3128, // Replace this value with the port that your proxy server listens on
+                Username = "{yourProxyServerUserName}",
+                Password = "{yourProxyServerPassword}",
+            }
+        });
+    }
+}
+```
 
 ## Self-Hosted login configuration
 
@@ -167,6 +193,7 @@ The `OktaMvcOptions` class configures the Okta middleware. You can see all the a
 | ClockSkew                 | No           | The clock skew allowed when validating tokens. The default value is 2 minutes. |
 | SecurityTokenValidated                 | No           | The event invoked after the security token has passed validation and a `ClaimsIdentity` has been generated. |
 | OnAuthenticationFailed    | No           | The event invoked if exceptions are thrown during request processing. |
+| Proxy                     | No           | An object describing proxy server configuration.  Properties are `Host`, `Port`, `Username` and `Password` |
 
 You can store these values (except the Token event) in the `Web.config`, but be careful when checking in the client secret to the source control.
 

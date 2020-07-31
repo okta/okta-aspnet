@@ -39,6 +39,36 @@ public void ConfigureServices(IServiceCollection services)
 
 Placing the `[Authorize]` attribute on your controllers or actions will require a valid access token for those routes. This package will [parse and validate the access token](https://developer.okta.com/blog/2017/06/21/what-the-heck-is-oauth#oauth-flows) and populate `Http.Context` with a limited set of user information.
 
+## Proxy configuration
+
+If your application requires proxy server settings, specify the `Proxy` property on `OktaWebApiOptions`.
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = OktaDefaults.ApiAuthenticationScheme;
+        options.DefaultChallengeScheme = OktaDefaults.ApiAuthenticationScheme;
+        options.DefaultSignInScheme = OktaDefaults.ApiAuthenticationScheme;
+    })
+    .AddOktaWebApi(new OktaWebApiOptions()
+    {
+        OktaDomain = Configuration["Okta:OktaDomain"],
+        AuthorizationServerId = Configuration["Okta:AuthorizationServerId"],
+        Proxy = new ProxyConfiguration
+        {
+            Host = "http://{yourProxyHostNameOrIp}",
+            Port = 3128, // Replace this value with the port that your proxy server listens on
+            Username = "{yourProxyServerUserName}",
+            Password = "{yourProxyServerPassword}",
+        }
+    });
+
+    services.AddMvc();
+}
+```
+
 ## Configuration Reference
 
 The `OktaWebApiOptions` class configures the Okta middleware. You can see all the available options in the table below:
@@ -50,6 +80,7 @@ The `OktaWebApiOptions` class configures the Okta middleware. You can see all th
 | AuthorizationServerId     | No           |  The [Okta Custom Authorization Server](https://developer.okta.com/docs/concepts/auth-servers/#custom-authorization-server) to use. The default value is `default`. [The Org Authorization Server](https://developer.okta.com/docs/concepts/auth-servers/#org-authorization-server) is not supported. |
 | Audience                  | No           | The expected audience of incoming tokens. The default value is `api://default`. |
 | ClockSkew                 | No           | The clock skew allowed when validating tokens. The default value is 2 minutes. |
+| Proxy                     | No           | An object describing proxy server configuration.  Properties are `Host`, `Port`, `Username` and `Password` |
 
 You can store these values in the `appsettings.json`.
 
