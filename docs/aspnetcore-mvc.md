@@ -45,6 +45,12 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
+### That's it!
+
+Placing the `[Authorize]` attribute on your controllers or actions will check whether the user is logged in, and redirect them to Okta if necessary.
+
+ASP.NET automatically populates `HttpContext.User` with the information Okta sends back about the user. You can check whether the user is logged in with `User.Identity.IsAuthenticated` in your actions or views.
+
 ## Proxy configuration
 
 If your application requires proxy server settings, specify the `Proxy` property on `OktaMvcOptions`.
@@ -79,12 +85,6 @@ public void ConfigureServices(IServiceCollection services)
     services.AddMvc();
 }
 ```
-
-### That's it!
-
-Placing the `[Authorize]` attribute on your controllers or actions will check whether the user is logged in, and redirect them to Okta if necessary.
-
-ASP.NET automatically populates `HttpContext.User` with the information Okta sends back about the user. You can check whether the user is logged in with `User.Identity.IsAuthenticated` in your actions or views.
 
 ## Self-Hosted login configuration
 
@@ -225,6 +225,7 @@ The `OktaMvcOptions` class configures the Okta middleware. You can see all the a
 | OnUserInformationReceived                 | No           | The event invoked when user information is retrieved from the UserInfoEndpoint. The `GetClaimsFromUserInfoEndpoint` value must be `true` when using this event. |
 | OnOktaApiFailure          | No           | The event invoked when a failure occurs within the Okta API. |
 | OnAuthenticationFailed    | No           | The event invoked if exceptions are thrown during request processing. |
+| Proxy                     | No           | An object describing proxy server configuration.  Properties are `Host`, `Port`, `Username` and `Password` |
 
 You can store these values (except the events) in the `appsettings.json`, but be careful when checking in the client secret to the source control.
 
