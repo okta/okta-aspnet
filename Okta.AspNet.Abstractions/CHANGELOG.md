@@ -1,6 +1,12 @@
 # Changelog
 Running changelog of releases since `3.0.5`
 
+## v3.1.0
+
+### Features
+
+- Add support for Proxy configuration (#123)
+
 ## v3.0.5
 
 ### Bug Fixes
