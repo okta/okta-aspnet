@@ -4,7 +4,7 @@
 // </copyright>
 
 using System;
-using System.Runtime.InteropServices;
+using System.Linq;
 
 namespace Okta.AspNet.Abstractions
 {
@@ -21,18 +21,18 @@ namespace Okta.AspNet.Abstractions
         }
 
         public string GetUserAgent()
-        {
-            return string.Join(" ", GetOSVersion(), GetFrameworkVersion());
-        }
+            => $"{GetFrameworkVersion()} {GetRuntimeVersion()} {GetOSVersion()}";
 
         private string GetFrameworkVersion()
-        {
-            return $"{_frameworkName}{VersionSeparator}{_frameworkVersion.Major}.{_frameworkVersion.Minor}.{_frameworkVersion.Build}";
-        }
+            => $"{_frameworkName}{VersionSeparator}{_frameworkVersion.Major}.{_frameworkVersion.Minor}.{_frameworkVersion.Build}";
+
+        private object GetRuntimeVersion()
+            => $"runtime{VersionSeparator}{Sanitize(UserAgentHelper.GetFrameworkDescription())}";
 
         private string GetOSVersion()
-        {
-            return $"os-version{VersionSeparator}{Environment.OSVersion.VersionString}{VersionSeparator}{Environment.OSVersion.Platform}";
-        }
+            => $"os-version{VersionSeparator}{Environment.OSVersion.VersionString}{VersionSeparator}{Environment.OSVersion.Platform}";
+
+        private string Sanitize(string input)
+            => new[] { '/', ':', ';' }.Aggregate(input, (current, bad) => current.Replace(bad, '-'));
     }
 }
