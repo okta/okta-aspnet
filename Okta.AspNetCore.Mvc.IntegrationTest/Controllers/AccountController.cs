@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Okta.AspNet.Abstractions;
 
 namespace Okta.AspNetCore.Mvc.IntegrationTest.Controllers
 {
@@ -24,6 +25,20 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest.Controllers
             {
                 var properties = new AuthenticationProperties();
                 properties.Items.Add("idp", "foo");
+                properties.RedirectUri = "/Home/";
+
+                return Challenge(properties, OktaDefaults.MvcAuthenticationScheme);
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult LoginWithLoginHint()
+        {
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                var properties = new AuthenticationProperties();
+                properties.Items.Add(OktaParams.LoginHint, "foo");
                 properties.RedirectUri = "/Home/";
 
                 return Challenge(properties, OktaDefaults.MvcAuthenticationScheme);

@@ -56,6 +56,19 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
             }
         }
 
+        [Fact]
+        public async Task IncludeLoginHintInAuthorizeUrlAsync()
+        {
+            var loginWithIdpEndpoint = string.Format("{0}/Account/LoginWithLoginHint", BaseUrl);
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, loginWithIdpEndpoint);
+            using (var client = _server.CreateClient())
+            {
+                var response = await client.GetAsync(loginWithIdpEndpoint);
+                Assert.True(response.StatusCode == System.Net.HttpStatusCode.Found);
+                Assert.Contains("login_hint=foo", response.Headers.Location.AbsoluteUri);
+            }
+        }
+
         public void Dispose()
         {
             _server.Dispose();
