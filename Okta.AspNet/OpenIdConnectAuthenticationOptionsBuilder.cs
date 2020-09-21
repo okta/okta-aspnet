@@ -90,23 +90,19 @@ namespace Okta.AspNet
                 }
             }
 
-            // Add sessionToken to provide custom login
+            // Verify if additional well-known params (e.g login-hint, sessionToken, idp, etc.) should be sent in the request.
             if (redirectToIdentityProviderNotification.ProtocolMessage.RequestType == OpenIdConnectRequestType.Authentication)
             {
-                var sessionToken = string.Empty;
-                redirectToIdentityProviderNotification.OwinContext.Authentication.AuthenticationResponseChallenge?.Properties?.Dictionary?.TryGetValue("sessionToken", out sessionToken);
+                var oktaRequestParamValue = string.Empty;
 
-                if (!string.IsNullOrEmpty(sessionToken))
+                foreach (var oktaParamKey in OktaParams.AllParams)
                 {
-                    redirectToIdentityProviderNotification.ProtocolMessage.SetParameter("sessionToken", sessionToken);
-                }
+                    redirectToIdentityProviderNotification.OwinContext.Authentication.AuthenticationResponseChallenge?.Properties?.Dictionary?.TryGetValue(oktaParamKey, out oktaRequestParamValue);
 
-                var idpId = string.Empty;
-                redirectToIdentityProviderNotification.OwinContext.Authentication.AuthenticationResponseChallenge?.Properties?.Dictionary?.TryGetValue("idp", out idpId);
-
-                if (!string.IsNullOrEmpty(idpId))
-                {
-                    redirectToIdentityProviderNotification.ProtocolMessage.SetParameter("idp", idpId);
+                    if (!string.IsNullOrEmpty(oktaRequestParamValue))
+                    {
+                        redirectToIdentityProviderNotification.ProtocolMessage.SetParameter(oktaParamKey, oktaRequestParamValue);
+                    }
                 }
             }
 

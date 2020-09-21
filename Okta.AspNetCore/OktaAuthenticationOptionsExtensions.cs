@@ -71,20 +71,16 @@ namespace Okta.AspNetCore
 
         private static Task BeforeRedirectToIdentityProviderAsync(RedirectContext context)
         {
-            // Add sessionToken to provide custom login
-            if (context.Properties.Items.TryGetValue("sessionToken", out var sessionToken))
-            {
-                if (!string.IsNullOrEmpty(sessionToken))
-                {
-                    context.ProtocolMessage.SetParameter("sessionToken", sessionToken);
-                }
-            }
+            // Verify if additional well-known params (e.g login-hint, sessionToken, idp, etc.) should be sent in the request.
+            var oktaRequestParamValue = string.Empty;
 
-            if (context.Properties.Items.TryGetValue("idp", out var idpId))
+            foreach (var oktaParamKey in OktaParams.AllParams)
             {
-                if (!string.IsNullOrEmpty(idpId))
+                context.Properties?.Items?.TryGetValue(oktaParamKey, out oktaRequestParamValue);
+
+                if (!string.IsNullOrEmpty(oktaRequestParamValue))
                 {
-                    context.ProtocolMessage.SetParameter("idp", idpId);
+                    context.ProtocolMessage.SetParameter(oktaParamKey, oktaRequestParamValue);
                 }
             }
 

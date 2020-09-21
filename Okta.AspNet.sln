@@ -24,7 +24,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNetCore.Mvc.Integra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNetCore.WebApi.IntegrationTest", "Okta.AspNetCore.WebApi.IntegrationTest\Okta.AspNetCore.WebApi.IntegrationTest.csproj", "{C15647D6-77FC-43D6-86AD-888025A0326F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okta.AspNet.Abstractions.Test", "Okta.AspNet.Abstractions.Test\Okta.AspNet.Abstractions.Test.csproj", "{265F81BE-5E48-4D90-851E-659FF93D4FC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Okta.AspNet.Abstractions.Test", "Okta.AspNet.Abstractions.Test\Okta.AspNet.Abstractions.Test.csproj", "{265F81BE-5E48-4D90-851E-659FF93D4FC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

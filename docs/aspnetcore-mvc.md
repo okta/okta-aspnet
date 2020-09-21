@@ -116,6 +116,28 @@ public void ConfigureServices(IServiceCollection services)
 ```
 > Note: If you are using role-based authorization and you need to redirect unauthorized users to an access-denied page or similar, check out [CookieAuthenticationOptions.AccessDeniedPath](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.cookies.cookieauthenticationoptions.accessdeniedpath?view=aspnetcore-2.2).
 
+## Specifying the `login_hint` parameter
+
+The `login_hint` parameter allows you to pass a username to prepopulate when prompting for authentication. For more details check out the [Okta documentation](https://developer.okta.com/docs/reference/api/oidc/#request-parameters).
+
+Add the following action in your controller: 
+
+```csharp
+public IActionResult SignInWithIdp(string loginHint)
+{
+    if (!HttpContext.User.Identity.IsAuthenticated)
+    {
+        var properties = new AuthenticationProperties();
+        properties.Items.Add(OktaParams.LoginHint, loginHint);
+        properties.RedirectUri = "/Home/";
+
+        return Challenge(properties, OktaDefaults.MvcAuthenticationScheme);
+    }
+
+    return RedirectToAction("Index", "Home");
+}
+```
+
 ## Login with an external identity provider
 
 Add the following action in your controller: 
@@ -126,7 +148,7 @@ public IActionResult SignInWithIdp(string idp)
     if (!HttpContext.User.Identity.IsAuthenticated)
     {
         var properties = new AuthenticationProperties();
-        properties.Items.Add("idp", idp);
+        properties.Items.Add(OktaParams.Idp, idp);
         properties.RedirectUri = "/Home/";
 
         return Challenge(properties, OktaDefaults.MvcAuthenticationScheme);

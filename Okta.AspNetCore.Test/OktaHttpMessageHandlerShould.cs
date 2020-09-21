@@ -13,7 +13,7 @@ namespace Okta.AspNet.Test
     public class OktaHttpMessageHandlerShould
     {
         [Fact]
-        public async Task SetInnerHandlerWebProxy()
+        public void SetInnerHandlerWebProxy()
         {
             var testProxyAddress = "http://test.cxm/";
             var testUserName = "testUserName";
@@ -44,40 +44,37 @@ namespace Okta.AspNet.Test
         }
         
         [Fact]
-        public async Task SetInnerHandlerWebProxyPort()
+        public void SetInnerHandlerWebProxyPort()
         {
-            await Task.Run(() =>
+            var testProxyBaseUri = "http://test.cxm/";
+            var testPort = 8080;
+            var expectedProxyAddress = "http://test.cxm:8080/";
+            var testFrameworkName = $"{nameof(SetInnerHandlerWebProxyPort)}_testFrameworkName";
+            var version = typeof(OktaHttpMessageHandlerShould).Assembly.GetName().Version;
+            var oktaHandler = new OktaHttpMessageHandler(testFrameworkName, version, new OktaMvcOptions
             {
-                var testProxyBaseUri = "http://test.cxm/";
-                var testPort = 8080;
-                var expectedProxyAddress = "http://test.cxm:8080/";
-                var testFrameworkName = $"{nameof(SetInnerHandlerWebProxyPort)}_testFrameworkName";
-                var version = typeof(OktaHttpMessageHandlerShould).Assembly.GetName().Version;
-                var oktaHandler = new OktaHttpMessageHandler(testFrameworkName, version, new OktaMvcOptions
+                Proxy = new ProxyConfiguration
                 {
-                    Proxy = new ProxyConfiguration
-                    {
-                        Host = testProxyBaseUri,
-                        Port = testPort,
-                    },
-                });
-                oktaHandler.InnerHandler.Should().NotBeNull();
-                oktaHandler.InnerHandler.Should().BeAssignableTo<HttpClientHandler>();
-
-                var httpClientHandler = (HttpClientHandler)oktaHandler.InnerHandler;
-                httpClientHandler.Proxy.Should().NotBeNull();
-                httpClientHandler.Proxy.Should().BeAssignableTo<DefaultProxy>();
-
-                var webProxy = (DefaultProxy)httpClientHandler.Proxy;
-                var proxyUri = webProxy.GetProxy(Arg.Any<Uri>());
-                proxyUri.ToString().Should().Be(expectedProxyAddress);
-                proxyUri.Port.Should().Be(testPort);
-                webProxy.Credentials.Should().BeNull();
+                    Host = testProxyBaseUri,
+                    Port = testPort,
+                },
             });
+            oktaHandler.InnerHandler.Should().NotBeNull();
+            oktaHandler.InnerHandler.Should().BeAssignableTo<HttpClientHandler>();
+
+            var httpClientHandler = (HttpClientHandler)oktaHandler.InnerHandler;
+            httpClientHandler.Proxy.Should().NotBeNull();
+            httpClientHandler.Proxy.Should().BeAssignableTo<DefaultProxy>();
+
+            var webProxy = (DefaultProxy)httpClientHandler.Proxy;
+            var proxyUri = webProxy.GetProxy(Arg.Any<Uri>());
+            proxyUri.ToString().Should().Be(expectedProxyAddress);
+            proxyUri.Port.Should().Be(testPort);
+            webProxy.Credentials.Should().BeNull();
         }
         
         [Fact]
-        public async Task NotSetInnerHandlerWebProxyIfNotSpecified()
+        public void NotSetInnerHandlerWebProxyIfNotSpecified()
         {
             var testFrameworkName = $"{nameof(NotSetInnerHandlerWebProxyIfNotSpecified)}_testFrameworkName";
             var version = typeof(OktaHttpMessageHandlerShould).Assembly.GetName().Version;

@@ -65,6 +65,7 @@ namespace Okta.AspNet
         /// <summary>
         /// Gets or sets the event invoked if exceptions are thrown during request processing.
         /// </summary>
+        /// <value>The AuthenticationFailed event.</value>
         public Func<AuthenticationFailedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions>, Task> AuthenticationFailed { get; set; } = notification => Task.FromResult(0);
     }
 }
