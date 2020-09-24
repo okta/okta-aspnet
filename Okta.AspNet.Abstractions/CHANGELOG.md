@@ -1,6 +1,14 @@
 # Changelog
 Running changelog of releases since `3.0.5`
 
+## v3.2.0
+
+### Features
+
+- Update dependencies
+- Add a new class called `OktaParams` that contains Okta well-known parameters supported by the SDK 
+- Report .NET runtime via user agent.
+
 ## v3.1.0
 
 ### Features
