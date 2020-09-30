@@ -111,12 +111,12 @@ The `login_hint` parameter allows you to pass a username to prepopulate when pro
 Add the following action in your controller: 
 
 ```csharp
-public ActionResult Login(string loginHint)
+public ActionResult Login()
 {
     if (!HttpContext.User.Identity.IsAuthenticated)
     {
         var properties = new AuthenticationProperties();
-        properties.Dictionary.Add(OktaParams.LoginHint, loginHint);
+        properties.Dictionary.Add(OktaParams.LoginHint, "darth.vader@imperial-senate.gov");
         properties.RedirectUri = "/Home/About";
 
         HttpContext.GetOwinContext().Authentication.Challenge(properties,
