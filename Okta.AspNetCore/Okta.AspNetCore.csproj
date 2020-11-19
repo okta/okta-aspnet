@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
   </PropertyGroup>
   
   <PropertyGroup>
     <Description>Official Okta middleware for ASP.NET Core 3.0+. Easily add authentication and authorization to ASP.NET Core applications.</Description>
-    <Copyright>(c) 2019 Okta, Inc.</Copyright>
-    <VersionPrefix>3.4.0</VersionPrefix>
+    <Copyright>(c) 2020 Okta, Inc.</Copyright>
+    <VersionPrefix>3.5.0</VersionPrefix>
     <Authors>Okta, Inc.</Authors>
     <AssemblyName>Okta.AspNetCore</AssemblyName>
     <PackageId>Okta.AspNetCore</PackageId>
