@@ -86,6 +86,57 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
+
+## Configuration for cloud services or load balancers
+
+If you plan to deploy your application to a cloud service, you may need to do additional customization. Cloud services usually create similar environments in which applications run inside a Docker container without using HTTPS. The front host or load balancer that the user has direct access to may or may not use HTTPS by-default. 
+
+Cloud services are vary in configuration, but general rules are:
+
+* Make sure Load Balancer or front host uses HTTPS. 
+
+This may be the default or may require some amount of fiddling as in case of AWS.
+
+
+* Your Application should be aware of HTTPS scheme used by user despite the App itself is using HTTP. 
+
+[Microsoft.AspNetCore.Authentication.BuildRedirectUri](https://github.com/aspnet/Security/blob/26d27d871b7992022c082dc207e3d126e1d9d278/src/Microsoft.AspNetCore.Authentication/AuthenticationHandler.cs#L117) function relies on request scheme and will not work properly when front host uses HTTPS but the application is running over HTTP. 
+
+Please check this [Microsoft documentation](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer) on how to configure your application to work in such environments.
+
+Azure environment with Front Door load balancer should work properly after forwarded headers configuration is added like so:
+
+`Startup.ConfigureServices:`
+```csharp
+     services.Configure<ForwardedHeadersOptions>(options =>
+     {
+         options.ForwardedHeaders =
+             ForwardedHeaders.XForwardedHost | ForwardedHeaders.XForwardedProto;
+     });
+```
+
+Following is found to be working configuration for AWS or Google Cloud with App Engine Flex:
+
+`Startup.Configure:`
+```csharp
+     app.Use((context, next) =>
+     {
+         var xProtoHeaders = context.Request.Headers["X-Forwarded-Proto"];
+         if (xProtoHeaders.Count > 0 && xProtoHeaders[0].ToLower() == "https")
+             context.Request.Scheme = "https";
+         return next();
+     });
+```
+
+
+Don't use `app.UseHttpsRedirection();` as it may cause infinite redirection loop on client.
+
+* Do additional configuration if needed. 
+
+Because of Docker specifics on some cloud services authentication may fail with the message `Unable to unprotect the message.State.` This most likely means you need to configure Data Protection storage. Follow [these instructions](https://cloud.google.com/appengine/docs/flexible/dotnet/application-security#aspnet_core_data_protection_provider) to do this for Google Cloud.
+
+
+
 ## Self-Hosted login configuration
 
 ```csharp
