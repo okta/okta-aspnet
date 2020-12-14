@@ -89,22 +89,22 @@ public void ConfigureServices(IServiceCollection services)
 
 ## Configuration for cloud services or load balancers
 
-If you plan to deploy your application to a cloud service, you may need to do additional customization. Cloud services usually create similar environments in which applications run inside a Docker container without using HTTPS. The front host or load balancer that the user has direct access to may or may not use HTTPS by-default. 
+If you plan to deploy your application to a cloud service, you may need to do additional customization. Cloud services usually create similar environments in which applications run inside a Docker container using HTTP and behind a reverse proxy or load balancer. Cloud environment may comprise API gateway, firewall, load balancer, reverse proxy. This environment may be initially configured to use HTTP for incoming requests.
 
-Cloud services are vary in configuration, but general rules are:
+Although cloud services configurations may vary, general rules are:
 
-* Make sure Load Balancer or front host uses HTTPS. 
+* Make sure the environment is using HTTPS for incoming requests. 
 
-This may be the default or may require some amount of fiddling as in case of AWS.
+This may be the default setting or may require some amount of fiddling as in case of AWS.
 
 
-* Your Application should be aware of HTTPS scheme used by user despite the App itself is using HTTP. 
+* Application should be configured to consider forwarded headers information. 
 
-[Microsoft.AspNetCore.Authentication.BuildRedirectUri](https://github.com/aspnet/Security/blob/26d27d871b7992022c082dc207e3d126e1d9d278/src/Microsoft.AspNetCore.Authentication/AuthenticationHandler.cs#L117) function relies on request scheme and will not work properly when front host uses HTTPS but the application is running over HTTP. 
+Backend application typically listens on HTTP and it sits behind a reverse proxy or load balancer that accepts user requests over HTTPS. If this isn't taken into account `redirect_uri` authentication parameter will not be built correctly as the function used for that [Microsoft.AspNetCore.Authentication.BuildRedirectUri](https://github.com/aspnet/Security/blob/26d27d871b7992022c082dc207e3d126e1d9d278/src/Microsoft.AspNetCore.Authentication/AuthenticationHandler.cs#L117) relies on request scheme. 
 
-Please check this [Microsoft documentation](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer) on how to configure your application to work in such environments.
+For information on how to configure your application in a proxied, load balanced environment, see [Configure ASP.NET Core to work with proxy servers and load balancers](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer).
 
-Azure environment with Front Door load balancer should work properly after forwarded headers configuration is added like so:
+Azure environment with [Front Door load balancer](https://docs.microsoft.com/en-us/azure/frontdoor/) should work properly after forwarded headers configuration is added like so:
 
 `Startup.ConfigureServices:`
 ```csharp
@@ -115,7 +115,7 @@ Azure environment with Front Door load balancer should work properly after forwa
      });
 ```
 
-Following is found to be working configuration for AWS or Google Cloud with App Engine Flex:
+Use code similar to the following to properly configure a load balanced `AWS` or `Google Cloud with App Engine Flex` environment.
 
 `Startup.Configure:`
 ```csharp
@@ -129,11 +129,11 @@ Following is found to be working configuration for AWS or Google Cloud with App 
 ```
 
 
-Don't use `app.UseHttpsRedirection();` as it may cause infinite redirection loop on client.
+Don't use `app.UseHttpsRedirection();` as it may cause a client infinite redirection loop.
 
 * Do additional configuration if needed. 
 
-Because of Docker specifics on some cloud services authentication may fail with the message `Unable to unprotect the message.State.` This most likely means you need to configure Data Protection storage. Follow [these instructions](https://cloud.google.com/appengine/docs/flexible/dotnet/application-security#aspnet_core_data_protection_provider) to do this for Google Cloud.
+Because of Docker specifics on some cloud services authentication may fail with the message `Unable to unprotect the message.State.` This most likely means you need to configure Data Protection storage. For Google Cloud, see [ASP.Net Core data protection provider](https://cloud.google.com/appengine/docs/flexible/dotnet/application-security#aspnet_core_data_protection_provider).
 
 
 
