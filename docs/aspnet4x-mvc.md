@@ -36,7 +36,7 @@ public class Startup
             OktaDomain = "https://{yourOktaDomain}",
             ClientId = "{clientId}",
             ClientSecret = "{clientSecret}",
-            AuthorizationServerId = "default",
+            AuthorizationServerId = "default", // Use string.Empty if you are using the Org Authorization Server
             RedirectUri = "http://localhost:8080/authorization-code/callback",
             PostLogoutRedirectUri = "http://localhost:8080/Home"
         });
@@ -93,7 +93,7 @@ public class Startup
             OktaDomain = "https://{yourOktaDomain}",
             ClientId = "{clientId}",
             ClientSecret = "{clientSecret}",
-            AuthorizationServerId = "default",
+            AuthorizationServerId = "default", // Use string.Empty if you are using the Org Authorization Server
             RedirectUri = "http://localhost:8080/authorization-code/callback",
             PostLogoutRedirectUri = "http://localhost:8080/Home",
             LoginMode = LoginMode.SelfHosted
@@ -210,7 +210,7 @@ The `OktaMvcOptions` class configures the Okta middleware. You can see all the a
 | ClientId                  | **Yes**      | The client ID of your Okta Application |
 | ClientSecret              | **Yes**      | The client secret of your Okta Application |
 | RedirectUri               | **Yes**      | The location Okta should redirect to process a login. This is typically `http://{yourApp}/authorization-code/callback`. No matter the value, the redirect is handled automatically by this package, so you don't need to write any custom code to handle this route. |
-| AuthorizationServerId     | No           | The Okta Authorization Server to use. The default value is `default`. |
+| AuthorizationServerId     | No           | The Okta Authorization Server to use. The default value is `default`. Use `string.Empty` if you are using the Org Authorization Server |
 | PostLogoutRedirectUri     | No           | The location Okta should redirect to after logout. If blank, Okta will redirect to the Okta login page. |
 | Scope                     | No           | The OAuth 2.0/OpenID Connect scopes to request when logging in. The default value is `openid profile`. |
 | LoginMode                     | No           | LoginMode controls the login redirect behavior of the middleware. The default value is `OktaHosted`. |
