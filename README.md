@@ -29,10 +29,9 @@ This library uses semantic versioning and follows Okta's [library version policy
 | ------- | ------- | ------------------------- | ----------------------- | -------------------- |
 |`Okta.AspNet.Abstractions`| 3.x   | :heavy_check_mark: Stable | .NET Standard 2.0 and .NET Framework 4.5.2 or higher.| master |
 |`Okta.AspNet`| 1.x | :heavy_check_mark: Stable | .NET Framework 4.5.2 | master |
-|`Okta.AspNetCore`| 1.x | :heavy_check_mark: Stable | .NET Standard 2.0 and .NET Core 2.x | [okta-aspnetcore-2.x](https://github.com/okta/okta-aspnet/tree/okta-aspnetcore-2.x) |
+|`Okta.AspNetCore`| 1.x | :warning: Retiring | .NET Standard 2.0 and .NET Core 2.x | [okta-aspnetcore-2.x](https://github.com/okta/okta-aspnet/tree/okta-aspnetcore-2.x) |
 |`Okta.AspNetCore`| 3.x | :heavy_check_mark: Stable | .NET Core 3.x and .NET 5.0 | master |
  
-> :warning: Note that we support both .NET Core versions 2.x and 3.x, and we use different branches, `okta-aspnetcore-2.x` and `master` respectively, for each version. 
 
 The latest release can always be found on the [releases page][github-releases].
 
@@ -75,4 +74,3 @@ Issues and Pull Requests are welcome! To build the project, clone and build it w
 [github-issues]: https://github.com/okta/okta-aspnet/issues
 [github-releases]: https://github.com/okta/okta-aspnet/releases
 [devforum]: https://devforum.okta.com/
-
