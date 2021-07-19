@@ -31,6 +31,9 @@
     <CodeAnalysisRuleSet>..\OktaSdk.ruleset</CodeAnalysisRuleSet>
     <AssemblyVersion>1.8.0.0</AssemblyVersion>
     <FileVersion>1.8.0.0</FileVersion>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>okta.aspnet.pk</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
