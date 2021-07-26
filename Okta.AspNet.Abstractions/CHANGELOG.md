@@ -1,6 +1,12 @@
 # Changelog
 Running changelog of releases since `3.0.5`
 
+## v3.2.1
+
+### Features
+
+- Add strong name signature
+
 ## v3.2.0
 
 ### Features

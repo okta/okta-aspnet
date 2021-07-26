@@ -1,10 +1,12 @@
 #addin nuget:?package=Cake.Figlet&version=1.3.1
+#addin nuget:?package=Cake.StrongNameTool&version=0.0.5
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
 Boolean.TryParse(EnvironmentVariable("TRAVIS"), out var travisEnabled);
 Console.WriteLine($"\n Travis enabled: {travisEnabled}");
+Console.WriteLine($"\n Jenkins build: {BuildSystem.IsRunningOnJenkins}");
 
 var Projects = new List<string>()
 {
@@ -83,6 +85,7 @@ Task("Build")
 Task("RunTests")
 .IsDependentOn("Restore")
 .IsDependentOn("Build")
+.IsDependentOn("Strongname")
 .Does(() =>
 {
     Projects
@@ -93,8 +96,30 @@ Task("RunTests")
     });
 });
 
+Task("Strongname")
+.IsDependentOn("Build")
+.Does(() =>
+{
+    if (!travisEnabled)
+	{
+        var snBinaries = GetFiles("./Okta.AspNet/bin/Release/net4*/Okta.AspNet.dll")
+                        .Concat(GetFiles("./Okta.AspNet.Abstractions/bin/Release/net4*/Okta.AspNet.Abstractions.dll"))
+                        .Concat(GetFiles("./Okta.AspNet.Test/bin/Release/net4*/Okta.AspNet.Test.dll"));
+
+        Console.WriteLine("About to strong-name the following binaries:");
+        foreach (var binary in snBinaries)
+        {
+            Console.WriteLine(binary);
+        }
+
+        var snSettings = new StrongNameToolSettings { Container= "OktaDotnetStrongname" };
+        StrongNameReSign(snBinaries, snSettings);    
+	}
+});
+
 Task("PackNuget")
 .IsDependentOn("RunTests")
+.IsDependentOn("Strongname")
 .Does(() =>
 {
     Projects
@@ -114,6 +139,7 @@ Task("PackNuget")
                 Configuration = configuration,
                 OutputDirectory = "./artifacts",
                 MSBuildSettings = msBuildSettings,
+				NoBuild = true,
             });
         } 
         else
@@ -142,6 +168,7 @@ Task("Default")
     .IsDependentOn("Clean")
     .IsDependentOn("Restore")
     .IsDependentOn("Build")
+	.IsDependentOn("Strongname")
     .IsDependentOn("RunTests")
     .IsDependentOn("PackNuget");
     
