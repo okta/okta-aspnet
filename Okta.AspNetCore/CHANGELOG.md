@@ -1,6 +1,12 @@
 # Changelog
 Running changelog of releases since `3.2.0`
 
+## v3.5.1
+
+### Features
+
+- Add support for ASP.NET Core Identity
+
 ## v3.5.0
 
 ### Features

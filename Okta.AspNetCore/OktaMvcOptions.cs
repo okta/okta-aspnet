@@ -70,5 +70,11 @@ namespace Okta.AspNetCore
         /// Gets or sets the event invoked if exceptions are thrown during request processing.
         /// </summary>
         public Func<AuthenticationFailedContext, Task> OnAuthenticationFailed { get; set; } = context => Task.CompletedTask;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to retrieve additional "long" claims for AspNet Identity from the UserInfo endpoint after login.
+        /// </summary>
+        /// <value>The UseIdentityClaims flag.</value>
+        public bool UseIdentityClaims { get; set; } = true;
     }
 }

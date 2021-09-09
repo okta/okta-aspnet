@@ -13,15 +13,17 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using NSubstitute;
 using Okta.AspNet.Abstractions;
 using Xunit;
+using Microsoft.AspNetCore.Authentication.OAuth.Claims;
+using System.Security.Claims;
 
 namespace Okta.AspNetCore.Test
 {
     public class OpenIdConnectOptionsHelperShould
     {
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void SetOpenIdConnectsOptionsCorrectly(bool getClaimsFromUserInfoEndpoint)
+        [InlineData(true, true)]
+        [InlineData(false, false)]
+        public void SetOpenIdConnectsOptionsCorrectly(bool getClaimsFromUserInfoEndpoint, bool useIdentityClaims)
         {
             var mockTokenValidatedEvent = Substitute.For<Func<TokenValidatedContext, Task>>();
             var mockUserInfoReceivedEvent = Substitute.For<Func<UserInformationReceivedContext, Task>>();
@@ -42,6 +44,7 @@ namespace Okta.AspNetCore.Test
                 OnUserInformationReceived = mockUserInfoReceivedEvent,
                 OnAuthenticationFailed = mockAuthenticationFailedEvent,
                 OnOktaApiFailure = mockOktaExceptionEvent,
+                UseIdentityClaims = useIdentityClaims
             };
 
             var events = new OpenIdConnectEvents() { OnRedirectToIdentityProvider = null };
@@ -55,6 +58,27 @@ namespace Okta.AspNetCore.Test
             oidcOptions.SignedOutRedirectUri.Should().Be(oktaMvcOptions.PostLogoutRedirectUri);
             oidcOptions.GetClaimsFromUserInfoEndpoint.Should().Be(oktaMvcOptions.GetClaimsFromUserInfoEndpoint);
             oidcOptions.CallbackPath.Value.Should().Be(oktaMvcOptions.CallbackPath);
+
+            var jsonClaims = oidcOptions
+                .ClaimActions.Where(ca => ca is JsonKeyClaimAction)
+                .Cast<JsonKeyClaimAction>();
+
+            if (useIdentityClaims)
+            {
+                jsonClaims.Should().Contain(ca => ca.ClaimType == ClaimTypes.Email && ca.JsonKey == "email");
+                jsonClaims.Should().Contain(ca => ca.ClaimType == ClaimTypes.GivenName && ca.JsonKey == "given_name");
+                jsonClaims.Should().Contain(ca => ca.ClaimType == ClaimTypes.Name && ca.JsonKey == "name");
+                jsonClaims.Should().Contain(ca => ca.ClaimType == ClaimTypes.NameIdentifier && ca.JsonKey == "sub");
+                jsonClaims.Should().Contain(ca => ca.ClaimType == ClaimTypes.Surname && ca.JsonKey == "family_name");
+            }
+            else
+            {
+                jsonClaims.Should().NotContain(ca => ca.ClaimType == ClaimTypes.Email && ca.JsonKey == "email");
+                jsonClaims.Should().NotContain(ca => ca.ClaimType == ClaimTypes.GivenName && ca.JsonKey == "given_name");
+                jsonClaims.Should().NotContain(ca => ca.ClaimType == ClaimTypes.Name && ca.JsonKey == "name");
+                jsonClaims.Should().NotContain(ca => ca.ClaimType == ClaimTypes.NameIdentifier && ca.JsonKey == "sub");
+                jsonClaims.Should().NotContain(ca => ca.ClaimType == ClaimTypes.Surname && ca.JsonKey == "family_name");
+            }
 
             var issuer = UrlHelper.CreateIssuerUrl(oktaMvcOptions.OktaDomain, oktaMvcOptions.AuthorizationServerId);
             oidcOptions.Authority.Should().Be(issuer);
