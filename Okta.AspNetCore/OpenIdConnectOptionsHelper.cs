@@ -78,7 +78,7 @@ namespace Okta.AspNetCore
                 oidcOptions.ClaimActions.Add(new MapAllClaimsAction());
             }
 
-            if (oktaMvcOptions.UseIdentityClaims)
+            if (oktaMvcOptions.AddFullyQualifiedIdentityClaimNames)
             {
                 oidcOptions.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
                 oidcOptions.ClaimActions.MapJsonKey(ClaimTypes.GivenName, "given_name");

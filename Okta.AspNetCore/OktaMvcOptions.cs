@@ -72,9 +72,9 @@ namespace Okta.AspNetCore
         public Func<AuthenticationFailedContext, Task> OnAuthenticationFailed { get; set; } = context => Task.CompletedTask;
 
         /// <summary>
-        /// Gets or sets a value indicating whether to retrieve additional "long" claims for AspNet Identity from the UserInfo endpoint after login.
+        /// Gets or sets a value indicating whether to include identity claims with fully qualified claim names.
         /// </summary>
-        /// <value>The UseIdentityClaims flag.</value>
-        public bool UseIdentityClaims { get; set; } = true;
+        /// <value>The AddFullyQualifiedIdentityClaimNames flag.</value>
+        public bool AddFullyQualifiedIdentityClaimNames { get; set; } = true;
     }
 }
