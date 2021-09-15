@@ -70,11 +70,5 @@ namespace Okta.AspNetCore
         /// Gets or sets the event invoked if exceptions are thrown during request processing.
         /// </summary>
         public Func<AuthenticationFailedContext, Task> OnAuthenticationFailed { get; set; } = context => Task.CompletedTask;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to include identity claims with fully qualified claim names.
-        /// </summary>
-        /// <value>The AddFullyQualifiedIdentityClaimNames flag.</value>
-        public bool AddFullyQualifiedIdentityClaimNames { get; set; } = true;
     }
 }

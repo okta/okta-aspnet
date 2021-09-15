@@ -90,49 +90,5 @@ namespace Okta.AspNetCore.Test
                 mockUserInfoReceivedEvent.Received(1).Invoke(null);
             }
         }
-
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void ClearAddFullyQualifiedIdentityClaimNamesCorrectly(bool getClaimsFromUserInfoEndpoint)
-        {
-            var mockTokenValidatedEvent = Substitute.For<Func<TokenValidatedContext, Task>>();
-            var mockUserInfoReceivedEvent = Substitute.For<Func<UserInformationReceivedContext, Task>>();
-            var mockOktaExceptionEvent = Substitute.For<Func<RemoteFailureContext, Task>>();
-            var mockAuthenticationFailedEvent = Substitute.For<Func<AuthenticationFailedContext, Task>>();
-
-            var oktaMvcOptions = new OktaMvcOptions
-            {
-                PostLogoutRedirectUri = "http://foo.postlogout.com",
-                AuthorizationServerId = "bar",
-                ClientId = "foo",
-                ClientSecret = "baz",
-                OktaDomain = "http://myoktadomain.com",
-                GetClaimsFromUserInfoEndpoint = getClaimsFromUserInfoEndpoint,
-                CallbackPath = "/somecallbackpath",
-                Scope = new List<string> { "openid", "profile", "email" },
-                OnTokenValidated = mockTokenValidatedEvent,
-                OnUserInformationReceived = mockUserInfoReceivedEvent,
-                OnAuthenticationFailed = mockAuthenticationFailedEvent,
-                OnOktaApiFailure = mockOktaExceptionEvent,
-                AddFullyQualifiedIdentityClaimNames = false,
-            };
-
-            var events = new OpenIdConnectEvents() { OnRedirectToIdentityProvider = null };
-            var oidcOptions = new OpenIdConnectOptions();
-            OpenIdConnectOptionsHelper.ConfigureOpenIdConnectOptions(oktaMvcOptions, events, oidcOptions);
-
-            oidcOptions.ClaimActions.Should().NotBeEmpty();
-
-            var jsonClaims = oidcOptions
-                .ClaimActions.Where(ca => ca is JsonKeyClaimAction)
-                .Cast<JsonKeyClaimAction>();
-            jsonClaims.Should().NotContain(ca => ca.ClaimType == ClaimTypes.Email && ca.JsonKey == "email");
-            jsonClaims.Should().NotContain(ca => ca.ClaimType == ClaimTypes.GivenName && ca.JsonKey == "given_name");
-            jsonClaims.Should().NotContain(ca => ca.ClaimType == ClaimTypes.Name && ca.JsonKey == "name");
-            jsonClaims.Should().NotContain(ca => ca.ClaimType == ClaimTypes.NameIdentifier && ca.JsonKey == "sub");
-            jsonClaims.Should().NotContain(ca => ca.ClaimType == ClaimTypes.Surname && ca.JsonKey == "family_name");
-        }
     }
 }
