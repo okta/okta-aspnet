@@ -4,6 +4,8 @@
 // </copyright>
 
 using System.Linq;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
@@ -75,6 +77,12 @@ namespace Okta.AspNetCore
             {
                 oidcOptions.ClaimActions.Add(new MapAllClaimsAction());
             }
+
+            oidcOptions.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
+            oidcOptions.ClaimActions.MapJsonKey(ClaimTypes.GivenName, "given_name");
+            oidcOptions.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");
+            oidcOptions.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "sub");
+            oidcOptions.ClaimActions.MapJsonKey(ClaimTypes.Surname, "family_name");
 
             if (oktaMvcOptions.OnOktaApiFailure != null)
             {
