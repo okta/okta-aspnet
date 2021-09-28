@@ -67,6 +67,9 @@ To learn more about this library you can explore the following additional resour
 * [ASP.NET Core samples](https://github.com/okta/samples-aspnetcore)
 * [Project Documentation](https://github.com/okta/okta-aspnet/tree/master/docs)
 
+You can find an example of implementation of refresh token middleware [here](https://github.com/okta/okta-aspnet/blob/master/docs/refresh-token.md)
+
+
 ## Contributing
 
 Issues and Pull Requests are welcome! To build the project, clone and build it with Visual Studio 2017 or newer. Check out the [Contributing Guide](https://github.com/okta/okta-aspnet/tree/master/CONTRIBUTING.md).
