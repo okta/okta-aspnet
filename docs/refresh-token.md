@@ -2,8 +2,11 @@
 
 ## Refreshing Access Token
 
+Here is the possible implementation of Refresh Token middleware. 
 
-Startup.cs
+Based on the sample from this issue https://github.com/okta/okta-aspnet/issues/130, thanks [@Good-man](https://github.com/Good-man).
+
+### Startup.cs
 
 ```csharp
         public void Configuration(IAppBuilder app)
@@ -11,7 +14,8 @@ Startup.cs
             app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions());
-
+            
+            // Adding the Refresh token middleware
             var oktaDomain = ConfigurationManager.AppSettings["okta:OktaDomain"];
             var authServerId = ConfigurationManager.AppSettings["okta:AuthorizationServerId"];
             var tokenEndpoint = $"{oktaDomain}/oauth2/{authServerId}/v1/token";
@@ -22,7 +26,8 @@ Startup.cs
                 ClientId = ConfigurationManager.AppSettings["okta:ClientId"],
                 ClientSecret = ConfigurationManager.AppSettings["okta:ClientSecret"],
             });
-
+            
+            // Adding Okta Mvc
             app.UseOktaMvc(new OktaMvcOptions()
             {
                 OktaDomain = oktaDomain,
@@ -39,7 +44,7 @@ Startup.cs
 ```
 
 
-RefreshTokenMiddleware
+### RefreshTokenMiddleware.cs
 
 ```csharp
     public class RefreshTokenMiddleware : OwinMiddleware
@@ -145,7 +150,7 @@ RefreshTokenMiddleware
 ```
 
 
-ClaimTypeKey
+### ClaimTypeKey.cs
 ```csharp
     internal static class ClaimTypeKey
     {
