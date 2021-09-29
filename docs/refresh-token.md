@@ -68,7 +68,7 @@ The following is an example of middleware that handles the token refresh process
         {
             if (context.Authentication.User.Identity is ClaimsIdentity id && id.IsAuthenticated)
             {
-                return id.Claims.Any(c => c.Type == JwtClaimTypes.Name);
+                return id.Claims.Any(c => c.Type == ClaimTypeKey.RefreshToken);
             }
 
             return false;
