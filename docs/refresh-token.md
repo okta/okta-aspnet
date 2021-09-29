@@ -2,9 +2,7 @@
 
 ## Refreshing Access Token
 
-Here is the possible implementation of Refresh Token middleware. 
-
-Based on the sample from this issue https://github.com/okta/okta-aspnet/issues/130, thanks [@Good-man](https://github.com/Good-man).
+The following is an example of middleware that handles the token refresh process based on the sample provided by [@Good-man](https://github.com/Good-man) on this issue https://github.com/okta/okta-aspnet/issues/130.
 
 ### Startup.cs
 
