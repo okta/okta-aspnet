@@ -1,10 +1,12 @@
 
 
-## Refreshing Access Token
+## Refreshing Access Token in ASP.NET MVC or WebForms App
 
 The following is an example of middleware that handles the token refresh process based on the sample provided by [@Good-man](https://github.com/Good-man) on [this issue](https://github.com/okta/okta-aspnet/issues/130).
 
 ### Startup.cs
+
+App configuration code may look like this. Note that Scope includes ```offline_access```. That is required for refresh tokens to work.
 
 ```csharp
         public void Configuration(IAppBuilder app)
@@ -42,7 +44,10 @@ The following is an example of middleware that handles the token refresh process
 ```
 
 
+
 ### RefreshTokenMiddleware.cs
+
+Refresh token logic is implemented in this class which can be added to the OWIN Middleware Pipeline.
 
 ```csharp
     public class RefreshTokenMiddleware : OwinMiddleware
@@ -66,9 +71,9 @@ The following is an example of middleware that handles the token refresh process
 
         private bool HasRefreshToken(IOwinContext context)
         {
-            if (context.Authentication.User.Identity is ClaimsIdentity id && id.IsAuthenticated)
+            if (context.Authentication.User.Identity is ClaimsIdentity identity && identity.IsAuthenticated)
             {
-                return id.Claims.Any(c => c.Type == ClaimTypeKey.RefreshToken);
+                return identity.Claims.Any(c => c.Type == ClaimTypeKey.RefreshToken);
             }
 
             return false;
@@ -76,9 +81,9 @@ The following is an example of middleware that handles the token refresh process
 
         private bool AccessTokenExpired(IOwinContext context)
         {
-            if (context.Authentication.User?.Identity is ClaimsIdentity id && id.IsAuthenticated)
+            if (context.Authentication.User?.Identity is ClaimsIdentity identity && identity.IsAuthenticated)
             {
-                var accessTokenString = id.FindFirst(ClaimTypeKey.AccessToken)?.Value;
+                var accessTokenString = identity.FindFirst(ClaimTypeKey.AccessToken)?.Value;
                 if (accessTokenString == null)
                 {
                     return false;
@@ -144,11 +149,14 @@ The following is an example of middleware that handles the token refresh process
                 }
             }
         }
-    }
+	}	
 ```
 
 
 ### ClaimTypeKey.cs
+
+Constants used by the Refresh Token Middleware.
+
 ```csharp
     internal static class ClaimTypeKey
     {
