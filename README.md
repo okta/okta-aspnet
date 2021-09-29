@@ -58,6 +58,7 @@ Also, if you want to build an ASP.NET Web API application check out [this guide]
 
 * [Getting started with ASP.NET Web API](https://github.com/okta/okta-aspnet/blob/master/docs/aspnet4x-webapi.md)
 * [Getting started with ASP.NET Core Web API](https://github.com/okta/okta-aspnet/blob/master/docs/aspnetcore-webapi.md)
+* [Refreshing Access Token](https://github.com/okta/okta-aspnet/tree/master/docs/refresh-token.md)
 
 To learn more about this library you can explore the following additional resources:
 
@@ -66,8 +67,6 @@ To learn more about this library you can explore the following additional resour
 * [ASP.NET Web Forms samples](https://github.com/okta/samples-aspnet-webforms/)
 * [ASP.NET Core samples](https://github.com/okta/samples-aspnetcore)
 * [Project Documentation](https://github.com/okta/okta-aspnet/tree/master/docs)
-
-You can find an example of implementation of refresh token middleware [here](https://github.com/okta/okta-aspnet/blob/master/docs/refresh-token.md)
 
 
 ## Contributing
