@@ -45,6 +45,33 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
+
+ASP.NET Core Identity framework uses "Identity.Application" authentication scheme. Here is how configuration code looks like in such case:
+
+```csharp
+
+public void ConfigureServices(IServiceCollection services)
+{
+    var oktaMvcOptions = new OktaMvcOptions()
+    {
+        OktaDomain = Configuration.GetSection("Okta").GetValue<string>("OktaDomain"),
+        ClientId = Configuration.GetSection("Okta").GetValue<string>("ClientId"),
+        ClientSecret = Configuration.GetSection("Okta").GetValue<string>("ClientSecret"),
+        Scope = new List<string> { "openid", "profile", "email" },
+    };
+
+    services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme; 
+    })
+    .AddCookie()
+    .AddOktaMvc(oktaMvcOptions);
+
+    services.AddMvc();
+}
+```
+
+ 
 ### That's it!
 
 Placing the `[Authorize]` attribute on your controllers or actions will check whether the user is logged in, and redirect them to Okta if necessary.
