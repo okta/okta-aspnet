@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using NSubstitute;
 using Okta.AspNet.Abstractions;
 using Xunit;
+using Microsoft.AspNetCore.Authentication.OAuth.Claims;
+using System.Security.Claims;
 
 namespace Okta.AspNetCore.Test
 {
@@ -55,6 +57,15 @@ namespace Okta.AspNetCore.Test
             oidcOptions.SignedOutRedirectUri.Should().Be(oktaMvcOptions.PostLogoutRedirectUri);
             oidcOptions.GetClaimsFromUserInfoEndpoint.Should().Be(oktaMvcOptions.GetClaimsFromUserInfoEndpoint);
             oidcOptions.CallbackPath.Value.Should().Be(oktaMvcOptions.CallbackPath);
+
+            var jsonClaims = oidcOptions
+                .ClaimActions.Where(ca => ca is JsonKeyClaimAction)
+                .Cast<JsonKeyClaimAction>();
+            jsonClaims.Should().Contain(ca => ca.ClaimType == ClaimTypes.Email && ca.JsonKey == "email");
+            jsonClaims.Should().Contain(ca => ca.ClaimType == ClaimTypes.GivenName && ca.JsonKey == "given_name");
+            jsonClaims.Should().Contain(ca => ca.ClaimType == ClaimTypes.Name && ca.JsonKey == "name");
+            jsonClaims.Should().Contain(ca => ca.ClaimType == ClaimTypes.NameIdentifier && ca.JsonKey == "sub");
+            jsonClaims.Should().Contain(ca => ca.ClaimType == ClaimTypes.Surname && ca.JsonKey == "family_name");
 
             var issuer = UrlHelper.CreateIssuerUrl(oktaMvcOptions.OktaDomain, oktaMvcOptions.AuthorizationServerId);
             oidcOptions.Authority.Should().Be(issuer);
