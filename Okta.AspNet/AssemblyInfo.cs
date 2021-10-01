@@ -5,8 +5,8 @@
 
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("Okta.AspNet.Test, PublicKey=0024000004800000940000000602000000240000525341310004000001000100c9a1a6c8fc5450"+
-                                                 "11447302c48e3e39053e73cbe2ee76690f123727e88fe304cc4847eebb97b02f423d8678022911"+
-                                                 "21ed2640d24c482e6ec1362923d804c7078f4ff43990f9dbbbb800f04d4025d43a2e045e85b8aa"+
-                                                 "00fe7968eda585a92c47fc9db044f2dec7056f3bbcd01439daf54be057ace51eddf42c1cb7e107"+
-                                                 "ea982abd")]
+[assembly: InternalsVisibleTo("Okta.AspNet.Test, PublicKey=0024000004800000940000000602000000240000525341310004000001000100" +
+                                                            "8DDE94AA036E3E52A8EA88BA106BF923C934C8C6674A76F747441CFC57C6FC56" +
+                                                            "BD30656541A44306A15976398ADEEDEC5109E34A7F0D93058FC9092834442CAF" +
+                                                            "01C76400A41E470716B2979C238A448383654E4B42EC20B8E831A8E63D6F9988" +
+                                                            "ABACAE63683A6FA647515704E1E1855B2DC45682D27FA859F2609734BA21A4CB")]

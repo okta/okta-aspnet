@@ -25,7 +25,7 @@
   <PropertyGroup>
     <CodeAnalysisRuleSet>..\OktaSdk.Tests.ruleset</CodeAnalysisRuleSet>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>okta.aspnet.pk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>okta.aspnet.public.snk</AssemblyOriginatorKeyFile>
     <DelaySign>true</DelaySign>
   </PropertyGroup>
 
