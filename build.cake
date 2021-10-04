@@ -163,7 +163,7 @@ Task("Default")
     .IsDependentOn("Clean")
     .IsDependentOn("Restore")
     .IsDependentOn("Build")
-	.IsDependentOn("Strongname")
+    .IsDependentOn("Strongname")
     .IsDependentOn("RunTests")
     .IsDependentOn("PackNuget");
     
