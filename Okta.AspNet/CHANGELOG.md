@@ -1,6 +1,12 @@
 # Changelog
 Running changelog of releases since `1.6.0`
 
+## v1.8.1
+
+### Features
+
+- Add strong name signature
+
 ## v1.8.0
 
 ### Features

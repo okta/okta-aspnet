@@ -11,7 +11,6 @@ Okta ASP.NET middleware
 * [Getting started](#getting-started)
 * [Contributing](#contributing)
 
-
 This package will enable your ASP.NET application to work with Okta via OAuth 2.0/OIDC. You can follow our instructions below, check out our examples on GitHub or [jump to our guides](https://developer.okta.com/docs/guides/sign-into-web-app/aspnet/before-you-begin/) to see how to configure Okta with your ASP.NET applications. 
 
 We also publish these other libraries for .NET:
@@ -71,7 +70,23 @@ To learn more about this library you can explore the following additional resour
 
 ## Contributing
 
-Issues and Pull Requests are welcome! To build the project, clone and build it with Visual Studio 2017 or newer. Check out the [Contributing Guide](https://github.com/okta/okta-aspnet/tree/master/CONTRIBUTING.md).
+Issues and Pull Requests are welcome! To build the project, clone and build it with Visual Studio 2017 or newer. 
+
+Be aware that these assemblies are strong-named:
+
+* Okta.AspNet
+* Okta.AspNet.Abstractions
+* Okta.AspNet.Test
+
+In order to be able to debug those assemblies locally you can either remove strong-naming by unchecking "Sign the assembly" check box in the project options or temporarily add them to ignore list using the Strong Name Tool:
+
+```
+sn.exe -Vr (path-to)\Okta.AspNet.dll
+sn.exe -Vr (path-to)\Okta.AspNet.Abstractions.dll
+sn.exe -Vr (path-to)\Okta.AspNet.Test.dll
+```
+
+Check out the [Contributing Guide](https://github.com/okta/okta-aspnet/tree/master/CONTRIBUTING.md).
 
 [github-issues]: https://github.com/okta/okta-aspnet/issues
 [github-releases]: https://github.com/okta/okta-aspnet/releases
