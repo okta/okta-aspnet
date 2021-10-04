@@ -11,7 +11,6 @@ Okta ASP.NET middleware
 * [Getting started](#getting-started)
 * [Contributing](#contributing)
 
-
 This package will enable your ASP.NET application to work with Okta via OAuth 2.0/OIDC. You can follow our instructions below, check out our examples on GitHub or [jump to our guides](https://developer.okta.com/docs/guides/sign-into-web-app/aspnet/before-you-begin/) to see how to configure Okta with your ASP.NET applications. 
 
 We also publish these other libraries for .NET:
