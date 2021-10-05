@@ -1,11 +1,17 @@
 # Changelog
 Running changelog of releases since `1.6.0`
 
-## v1.8.1
+## v1.8.2
+
+### Bug Fix
+
+- Fix issue with strong name signature introduced in 1.8.1.
+
+## v1.8.1 
 
 ### Features
 
-- Add strong name signature
+- Add strong name signature.
 
 ## v1.8.0
 

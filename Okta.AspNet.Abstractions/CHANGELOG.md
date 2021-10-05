@@ -1,11 +1,17 @@
 # Changelog
 Running changelog of releases since `3.0.5`
 
-## v3.2.1
+## v3.2.2
+
+### Bug Fix
+
+- Fix issue with strong name signature introduced in 3.2.1.
+
+## v3.2.1 
 
 ### Features
 
-- Add strong name signature
+- Add strong name signature.
 
 ## v3.2.0
 

@@ -143,6 +143,7 @@ Task("PackNuget")
             {
                 Configuration = configuration,
                 OutputDirectory = "./artifacts",
+                NoBuild = true,
             });
         }
     });
