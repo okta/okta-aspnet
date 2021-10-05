@@ -1,7 +1,7 @@
 # Changelog
 Running changelog of releases since `3.0.5`
 
-## v3.2.1
+## v3.2.2
 
 ### Features
 

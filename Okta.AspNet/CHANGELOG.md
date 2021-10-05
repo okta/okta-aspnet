@@ -1,7 +1,7 @@
 # Changelog
 Running changelog of releases since `1.6.0`
 
-## v1.8.1
+## v1.8.2
 
 ### Features
 
