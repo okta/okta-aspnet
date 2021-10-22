@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.Owin.Infrastructure;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Jwt;
 using Microsoft.Owin.Security.Notifications;
@@ -30,6 +31,24 @@ namespace Okta.AspNet
 
             new OktaMvcOptionsValidator().Validate(options);
             AddOpenIdConnectAuthentication(app, options);
+
+            return app;
+        }
+
+        public static IAppBuilder UseOktaMvcWithCookieManager(this IAppBuilder app, OktaMvcOptions options, ICookieManager cookieManager)
+        {
+            if (app == null)
+            {
+                throw new ArgumentNullException(nameof(app));
+            }
+
+            if (cookieManager == null)
+            {
+                throw new ArgumentNullException(nameof(cookieManager));
+            }
+
+            new OktaMvcOptionsValidator().Validate(options);
+            AddOpenIdConnectAuthentication(app, options, cookieManager);
 
             return app;
         }
@@ -79,12 +98,21 @@ namespace Okta.AspNet
             });
         }
 
-        private static void AddOpenIdConnectAuthentication(IAppBuilder app, OktaMvcOptions options)
+        private static void AddOpenIdConnectAuthentication(IAppBuilder app, OktaMvcOptions options, ICookieManager cookieManager = null)
         {
             // Stop the default behavior of remapping JWT claim names to legacy MS/SOAP claim names
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptionsBuilder(options).BuildOpenIdConnectAuthenticationOptions());
+            if (cookieManager != null)
+            {
+                var opts = new OpenIdConnectAuthenticationOptionsBuilder(options).BuildOpenIdConnectAuthenticationOptions();
+                opts.CookieManager = cookieManager;
+                app.UseOpenIdConnectAuthentication(opts);
+            }
+            else
+            {
+                app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptionsBuilder(options).BuildOpenIdConnectAuthenticationOptions());
+            }
         }
     }
 }
