@@ -6,6 +6,7 @@
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
@@ -23,9 +24,8 @@ namespace Okta.AspNetCore
         /// Configure an OpenIdConnectOptions object based on user's configuration.
         /// </summary>
         /// <param name="oktaMvcOptions">The <see cref="OktaMvcOptions"/> options.</param>
-        /// <param name="events">The OpenIdConnect events.</param>
         /// <param name="oidcOptions">The OpenIdConnectOptions to configure.</param>
-        public static void ConfigureOpenIdConnectOptions(OktaMvcOptions oktaMvcOptions, OpenIdConnectEvents events, OpenIdConnectOptions oidcOptions)
+        public static void ConfigureOpenIdConnectOptions(OktaMvcOptions oktaMvcOptions, OpenIdConnectOptions oidcOptions)
         {
             var issuer = UrlHelper.CreateIssuerUrl(oktaMvcOptions.OktaDomain, oktaMvcOptions.AuthorizationServerId);
 
@@ -61,16 +61,9 @@ namespace Okta.AspNetCore
                 NameClaimType = "name",
             };
 
-            oidcOptions.Events.OnRedirectToIdentityProvider = events.OnRedirectToIdentityProvider;
-
-            if (oktaMvcOptions.OnTokenValidated != null)
+            if (oktaMvcOptions.OpenIdConnectEvents != null)
             {
-                oidcOptions.Events.OnTokenValidated = oktaMvcOptions.OnTokenValidated;
-            }
-
-            if (oktaMvcOptions.GetClaimsFromUserInfoEndpoint && oktaMvcOptions.OnUserInformationReceived != null)
-            {
-                oidcOptions.Events.OnUserInformationReceived = oktaMvcOptions.OnUserInformationReceived;
+                oidcOptions.Events = oktaMvcOptions.OpenIdConnectEvents;
             }
 
             if (oktaMvcOptions.GetClaimsFromUserInfoEndpoint)
@@ -83,16 +76,29 @@ namespace Okta.AspNetCore
             oidcOptions.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");
             oidcOptions.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "sub");
             oidcOptions.ClaimActions.MapJsonKey(ClaimTypes.Surname, "family_name");
+        }
 
-            if (oktaMvcOptions.OnOktaApiFailure != null)
-            {
-                oidcOptions.Events.OnRemoteFailure = oktaMvcOptions.OnOktaApiFailure;
-            }
+        /// <summary>
+        /// Configure the JwtBearerOptions based on user's configuration.
+        /// </summary>
+        /// <param name="oktaWebApiOptions">The <see cref="OktaWebApiOptions"/> options.</param>
+        /// <param name="jwtBearerOptions">The jwtBearerOptions to configure.</param>
+        public static void ConfigureJwtBearerOptions(OktaWebApiOptions oktaWebApiOptions, JwtBearerOptions jwtBearerOptions)
+        {
+            var issuer = UrlHelper.CreateIssuerUrl(oktaWebApiOptions.OktaDomain, oktaWebApiOptions.AuthorizationServerId);
 
-            if (oktaMvcOptions.OnAuthenticationFailed != null)
+            var tokenValidationParameters = new DefaultTokenValidationParameters(oktaWebApiOptions, issuer)
             {
-                oidcOptions.Events.OnAuthenticationFailed = oktaMvcOptions.OnAuthenticationFailed;
-            }
+                ValidAudience = oktaWebApiOptions.Audience,
+            };
+
+            jwtBearerOptions.Audience = oktaWebApiOptions.Audience;
+            jwtBearerOptions.Authority = issuer;
+            jwtBearerOptions.TokenValidationParameters = tokenValidationParameters;
+            jwtBearerOptions.BackchannelHttpHandler = new OktaHttpMessageHandler("okta-aspnetcore", typeof(OktaAuthenticationOptionsExtensions).Assembly.GetName().Version, oktaWebApiOptions);
+            jwtBearerOptions.Events = oktaWebApiOptions.JwtBearerEvents ?? new JwtBearerEvents();
+            jwtBearerOptions.SecurityTokenValidators.Clear();
+            jwtBearerOptions.SecurityTokenValidators.Add(new StrictSecurityTokenValidator());
         }
     }
 }
