@@ -11,7 +11,7 @@ Refreshing access tokens in Asp.Net Core can be done in various ways and samples
     })
 ```
 
-Another option is to do it in a custom middleware as for Asp.Net Framework.
+Another option is to implement refreshing token in a custom middleware.
 
 Don't forget to include "offline_access" scope into scope list in `OktaMvcOptions` for minting refresh token.
 
