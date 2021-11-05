@@ -235,6 +235,7 @@ public IActionResult SignInWithIdp(string idp)
     return RedirectToAction("Index", "Home");
 }
 ```
+The Okta.AspNetCore library will include your identity provider id in the authorize URL and the user will prompted with the identity provider login. For more information, check out our guides to [add an external identity provider](https://developer.okta.com/docs/guides/add-an-external-idp/).
 
 ## Accessing OIDC Tokens
 
@@ -268,10 +269,10 @@ This example assumes you have a view called `OIDCToken` whose model is of type `
 
 ## Handling failures
 
-In the event a failure occurs, the Okta.AspNetCore library exposes the [OpenIdConnectEvents](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectevents.onauthenticationfailed) so you can hook into specific events during the authentication process. For more information See [`OnAuthenticationFailed`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectevents.onauthenticationfailed) or [`OnRemoteFailure`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.remoteauthenticationevents.onremotefailure).
+In the event a failure occurs, the Okta.AspNetCore library exposes [OpenIdConnectEvents](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectevents.onauthenticationfailed) so you can hook into specific events during the authentication process. For more information See [`OnAuthenticationFailed`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectevents.onauthenticationfailed) or [`OnRemoteFailure`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.remoteauthenticationevents.onremotefailure).
 
 
- to defined on the `OktaMvcOptions` class. The following is an example of how to use `OnOktaApiFailure` and `OnAuthenticationFailed` to handle failures:
+ The following is an example of how to use events to handle failures:
 
 ```csharp
 public class Startup
@@ -308,9 +309,6 @@ public class Startup
     }
 }
 ```
-
-The Okta.AspNetCore library will include your identity provider id in the authorize URL and the user will prompted with the identity provider login. For more information, check out our guides to [add an external identity provider](https://developer.okta.com/docs/guides/add-an-external-idp/).
-
 # Configuration Reference 
 
 The `OktaMvcOptions` class configures the Okta middleware. You can see all the available options in the table below:

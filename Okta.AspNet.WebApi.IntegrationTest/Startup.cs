@@ -4,7 +4,11 @@
 // </copyright>
 
 using System;
+using System.Threading.Tasks;
+using System.Web;
 using Microsoft.Owin;
+using Microsoft.Owin.Security.OAuth;
+using Microsoft.Owin.Security.Provider;
 using Owin;
 
 [assembly: OwinStartup(typeof(Okta.AspNet.WebApi.IntegrationTest.Startup))]
@@ -16,10 +20,18 @@ namespace Okta.AspNet.WebApi.IntegrationTest
         public void Configuration(IAppBuilder app)
         {
             var oktaDomain = Environment.GetEnvironmentVariable("okta:OktaDomain");
-
+            var jwtProvider = new OAuthBearerAuthenticationProvider
+            {
+                OnApplyChallenge = context =>
+                {
+                    context.OwinContext.Response.Headers.Add("myCustomHeader", new [] {"myCustomValue"});
+                    return Task.CompletedTask;
+                },
+            };
             app.UseOktaWebApi(new OktaWebApiOptions()
                 {
                     OktaDomain = oktaDomain,
+                    OAuthBearerAuthenticationProvider = jwtProvider,
                 });
         }
     }

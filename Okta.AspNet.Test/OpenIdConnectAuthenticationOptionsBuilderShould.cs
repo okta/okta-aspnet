@@ -34,7 +34,10 @@ namespace Okta.AspNet.Test
                 ClientSecret = "bar",
                 RedirectUri = "/redirectUri",
                 Scope = new List<string> { "openid", "profile", "email" },
-                SecurityTokenValidated = mockTokenEvent,
+                OpenIdConnectEvents = new OpenIdConnectAuthenticationNotifications
+                {
+                    SecurityTokenValidated = mockTokenEvent,
+                },
                 GetClaimsFromUserInfoEndpoint = false,
             };
 
