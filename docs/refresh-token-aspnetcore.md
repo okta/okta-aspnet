@@ -8,7 +8,7 @@ The Asp.Net SDK doesn't currently have built-in support for refreshing tokens. I
 
 You can refresh access and ID tokens using the `/token` endpoint with the` grant_type` set to `refresh_token`. Before calling this endpoint, obtain the refresh token from the SDK and ensure that you have included `offline_access` as a scope in the SDK configuration. For further details on access token refresh with this endpoint, see [Use a refresh token](https://developer.okta.com/docs/guides/refresh-tokens/use-refresh-token/).
 
-This is an example of a token request method. 
+The following is an example of a token request method:
 
 
 ```csharp
