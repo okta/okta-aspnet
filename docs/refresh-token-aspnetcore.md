@@ -39,4 +39,16 @@ There are several ways you can call the `RequestNewToken` method. You can either
     })
 ```
 
-After new authentication tokens set use `context.ShouldRenew = true;` to update session cookies.
+After new authentication tokens are refreshed they can be persisted in cookies like in the following sampe:
+
+```csharp
+    var expirationValue = DateTime.UtcNow.AddSeconds(tokenResponse.ExpiresIn).ToString("o", CultureInfo.InvariantCulture);
+    context.Properties.StoreTokens(new []
+    {
+        new AuthenticationToken { Name = refreshTokenName, Value = tokenResponse.RefreshToken },
+        new AuthenticationToken { Name = accessTokenName, Value = tokenResponse.AccessToken },
+        new AuthenticationToken { Name = expirationTokenName, Value = expirationValue }
+    });
+
+    context.ShouldRenew = true;
+```
