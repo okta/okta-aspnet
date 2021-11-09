@@ -30,7 +30,7 @@ This is an example of a token request method.
     }
 ```
 
-There are several ways you can call the `RequestNewToken` method. You can either hook into OnValidatePrincipal event or define a new Middleware and call the refresh function after  existing access token is expired:
+There are several ways you can call the `RequestNewToken` method. You can either hook into OnValidatePrincipal event or define a new Middleware and call the refresh function after the existing access token expires:
 
 ```csharp
     .AddCookie(options=>
