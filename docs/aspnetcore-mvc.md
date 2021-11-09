@@ -235,7 +235,7 @@ public IActionResult SignInWithIdp(string idp)
     return RedirectToAction("Index", "Home");
 }
 ```
-The Okta.AspNetCore library will include your identity provider id in the authorize URL and the user will prompted with the identity provider login. For more information, check out our guides to [add an external identity provider](https://developer.okta.com/docs/guides/add-an-external-idp/).
+The Okta.AspNetCore library includes your identity provider id in the authorize URL and the user is prompted with the identity provider login. For more information, check out our guides to [add an external identity provider](https://developer.okta.com/docs/guides/add-an-external-idp/).
 
 ## Accessing OIDC Tokens
 
