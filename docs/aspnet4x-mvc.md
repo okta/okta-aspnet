@@ -174,7 +174,7 @@ This example assumes you have a view called `Claim` whose model is of type `Syst
 
 ## Handling failures
 
-library exposes [OpenIdConnectEvents](https://docs.microsoft.com/en-us/previous-versions/aspnet/mt180963(v=vs.113)) so you can hook into specific events during the authentication process. For more information see [`AuthenticationFailed`](https://docs.microsoft.com/en-us/previous-versions/aspnet/mt180967(v=vs.113)).
+This library exposes [OpenIdConnectEvents](https://docs.microsoft.com/en-us/previous-versions/aspnet/mt180963(v=vs.113)) so you can hook into specific events during the authentication process. For more information see [`AuthenticationFailed`](https://docs.microsoft.com/en-us/previous-versions/aspnet/mt180967(v=vs.113)).
 
 
  The following is an example of how to use events to handle failures:

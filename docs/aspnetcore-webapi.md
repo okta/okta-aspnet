@@ -79,7 +79,7 @@ The `OktaWebApiOptions` class configures the Okta middleware. You can see all th
 | ClientId                  | No      | The client ID of your Okta Application. This property is obsolete and will be removed in the next major version. |
 | AuthorizationServerId     | No           |  The [Okta Custom Authorization Server](https://developer.okta.com/docs/concepts/auth-servers/#custom-authorization-server) to use. The default value is `default`. [The Org Authorization Server](https://developer.okta.com/docs/concepts/auth-servers/#org-authorization-server) is not supported. |
 | Audience                  | No           | The expected audience of incoming tokens. The default value is `api://default`. |
-| JwtBearerEvents | No | Specifies [events](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.jwtbearer.jwtbearerevents) which the underlying JwtBearerHandler invokes to enable developer control over the authentication process.|
+| JwtBearerEvents | No | Specifies the [events](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.jwtbearer.jwtbearerevents) which the underlying JwtBearerHandler invokes to enable developer control over the authentication process.|
 | ClockSkew                 | No           | The clock skew allowed when validating tokens. The default value is 2 minutes. |
 | Proxy                     | No           | An object describing proxy server configuration.  Properties are `Host`, `Port`, `Username` and `Password` |
 

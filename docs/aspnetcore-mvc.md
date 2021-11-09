@@ -326,7 +326,7 @@ The `OktaMvcOptions` class configures the Okta middleware. You can see all the a
 | GetClaimsFromUserInfoEndpoint | No       | Whether to retrieve additional claims from the UserInfo endpoint after login. The default value is `true`. |
 | ClockSkew                 | No           | The clock skew allowed when validating tokens. The default value is 2 minutes. |
 | Proxy                     | No           | An object describing proxy server configuration.  Properties are `Host`, `Port`, `Username` and `Password` |
-|OpenIdConnectEvents | No |  Specifies the [events](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.remoteauthenticationevents.onremotefailure) which the underlying OpenIdConnectHandler invokes to enable developer control over the authentication process.|
+|OpenIdConnectEvents | No |  Specifies the [events](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectevents) which the underlying OpenIdConnectHandler invokes to enable developer control over the authentication process.|
 
 You can store these values (except the events) in the `appsettings.json`, but be careful when checking in the client secret to the source control.
 
