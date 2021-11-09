@@ -2,28 +2,41 @@
 
 ## About Refreshing Access Token in ASP.NET CORE
 
-Refreshing access tokens in Asp.Net Core can be done in various ways and samples are available across the Internet. For example this can be done in the OnValidatePrincipal event handler and attached like in here:
+The Asp.Net SDK doesn't currently have built-in support for refreshing tokens. Instead use the direct approach with the OAuth token endpoint.
 
+### Refresh the token using the OAuth token endpoint
+
+You can refresh access and ID tokens using the `/token` endpoint with the` grant_type` set to `refresh_token`. Before calling this endpoint, obtain the refresh token from the SDK and ensure that you have included `offline_access` as a scope in the SDK configuration. For further details on access token refresh with this endpoint, see [Use a refresh token](https://developer.okta.com/docs/guides/refresh-tokens/use-refresh-token/).
+
+This is an example of a token request method. 
+
+
+```csharp
+    private async Task<TokenResponse> RequestNewToken(CookieValidatePrincipalContext context, string refreshToken, CancellationToken cancellationToken)
+    {
+        using var httpClient = new HttpClient();
+        var oktaDomain = Configuration.GetValue<string>("Okta:OktaDomain");
+        var authorizationServerId = Configuration.GetValue<string>("Okta:AuthorizationServerId");
+        var tokenClientOptions = new TokenClientOptions
+        {
+            Address = $"{oktaDomain}/oauth2/{authorizationServerId}/v1/token",
+            ClientId = Configuration.GetValue<string>("Okta:ClientId"),
+            ClientSecret = Configuration.GetValue<string>("Okta:ClientSecret"),
+        };
+        var tokenClient = new TokenClient(httpClient, tokenClientOptions);
+        var tokenResponse = await tokenClient.RequestRefreshTokenAsync(refreshToken, cancellationToken: cancellationToken).ConfigureAwait(false);
+       
+        return tokenResponse;
+    }
 ```
+
+There are several ways you can call the `RequestNewToken` method. You can either hook into OnValidatePrincipal event or define a new Middleware and call the refresh function after  existing access token is expired:
+
+```csharp
     .AddCookie(options=>
     {
        options.Events.OnValidatePrincipal += OnValidatePrincipalHandler;
     })
 ```
 
-Another option is to implement refreshing token in a custom middleware.
-
-Don't forget to include "offline_access" scope into scope list in `OktaMvcOptions` for minting refresh token.
-
-```
-   .AddOktaMvc(new OktaMvcOptions
-   {
-       GetClaimsFromUserInfoEndpoint = true,
-       OktaDomain = Configuration.GetValue<string>("Okta:OktaDomain"),
-       AuthorizationServerId = Configuration.GetValue<string>("Okta:AuthorizationServerId"),
-       ClientId = Configuration.GetValue<string>("Okta:ClientId"),
-       ClientSecret = Configuration.GetValue<string>("Okta:ClientSecret"),
-       Scope = new List<string> { "openid", "profile", "email" , "offline_access" },
-   });
-
-```
+After new authentication tokens set use `context.ShouldRenew = true;` to update session cookies.
