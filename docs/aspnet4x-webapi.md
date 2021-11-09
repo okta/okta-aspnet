@@ -70,6 +70,7 @@ The `OktaWebApiOptions` class configures the Okta middleware. You can see all th
 | Audience                  | No           | The expected audience of incoming tokens. The default value is `api://default`. |
 | ClockSkew                 | No           | The clock skew allowed when validating tokens. The default value is 2 minutes. |
 | Proxy                     | No           | An object describing proxy server configuration.  Properties are `Host`, `Port`, `Username` and `Password` |
+ OAuthBearerAuthenticationProvider | No | The [authentication provider](https://docs.microsoft.com/en-us/previous-versions/aspnet/dn253813(v=vs.113)) which specifies callback methods invoked by the underlying authentication middleware to enable developer control over the authentication process. | 
 
 You can store these values in the `Web.config`.
 

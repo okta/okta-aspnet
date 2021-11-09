@@ -50,25 +50,9 @@ namespace Okta.AspNetCore
         public bool GetClaimsFromUserInfoEndpoint { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets the event invoked when an IdToken has been validated and produced an AuthenticationTicket.
+        /// Gets or sets the OIDC events.
         /// </summary>
-        /// <value>The OnTokenValidated event.</value>
-        public Func<TokenValidatedContext, Task> OnTokenValidated { get; set; } = context => Task.CompletedTask;
-
-        /// <summary>
-        /// Gets or sets the event invoked when user information is retrieved from the UserInfoEndpoint. The <see cref="GetClaimsFromUserInfoEndpoint"/> value must be true when using this event.
-        /// </summary>
-        /// <value>The OnUserInformationReceived event.</value>
-        public Func<UserInformationReceivedContext, Task> OnUserInformationReceived { get; set; } = context => Task.CompletedTask;
-
-        /// <summary>
-        /// Gets or sets the event invoked when a failure occurs within the Okta API.
-        /// </summary>
-        public Func<RemoteFailureContext, Task> OnOktaApiFailure { get; set; } = context => Task.CompletedTask;
-
-        /// <summary>
-        /// Gets or sets the event invoked if exceptions are thrown during request processing.
-        /// </summary>
-        public Func<AuthenticationFailedContext, Task> OnAuthenticationFailed { get; set; } = context => Task.CompletedTask;
+        /// <seealso cref="https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectevents"/>
+        public OpenIdConnectEvents OpenIdConnectEvents { get; set; }
     }
 }

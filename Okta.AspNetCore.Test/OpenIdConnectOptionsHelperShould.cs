@@ -15,6 +15,11 @@ using Okta.AspNet.Abstractions;
 using Xunit;
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using JwtAuthenticationFailedContext = Microsoft.AspNetCore.Authentication.JwtBearer.AuthenticationFailedContext;
+using OpenIdConnectTokenValidatedContext = Microsoft.AspNetCore.Authentication.OpenIdConnect.TokenValidatedContext;
+using OpenIdConnectAuthenticationFailedContext = Microsoft.AspNetCore.Authentication.OpenIdConnect.AuthenticationFailedContext;
+using JwtTokenValidatedContext = Microsoft.AspNetCore.Authentication.JwtBearer.TokenValidatedContext;
 
 namespace Okta.AspNetCore.Test
 {
@@ -23,12 +28,13 @@ namespace Okta.AspNetCore.Test
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void SetOpenIdConnectsOptionsCorrectly(bool getClaimsFromUserInfoEndpoint)
+        public void SetOpenIdConnectsOptions(bool getClaimsFromUserInfoEndpoint)
         {
-            var mockTokenValidatedEvent = Substitute.For<Func<TokenValidatedContext, Task>>();
+            var mockTokenValidatedEvent = Substitute.For<Func<OpenIdConnectTokenValidatedContext, Task>>();
             var mockUserInfoReceivedEvent = Substitute.For<Func<UserInformationReceivedContext, Task>>();
             var mockOktaExceptionEvent = Substitute.For<Func<RemoteFailureContext, Task>>();
-            var mockAuthenticationFailedEvent = Substitute.For<Func<AuthenticationFailedContext, Task>>();
+            var mockAuthenticationFailedEvent = Substitute.For<Func<OpenIdConnectAuthenticationFailedContext, Task>>();
+            var mockRedirectToIdentityProvider = Substitute.For<Func<RedirectContext, Task>>();
 
             var oktaMvcOptions = new OktaMvcOptions
             {
@@ -40,17 +46,19 @@ namespace Okta.AspNetCore.Test
                 GetClaimsFromUserInfoEndpoint = getClaimsFromUserInfoEndpoint,
                 CallbackPath = "/somecallbackpath",
                 Scope = new List<string> { "openid", "profile", "email" },
-                OnTokenValidated = mockTokenValidatedEvent,
-                OnUserInformationReceived = mockUserInfoReceivedEvent,
-                OnAuthenticationFailed = mockAuthenticationFailedEvent,
-                OnOktaApiFailure = mockOktaExceptionEvent,
+                OpenIdConnectEvents = new OpenIdConnectEvents
+                {
+                    OnTokenValidated = mockTokenValidatedEvent,
+                    OnUserInformationReceived = mockUserInfoReceivedEvent,
+                    OnAuthenticationFailed = mockAuthenticationFailedEvent,
+                    OnRemoteFailure = mockOktaExceptionEvent,
+                    OnRedirectToIdentityProvider = mockRedirectToIdentityProvider
+                }
             };
-
-            var events = new OpenIdConnectEvents() { OnRedirectToIdentityProvider = null };
 
             var oidcOptions = new OpenIdConnectOptions();
 
-            OpenIdConnectOptionsHelper.ConfigureOpenIdConnectOptions(oktaMvcOptions, events, oidcOptions);
+            OpenIdConnectOptionsHelper.ConfigureOpenIdConnectOptions(oktaMvcOptions, oidcOptions);
 
             oidcOptions.ClientId.Should().Be(oktaMvcOptions.ClientId);
             oidcOptions.ClientSecret.Should().Be(oktaMvcOptions.ClientSecret);
@@ -72,8 +80,7 @@ namespace Okta.AspNetCore.Test
 
             oidcOptions.Scope.ToList().Should().BeEquivalentTo(oktaMvcOptions.Scope);
             oidcOptions.CallbackPath.Value.Should().Be(oktaMvcOptions.CallbackPath);
-            oidcOptions.Events.OnRedirectToIdentityProvider.Should().BeNull();
-
+            
             // Check the event was call once with a null parameter
             oidcOptions.Events.OnTokenValidated(null);
             mockTokenValidatedEvent.Received(1).Invoke(null);
@@ -81,6 +88,8 @@ namespace Okta.AspNetCore.Test
             mockAuthenticationFailedEvent.Received(1).Invoke(null);
             oidcOptions.Events.OnRemoteFailure(null);
             mockOktaExceptionEvent.Received(1).Invoke(null);
+            oidcOptions.Events.OnRedirectToIdentityProvider(null);
+            mockRedirectToIdentityProvider.Received(1).Invoke(null);
 
             // UserInfo event is mapped only when GetClaimsFromUserInfoEndpoint = true
             if (oidcOptions.GetClaimsFromUserInfoEndpoint)
@@ -89,6 +98,37 @@ namespace Okta.AspNetCore.Test
                 oidcOptions.Events.OnUserInformationReceived(null);
                 mockUserInfoReceivedEvent.Received(1).Invoke(null);
             }
+        }
+
+        [Fact]
+        public void SetJwtBearerOptions()
+        {
+            var mockTokenValidatedEvent = Substitute.For<Func<JwtTokenValidatedContext, Task>>();
+            var mockAuthenticationFailedEvent = Substitute.For<Func<JwtAuthenticationFailedContext, Task>>();
+
+            var oktaWebApiOptions = new OktaWebApiOptions
+            {
+                AuthorizationServerId = "bar",
+                OktaDomain = "http://myoktadomain.com",
+                Audience = "foo",
+                JwtBearerEvents = new JwtBearerEvents()
+                {
+                    OnTokenValidated = mockTokenValidatedEvent,
+                    OnAuthenticationFailed = mockAuthenticationFailedEvent,
+                }
+            };
+            
+            var jwtBearerOptions = new JwtBearerOptions();
+
+            OpenIdConnectOptionsHelper.ConfigureJwtBearerOptions(oktaWebApiOptions, jwtBearerOptions);
+            var issuer = UrlHelper.CreateIssuerUrl(oktaWebApiOptions.OktaDomain, oktaWebApiOptions.AuthorizationServerId);
+            jwtBearerOptions.Authority.Should().Be(issuer);
+            jwtBearerOptions.Audience.Should().Be(oktaWebApiOptions.Audience);
+
+            jwtBearerOptions.Events.OnTokenValidated(null);
+            mockTokenValidatedEvent.Received(1).Invoke(null);
+            jwtBearerOptions.Events.OnAuthenticationFailed(null);
+            mockAuthenticationFailedEvent.Received(1).Invoke(null);
         }
     }
 }

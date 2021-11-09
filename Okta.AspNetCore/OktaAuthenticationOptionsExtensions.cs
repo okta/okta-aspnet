@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Extensions.DependencyInjection;
 using Okta.AspNet.Abstractions;
@@ -57,19 +58,18 @@ namespace Okta.AspNetCore
 
         private static AuthenticationBuilder AddCodeFlow(AuthenticationBuilder builder, OktaMvcOptions options)
         {
-            var events = new OpenIdConnectEvents
-            {
-                OnRedirectToIdentityProvider = BeforeRedirectToIdentityProviderAsync,
-            };
+            Func<RedirectContext, Task> redirectEvent = options.OpenIdConnectEvents?.OnRedirectToIdentityProvider;
+            options.OpenIdConnectEvents = options.OpenIdConnectEvents ?? new OpenIdConnectEvents();
+            options.OpenIdConnectEvents.OnRedirectToIdentityProvider = context => BeforeRedirectToIdentityProviderAsync(context, redirectEvent);
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            builder.AddOpenIdConnect(oidcOptions => OpenIdConnectOptionsHelper.ConfigureOpenIdConnectOptions(options, events, oidcOptions));
+            builder.AddOpenIdConnect(oidcOptions => OpenIdConnectOptionsHelper.ConfigureOpenIdConnectOptions(options, oidcOptions));
 
             return builder;
         }
 
-        private static Task BeforeRedirectToIdentityProviderAsync(RedirectContext context)
+        private static Task BeforeRedirectToIdentityProviderAsync(RedirectContext context, Func<RedirectContext, Task> redirectEvent)
         {
             // Verify if additional well-known params (e.g login-hint, sessionToken, idp, etc.) should be sent in the request.
             var oktaRequestParamValue = string.Empty;
@@ -84,30 +84,14 @@ namespace Okta.AspNetCore
                 }
             }
 
+            if (redirectEvent != null)
+            {
+                return redirectEvent(context);
+            }
+
             return Task.CompletedTask;
         }
 
-        private static AuthenticationBuilder AddJwtValidation(AuthenticationBuilder builder, OktaWebApiOptions options)
-        {
-            var issuer = UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
-
-            var tokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
-            {
-                ValidAudience = options.Audience,
-            };
-
-            builder.AddJwtBearer(opt =>
-            {
-                opt.Audience = options.Audience;
-                opt.Authority = issuer;
-                opt.TokenValidationParameters = tokenValidationParameters;
-                opt.BackchannelHttpHandler = new OktaHttpMessageHandler("okta-aspnetcore", typeof(OktaAuthenticationOptionsExtensions).Assembly.GetName().Version, options);
-
-                opt.SecurityTokenValidators.Clear();
-                opt.SecurityTokenValidators.Add(new StrictSecurityTokenValidator());
-            });
-
-            return builder;
-        }
+        private static AuthenticationBuilder AddJwtValidation(AuthenticationBuilder builder, OktaWebApiOptions options) => builder.AddJwtBearer(opt => OpenIdConnectOptionsHelper.ConfigureJwtBearerOptions(options, opt));
     }
 }

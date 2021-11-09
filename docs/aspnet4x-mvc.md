@@ -174,7 +174,11 @@ This example assumes you have a view called `Claim` whose model is of type `Syst
 
 ## Handling failures
 
-In the event a failure occurs, the Okta.AspNet library provides the `OnAuthenticationFailed` delegate defined on the `OktaMvcOptions` class. The following is an example of how to use `OnAuthenticationFailed` to handle authentication failures:
+This library exposes [OpenIdConnectEvents](https://docs.microsoft.com/en-us/previous-versions/aspnet/mt180963(v=vs.113)) so you can hook into specific events during the authentication process. For more information see [`AuthenticationFailed`](https://docs.microsoft.com/en-us/previous-versions/aspnet/mt180967(v=vs.113)).
+
+
+ The following is an example of how to use events to handle failures:
+
 
 ```csharp
 public class Startup
@@ -184,7 +188,10 @@ public class Startup
         app.UseOktaMvc(new OktaMvcOptions()
         {
             // ... other configuration options removed for brevity ...
-            AuthenticationFailed = OnAuthenticationFailed,
+            OpenIdConnectEvents = new OpenIdConnectAuthenticationNotifications
+            {
+                AuthenticationFailed = OnAuthenticationFailed,
+            },
         });
     }
 
@@ -216,8 +223,7 @@ The `OktaMvcOptions` class configures the Okta middleware. You can see all the a
 | LoginMode                     | No           | LoginMode controls the login redirect behavior of the middleware. The default value is `OktaHosted`. |
 | GetClaimsFromUserInfoEndpoint | No       | Whether to retrieve additional claims from the UserInfo endpoint after login. The default value is `true`. |
 | ClockSkew                 | No           | The clock skew allowed when validating tokens. The default value is 2 minutes. |
-| SecurityTokenValidated                 | No           | The event invoked after the security token has passed validation and a `ClaimsIdentity` has been generated. |
-| OnAuthenticationFailed    | No           | The event invoked if exceptions are thrown during request processing. |
+|OpenIdConnectEvents | No | Specifies the [events](https://docs.microsoft.com/en-us/previous-versions/aspnet/dn800270(v=vs.113)) which the underlying OpenIdConnectHandler invokes to enable developer control over the authentication process.|
 | Proxy                     | No           | An object describing proxy server configuration.  Properties are `Host`, `Port`, `Username` and `Password` |
 
 You can store these values (except the Token event) in the `Web.config`, but be careful when checking in the client secret to the source control.

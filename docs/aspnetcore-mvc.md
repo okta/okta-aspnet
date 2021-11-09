@@ -235,6 +235,7 @@ public IActionResult SignInWithIdp(string idp)
     return RedirectToAction("Index", "Home");
 }
 ```
+The Okta.AspNetCore library includes your identity provider id in the authorize URL and the user is prompted with the identity provider login. For more information, check out our guides to [add an external identity provider](https://developer.okta.com/docs/guides/add-an-external-idp/).
 
 ## Accessing OIDC Tokens
 
@@ -268,7 +269,10 @@ This example assumes you have a view called `OIDCToken` whose model is of type `
 
 ## Handling failures
 
-In the event a failure occurs, the Okta.AspNetCore library provides the `OnOktaApiFailure` and `OnAuthenticationFailed` delegates defined on the `OktaMvcOptions` class. The following is an example of how to use `OnOktaApiFailure` and `OnAuthenticationFailed` to handle failures:
+In the event a failure occurs, the Okta.AspNetCore library exposes [OpenIdConnectEvents](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectevents.onauthenticationfailed) so you can hook into specific events during the authentication process. For more information See [`OnAuthenticationFailed`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectevents.onauthenticationfailed) or [`OnRemoteFailure`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.remoteauthenticationevents.onremotefailure).
+
+
+ The following is an example of how to use events to handle failures:
 
 ```csharp
 public class Startup
@@ -278,8 +282,11 @@ public class Startup
         services.AddOktaMvc(new OktaMvcOptions
         {
             // ... other configuration options removed for brevity ...
-            OnOktaApiFailure = OnOktaApiFailure,
-            OnAuthenticationFailed = OnAuthenticationFailed,
+            OpenIdConnectEvents = new OpenIdConnectEvents
+            {
+                OnAuthenticationFailed = OnAuthenticationFailed,
+                OnRemoteFailure = OnOktaApiFailure,
+            },
         });
     }
 
@@ -302,9 +309,6 @@ public class Startup
     }
 }
 ```
-
-The Okta.AspNetCore library will include your identity provider id in the authorize URL and the user will prompted with the identity provider login. For more information, check out our guides to [add an external identity provider](https://developer.okta.com/docs/guides/add-an-external-idp/).
-
 # Configuration Reference 
 
 The `OktaMvcOptions` class configures the Okta middleware. You can see all the available options in the table below:
@@ -321,11 +325,8 @@ The `OktaMvcOptions` class configures the Okta middleware. You can see all the a
 | Scope                     | No           | The OAuth 2.0/OpenID Connect scopes to request when logging in. The default value is `openid profile`. |
 | GetClaimsFromUserInfoEndpoint | No       | Whether to retrieve additional claims from the UserInfo endpoint after login. The default value is `true`. |
 | ClockSkew                 | No           | The clock skew allowed when validating tokens. The default value is 2 minutes. |
-| OnTokenValidated                 | No           | The event invoked after the security token has passed validation and a ClaimsIdentity has been generated. |
-| OnUserInformationReceived                 | No           | The event invoked when user information is retrieved from the UserInfoEndpoint. The `GetClaimsFromUserInfoEndpoint` value must be `true` when using this event. |
-| OnOktaApiFailure          | No           | The event invoked when a failure occurs within the Okta API. |
-| OnAuthenticationFailed    | No           | The event invoked if exceptions are thrown during request processing. |
 | Proxy                     | No           | An object describing proxy server configuration.  Properties are `Host`, `Port`, `Username` and `Password` |
+|OpenIdConnectEvents | No |  Specifies the [events](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectevents) which the underlying OpenIdConnectHandler invokes to enable developer control over the authentication process.|
 
 You can store these values (except the events) in the `appsettings.json`, but be careful when checking in the client secret to the source control.
 

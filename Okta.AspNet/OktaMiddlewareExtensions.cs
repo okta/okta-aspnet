@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Jwt;
 using Microsoft.Owin.Security.Notifications;
+using Microsoft.Owin.Security.OAuth;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Okta.AspNet.Abstractions;
 using Owin;
@@ -76,6 +77,7 @@ namespace Okta.AspNet
                 AuthenticationMode = AuthenticationMode.Active,
                 TokenValidationParameters = tokenValidationParameters,
                 TokenHandler = new StrictTokenHandler(),
+                Provider = options.OAuthBearerAuthenticationProvider ?? new OAuthBearerAuthenticationProvider(),
             });
         }
 

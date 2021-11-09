@@ -41,5 +41,6 @@ namespace Okta.AspNet.Abstractions
         /// Gets or sets the URI of your organization's proxy server.  The default is <c>null</c>.
         /// </summary>
         public ProxyConfiguration Proxy { get; set; }
+
     }
 }
