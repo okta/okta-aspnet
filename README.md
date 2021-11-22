@@ -29,7 +29,7 @@ This library uses semantic versioning and follows Okta's [library version policy
 |`Okta.AspNet.Abstractions`| 3.x   | :heavy_check_mark: Stable | .NET Standard 2.0 and .NET Framework 4.5.2 or higher.| master |
 |`Okta.AspNet`| 1.x | :heavy_check_mark: Stable | .NET Framework 4.5.2 | master |
 |`Okta.AspNetCore`| 1.x | :warning: Retiring | .NET Standard 2.0 and .NET Core 2.x | [okta-aspnetcore-2.x](https://github.com/okta/okta-aspnet/tree/okta-aspnetcore-2.x) |
-|`Okta.AspNetCore`| 3.x | :heavy_check_mark: Stable | .NET Core 3.x and .NET 5.0 | master |
+|`Okta.AspNetCore`| 3.x | :heavy_check_mark: Stable | .NET Core 3.x, .NET 5.0 and  .NET 6.0 | master |
  
 
 The latest release can always be found on the [releases page][github-releases].
