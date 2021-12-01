@@ -99,6 +99,8 @@ namespace Okta.AspNetCore
             jwtBearerOptions.Events = oktaWebApiOptions.JwtBearerEvents ?? new JwtBearerEvents();
             jwtBearerOptions.SecurityTokenValidators.Clear();
             jwtBearerOptions.SecurityTokenValidators.Add(new StrictSecurityTokenValidator());
+            jwtBearerOptions.BackchannelTimeout = oktaWebApiOptions.BackchannelTimeout;
+            jwtBearerOptions.BackchannelHttpHandler = oktaWebApiOptions.BackchannelHttpClientHandler;
         }
     }
 }

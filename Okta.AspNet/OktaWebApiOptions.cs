@@ -15,5 +15,7 @@ namespace Okta.AspNet
         /// </summary>
         /// <seealso cref="https://docs.microsoft.com/en-us/previous-versions/aspnet/dn253813(v=vs.113)"/>
         public IOAuthBearerAuthenticationProvider OAuthBearerAuthenticationProvider { get; set; }
+
+
     }
 }

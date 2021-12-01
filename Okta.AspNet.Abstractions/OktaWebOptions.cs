@@ -4,6 +4,7 @@
 // </copyright>
 
 using System;
+using System.Net.Http;
 
 namespace Okta.AspNet.Abstractions
 {
@@ -42,5 +43,14 @@ namespace Okta.AspNet.Abstractions
         /// </summary>
         public ProxyConfiguration Proxy { get; set; }
 
+        /// <summary>
+        /// Gets or sets the HttpClientHandler used to communicate with Okta.
+        /// </summary>
+        public HttpMessageHandler BackchannelHttpClientHandler { get; set; }
+
+        /// <summary>
+        /// Gets or sets timeout value in milliseconds for back channel communications with Okta.
+        /// </summary>
+        public TimeSpan BackchannelTimeout { get; set; } = TimeSpan.FromSeconds(60);
     }
 }

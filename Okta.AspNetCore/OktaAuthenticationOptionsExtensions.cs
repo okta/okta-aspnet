@@ -59,7 +59,7 @@ namespace Okta.AspNetCore
         private static AuthenticationBuilder AddCodeFlow(AuthenticationBuilder builder, OktaMvcOptions options)
         {
             Func<RedirectContext, Task> redirectEvent = options.OpenIdConnectEvents?.OnRedirectToIdentityProvider;
-            options.OpenIdConnectEvents = options.OpenIdConnectEvents ?? new OpenIdConnectEvents();
+            options.OpenIdConnectEvents ??= new OpenIdConnectEvents();
             options.OpenIdConnectEvents.OnRedirectToIdentityProvider = context => BeforeRedirectToIdentityProviderAsync(context, redirectEvent);
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();

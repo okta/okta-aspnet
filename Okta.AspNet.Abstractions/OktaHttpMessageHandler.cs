@@ -21,7 +21,7 @@ namespace Okta.AspNet.Abstractions
         public OktaHttpMessageHandler(string frameworkName, Version frameworkVersion, OktaWebOptions oktaWebOptions = null)
         {
             _userAgent = new Lazy<string>(() => new UserAgentBuilder(frameworkName, frameworkVersion).GetUserAgent());
-            InnerHandler = new HttpClientHandler();
+            InnerHandler = oktaWebOptions?.BackchannelHttpClientHandler ?? new HttpClientHandler();
             if (oktaWebOptions?.Proxy != null)
             {
                 ((HttpClientHandler)InnerHandler).Proxy = new DefaultProxy(oktaWebOptions.Proxy);
