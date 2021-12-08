@@ -50,7 +50,7 @@ namespace Okta.AspNet.Abstractions
         /// Gets or sets the HttpClientHandler used to communicate with Okta.
         /// </summary>
         /// <value>
-        /// The HttpClientHandler used to communicate with Okta.
+        /// The HttpMessageHandler used to communicate with Okta.
         /// </value>
         public HttpMessageHandler BackchannelHttpClientHandler { get; set; }
 

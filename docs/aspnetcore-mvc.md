@@ -113,6 +113,56 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
+> Note: The proxy configuration is ignored when an `BackchannelHttpClientHandler` is provided.
+
+## Configure your own HttpMessageHandler implementation
+
+Starting in Okta.AspNet 2.0.0/Okta.AspNetCore 4.0.0, you can now provide your own HttpMessageHandler implementation to be used by the uderlying OIDC middleware. This is useful if you want to log all the requests and responses to diagnose problems, or retry failed requests among other use cases. The following example shows how to provide your own logging logic via Http handlers:
+
+```csharp
+
+public class Startup
+{
+    public void Configuration(IAppBuilder app)
+    {
+        app.UseOktaMvc(new OktaMvcOptions
+        {
+            BackchannelHttpClientHandler = new MyLoggingHandler((logger),
+        });
+    }
+}
+
+public class MyLoggingHandler : DelegatingHandler
+{
+    private readonly ILogger _logger;
+
+    public MyLoggingHandler(ILogger logger)
+    {
+        _logger = logger;
+    }
+
+    protected override async Task<HttpResponseMessage> SendAsync(
+        HttpRequestMessage request,
+        CancellationToken cancellationToken)
+    {
+        _logger.Trace($"Request: {request}");
+
+        try
+        {
+            var response = await base.SendAsync(request, cancellationToken);
+            _logger.Trace($"Response: {response}");
+           
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.Error($"Something went wrong: {ex}");
+            throw;
+        }
+    }
+}
+
+```
 
 ## Configuration for cloud services or load balancers
 
@@ -326,7 +376,9 @@ The `OktaMvcOptions` class configures the Okta middleware. You can see all the a
 | GetClaimsFromUserInfoEndpoint | No       | Whether to retrieve additional claims from the UserInfo endpoint after login. The default value is `true`. |
 | ClockSkew                 | No           | The clock skew allowed when validating tokens. The default value is 2 minutes. |
 | Proxy                     | No           | An object describing proxy server configuration.  Properties are `Host`, `Port`, `Username` and `Password` |
-|OpenIdConnectEvents | No |  Specifies the [events](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectevents) which the underlying OpenIdConnectHandler invokes to enable developer control over the authentication process.|
+| OpenIdConnectEvents | No |  Specifies the [events](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectevents) which the underlying OpenIdConnectHandler invokes to enable developer control over the authentication process.|
+| BackchannelTimeout                     | No           | Timeout value in milliseconds for back channel communications with Okta. The default value is 1 minute. |
+| BackchannelHttpClientHandler                   | No           | The HttpMessageHandler used to communicate with Okta. |
 
 You can store these values (except the events) in the `appsettings.json`, but be careful when checking in the client secret to the source control.
 
