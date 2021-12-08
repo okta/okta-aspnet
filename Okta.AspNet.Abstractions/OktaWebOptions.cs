@@ -47,7 +47,7 @@ namespace Okta.AspNet.Abstractions
         public ProxyConfiguration Proxy { get; set; }
 
         /// <summary>
-        /// Gets or sets the HttpClientHandler used to communicate with Okta.
+        /// Gets or sets the HttpMessageHandler used to communicate with Okta.
         /// </summary>
         /// <value>
         /// The HttpMessageHandler used to communicate with Okta.
