@@ -43,45 +43,9 @@ namespace Okta.AspNet
             }
 
             new OktaWebApiOptionsValidator().Validate(options);
-            AddJwtBearerAuthentication(app, options);
+            app.UseJwtBearerAuthentication(JwtOptionsBuilder.BuildJwtBearerAuthenticationOptions(options));
 
             return app;
-        }
-
-        private static void AddJwtBearerAuthentication(IAppBuilder app, OktaWebApiOptions options)
-        {
-            var issuer = UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
-
-            var httpClient = new HttpClient(new OktaHttpMessageHandler("okta-aspnet", typeof(OktaMiddlewareExtensions).Assembly.GetName().Version, options));
-            httpClient.Timeout = options.BackchannelTimeout;
-            httpClient.MaxResponseContentBufferSize = 1024 * 1024 * 10; // 10 MB
-
-            var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
-              issuer + "/.well-known/openid-configuration",
-              new OpenIdConnectConfigurationRetriever(),
-              new HttpDocumentRetriever(httpClient));
-
-            // Stop the default behavior of remapping JWT claim names to legacy MS/SOAP claim names
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-
-            var signingKeyCachingProvider = new DiscoveryDocumentCachingSigningKeyProvider(new DiscoveryDocumentSigningKeyProvider(configurationManager));
-
-            var tokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
-            {
-                ValidAudience = options.Audience,
-                IssuerSigningKeyResolver = (token, securityToken, keyId, validationParameters) =>
-                {
-                    return signingKeyCachingProvider.SigningKeys.Where(x => x.KeyId == keyId);
-                },
-            };
-
-            app.UseJwtBearerAuthentication(new JwtBearerAuthenticationOptions
-            {
-                AuthenticationMode = AuthenticationMode.Active,
-                TokenValidationParameters = tokenValidationParameters,
-                TokenHandler = new StrictTokenHandler(),
-                Provider = options.OAuthBearerAuthenticationProvider ?? new OAuthBearerAuthenticationProvider(),
-            });
         }
 
         private static void AddOpenIdConnectAuthentication(IAppBuilder app, OktaMvcOptions options)

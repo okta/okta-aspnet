@@ -44,6 +44,7 @@ namespace Okta.AspNetCore
                 "okta-aspnetcore",
                 typeof(OktaAuthenticationOptionsExtensions).Assembly.GetName().Version,
                 oktaMvcOptions);
+            oidcOptions.BackchannelTimeout = oktaMvcOptions.BackchannelTimeout;
 
             var hasDefinedScopes = oktaMvcOptions.Scope?.Any() ?? false;
             if (hasDefinedScopes)
@@ -100,7 +101,6 @@ namespace Okta.AspNetCore
             jwtBearerOptions.SecurityTokenValidators.Clear();
             jwtBearerOptions.SecurityTokenValidators.Add(new StrictSecurityTokenValidator());
             jwtBearerOptions.BackchannelTimeout = oktaWebApiOptions.BackchannelTimeout;
-            jwtBearerOptions.BackchannelHttpHandler = oktaWebApiOptions.BackchannelHttpClientHandler;
         }
     }
 }

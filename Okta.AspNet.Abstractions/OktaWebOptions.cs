@@ -41,16 +41,25 @@ namespace Okta.AspNet.Abstractions
         /// <summary>
         /// Gets or sets the URI of your organization's proxy server.  The default is <c>null</c>.
         /// </summary>
+        /// <value>
+        /// The URI of your organization's proxy server.  The default is <c>null</c>.
+        /// </value>
         public ProxyConfiguration Proxy { get; set; }
 
         /// <summary>
         /// Gets or sets the HttpClientHandler used to communicate with Okta.
         /// </summary>
+        /// <value>
+        /// The HttpClientHandler used to communicate with Okta.
+        /// </value>
         public HttpMessageHandler BackchannelHttpClientHandler { get; set; }
 
         /// <summary>
         /// Gets or sets timeout value in milliseconds for back channel communications with Okta.
         /// </summary>
+        /// <value>
+        /// Timeout value in milliseconds for back channel communications with Okta.
+        /// </value>
         public TimeSpan BackchannelTimeout { get; set; } = TimeSpan.FromSeconds(60);
     }
 }

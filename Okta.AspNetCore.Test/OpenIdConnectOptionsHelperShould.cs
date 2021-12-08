@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Authentication;
@@ -35,6 +36,7 @@ namespace Okta.AspNetCore.Test
             var mockOktaExceptionEvent = Substitute.For<Func<RemoteFailureContext, Task>>();
             var mockAuthenticationFailedEvent = Substitute.For<Func<OpenIdConnectAuthenticationFailedContext, Task>>();
             var mockRedirectToIdentityProvider = Substitute.For<Func<RedirectContext, Task>>();
+            var mockHttpHandler = Substitute.For<HttpMessageHandler>();
 
             var oktaMvcOptions = new OktaMvcOptions
             {
@@ -46,6 +48,8 @@ namespace Okta.AspNetCore.Test
                 GetClaimsFromUserInfoEndpoint = getClaimsFromUserInfoEndpoint,
                 CallbackPath = "/somecallbackpath",
                 Scope = new List<string> { "openid", "profile", "email" },
+                BackchannelTimeout = TimeSpan.FromMinutes(5),
+                BackchannelHttpClientHandler = mockHttpHandler,
                 OpenIdConnectEvents = new OpenIdConnectEvents
                 {
                     OnTokenValidated = mockTokenValidatedEvent,
@@ -65,6 +69,8 @@ namespace Okta.AspNetCore.Test
             oidcOptions.SignedOutRedirectUri.Should().Be(oktaMvcOptions.PostLogoutRedirectUri);
             oidcOptions.GetClaimsFromUserInfoEndpoint.Should().Be(oktaMvcOptions.GetClaimsFromUserInfoEndpoint);
             oidcOptions.CallbackPath.Value.Should().Be(oktaMvcOptions.CallbackPath);
+            oidcOptions.BackchannelTimeout.Should().Be(TimeSpan.FromMinutes(5));
+            ((DelegatingHandler)oidcOptions.BackchannelHttpHandler).InnerHandler.Should().Be(mockHttpHandler);
 
             var jsonClaims = oidcOptions
                 .ClaimActions.Where(ca => ca is JsonKeyClaimAction)
@@ -105,12 +111,15 @@ namespace Okta.AspNetCore.Test
         {
             var mockTokenValidatedEvent = Substitute.For<Func<JwtTokenValidatedContext, Task>>();
             var mockAuthenticationFailedEvent = Substitute.For<Func<JwtAuthenticationFailedContext, Task>>();
+            var mockHttpHandler = Substitute.For<HttpMessageHandler>();
 
             var oktaWebApiOptions = new OktaWebApiOptions
             {
                 AuthorizationServerId = "bar",
                 OktaDomain = "http://myoktadomain.com",
                 Audience = "foo",
+                BackchannelHttpClientHandler = mockHttpHandler,
+                BackchannelTimeout = TimeSpan.FromMinutes(5),
                 JwtBearerEvents = new JwtBearerEvents()
                 {
                     OnTokenValidated = mockTokenValidatedEvent,
@@ -124,6 +133,8 @@ namespace Okta.AspNetCore.Test
             var issuer = UrlHelper.CreateIssuerUrl(oktaWebApiOptions.OktaDomain, oktaWebApiOptions.AuthorizationServerId);
             jwtBearerOptions.Authority.Should().Be(issuer);
             jwtBearerOptions.Audience.Should().Be(oktaWebApiOptions.Audience);
+            jwtBearerOptions.BackchannelTimeout.Should().Be(TimeSpan.FromMinutes(5));
+            ((DelegatingHandler)jwtBearerOptions.BackchannelHttpHandler).InnerHandler.Should().Be(mockHttpHandler);
 
             jwtBearerOptions.Events.OnTokenValidated(null);
             mockTokenValidatedEvent.Received(1).Invoke(null);
