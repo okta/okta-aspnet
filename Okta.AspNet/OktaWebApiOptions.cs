@@ -11,9 +11,12 @@ namespace Okta.AspNet
     public sealed class OktaWebApiOptions : Abstractions.OktaWebApiOptions
     {
         /// <summary>
-        /// Gets ort sets the authentication provider which specifies callback methods invoked by the underlying authentication middleware to enable developer control over the authentication process.
+        /// Gets or sets the authentication provider which specifies callback methods invoked by the underlying authentication middleware to enable developer control over the authentication process.
         /// </summary>
         /// <seealso cref="https://docs.microsoft.com/en-us/previous-versions/aspnet/dn253813(v=vs.113)"/>
+        /// <value>
+        /// The authentication provider which specifies callback methods invoked by the underlying authentication middleware to enable developer control over the authentication process.
+        /// </value>
         public IOAuthBearerAuthenticationProvider OAuthBearerAuthenticationProvider { get; set; }
     }
 }

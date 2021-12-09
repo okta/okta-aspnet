@@ -81,6 +81,8 @@ namespace Okta.AspNet
                 AuthenticationMode = (_oktaMvcOptions.LoginMode == LoginMode.SelfHosted) ? AuthenticationMode.Passive : AuthenticationMode.Active,
                 SaveTokens = true,
                 Notifications = _oktaMvcOptions.OpenIdConnectEvents,
+                BackchannelHttpHandler = _oktaMvcOptions.BackchannelHttpClientHandler,
+                BackchannelTimeout = _oktaMvcOptions.BackchannelTimeout,
             };
 
             return oidcOptions;

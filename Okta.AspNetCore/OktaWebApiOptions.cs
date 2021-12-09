@@ -3,10 +3,15 @@
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Net.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Okta.AspNetCore
 {
+    /// <summary>
+    /// Configuration options for the underlying OIDC middleware.
+    /// </summary>
     public sealed class OktaWebApiOptions : AspNet.Abstractions.OktaWebApiOptions
     {
         /// <summary>

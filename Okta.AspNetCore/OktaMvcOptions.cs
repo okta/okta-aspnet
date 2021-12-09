@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace Okta.AspNetCore
 {
+    /// <summary>
+    /// The configuration options for the underlying OIDC middleware.
+    /// </summary>
     public class OktaMvcOptions : AspNet.Abstractions.OktaWebOptions
     {
         /// <summary>

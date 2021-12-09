@@ -1,6 +1,24 @@
 # Changelog
 Running changelog of releases since `3.0.5`
 
+## v4.0.0
+
+### Features
+
+- Add support for OIDC events configuration in MVC projects.
+- Add support for JWT events configuration in Web API projects.
+- Add support for BackchannelHttpHandler configuration.
+- Add support for BackchannelTimeout configuration.
+
+### Breaking changes
+
+- Remove `ClientId` property from `WebApiOptions`.
+
+### Features
+
+- Add strong name signature.
+
+
 ## v3.2.2
 
 ### Bug Fix

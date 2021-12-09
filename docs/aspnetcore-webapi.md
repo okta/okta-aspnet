@@ -69,6 +69,57 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
+> Note: The proxy configuration is ignored when a `BackchannelHttpClientHandler` is provided.
+
+## Configure your own HttpMessageHandler implementation
+
+Starting in Okta.AspNet 2.0.0/Okta.AspNetCore 4.0.0, you can now provide your own HttpMessageHandler implementation to be used by the uderlying OIDC middleware. This is useful if you want to log all the requests and responses to diagnose problems, or retry failed requests among other use cases. The following example shows how to provide your own logging logic via Http handlers:
+
+```csharp
+
+public class Startup
+{
+    public void Configuration(IAppBuilder app)
+    {
+        app.UseOktaMvc(new OktaWebApiOptions
+        {
+            BackchannelHttpClientHandler = new MyLoggingHandler((logger),
+        });
+    }
+}
+
+public class MyLoggingHandler : DelegatingHandler
+{
+    private readonly ILogger _logger;
+
+    public MyLoggingHandler(ILogger logger)
+    {
+        _logger = logger;
+    }
+
+    protected override async Task<HttpResponseMessage> SendAsync(
+        HttpRequestMessage request,
+        CancellationToken cancellationToken)
+    {
+        _logger.Trace($"Request: {request}");
+
+        try
+        {
+            var response = await base.SendAsync(request, cancellationToken);
+            _logger.Trace($"Response: {response}");
+           
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.Error($"Something went wrong: {ex}");
+            throw;
+        }
+    }
+}
+
+```
+
 ## Configuration Reference
 
 The `OktaWebApiOptions` class configures the Okta middleware. You can see all the available options in the table below:
@@ -82,6 +133,8 @@ The `OktaWebApiOptions` class configures the Okta middleware. You can see all th
 | JwtBearerEvents | No | Specifies the [events](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.jwtbearer.jwtbearerevents) which the underlying JwtBearerHandler invokes to enable developer control over the authentication process.|
 | ClockSkew                 | No           | The clock skew allowed when validating tokens. The default value is 2 minutes. |
 | Proxy                     | No           | An object describing proxy server configuration.  Properties are `Host`, `Port`, `Username` and `Password` |
+| BackchannelTimeout                     | No           | Timeout value in milliseconds for back channel communications with Okta. The default value is 1 minute. |
+| BackchannelHttpClientHandler                   | No           | The HttpMessageHandler used to communicate with Okta. |
 
 You can store these values in the `appsettings.json`.
 

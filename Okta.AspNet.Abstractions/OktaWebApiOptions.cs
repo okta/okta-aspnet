@@ -4,6 +4,7 @@
 // </copyright>
 
 using System;
+using System.Net.Http;
 
 namespace Okta.AspNet.Abstractions
 {
@@ -12,8 +13,5 @@ namespace Okta.AspNet.Abstractions
         public static readonly string DefaultAudience = "api://default";
 
         public string Audience { get; set; } = DefaultAudience;
-
-        [Obsolete("ClientId is no longer required, and has no effect. This property will be removed in the next major release.")]
-        public string ClientId { get; set; }
     }
 }
