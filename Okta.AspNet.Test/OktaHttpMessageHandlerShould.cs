@@ -145,9 +145,9 @@ namespace Okta.AspNet.Test
         }
 
         [Fact]
-        public void NotSetInnerHandlerIfWebProxyIsNotSpecified()
+        public void NotSetWebProxyIfNotSpecified()
         {
-            var testFrameworkName = $"{nameof(NotSetInnerHandlerIfWebProxyIsNotSpecified)}_testFrameworkName";
+            var testFrameworkName = $"{nameof(NotSetWebProxyIfNotSpecified)}_testFrameworkName";
             var version = typeof(OktaHttpMessageHandlerShould).Assembly.GetName().Version;
             var oktaHandler = new OktaHttpMessageHandler(testFrameworkName, version, new OktaMvcOptions());
             oktaHandler.InnerHandler.Should().NotBeNull();
