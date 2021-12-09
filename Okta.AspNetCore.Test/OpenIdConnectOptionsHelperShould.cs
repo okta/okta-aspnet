@@ -137,9 +137,9 @@ namespace Okta.AspNetCore.Test
             ((DelegatingHandler)jwtBearerOptions.BackchannelHttpHandler).InnerHandler.Should().Be(mockHttpHandler);
 
             jwtBearerOptions.Events.OnTokenValidated(null);
-            mockTokenValidatedEvent.Received(1).Invoke(null);
+            mockTokenValidatedEvent.Received().Invoke(null);
             jwtBearerOptions.Events.OnAuthenticationFailed(null);
-            mockAuthenticationFailedEvent.Received(1).Invoke(null);
+            mockAuthenticationFailedEvent.Received().Invoke(null);
         }
     }
 }
