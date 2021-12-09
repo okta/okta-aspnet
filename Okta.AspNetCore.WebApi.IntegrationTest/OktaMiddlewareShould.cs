@@ -56,6 +56,20 @@ namespace Okta.AspNetCore.WebApi.IntegrationTest
             }
         }
 
+        [Fact]
+        public async Task InvokeCustomEventsAsync()
+        {
+            var accessToken = "thisIsAnInvalidToken";
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, ProtectedEndpoint);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            using (var client = new HttpClient(_server.CreateHandler()))
+            {
+                var response = await client.SendAsync(request);
+                Assert.True(response.Headers.Contains("myCustomHeader"));
+            }
+        }
+
         public void Dispose()
         {
             _server.Dispose();

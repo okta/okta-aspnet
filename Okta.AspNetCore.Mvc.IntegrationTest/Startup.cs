@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
@@ -23,6 +25,17 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            Func<RedirectContext, Task> myRedirectEvent = context =>
+            {
+                context.ProtocolMessage.SetParameter("myCustomParamKey", "myCustomParamValue");
+                return Task.CompletedTask;
+            };
+
+            var events = new OpenIdConnectEvents
+            {
+                OnRedirectToIdentityProvider = myRedirectEvent,
+            };
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -35,9 +48,13 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
                 ClientId = Configuration["Okta:ClientId"],
                 ClientSecret = Configuration["Okta:ClientSecret"],
                 OktaDomain = Configuration["Okta:OktaDomain"],
+                OpenIdConnectEvents = events,
+                
             });
             services.AddAuthorization();
             services.AddControllers();
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

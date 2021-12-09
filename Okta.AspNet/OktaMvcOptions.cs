@@ -57,15 +57,9 @@ namespace Okta.AspNet
         public bool GetClaimsFromUserInfoEndpoint { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets the event invoked after the security token has passed validation and a ClaimsIdentity has been generated.
+        /// Gets or sets the OIDC events which the underlying OpenIdConnectAuthenticationMiddleware invokes to enable developer control over the authentication process.
         /// </summary>
-        /// <value>The SecurityTokenValidated event.</value>
-        public Func<SecurityTokenValidatedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions>, Task> SecurityTokenValidated { get; set; } = notification => Task.FromResult(0);
-
-        /// <summary>
-        /// Gets or sets the event invoked if exceptions are thrown during request processing.
-        /// </summary>
-        /// <value>The AuthenticationFailed event.</value>
-        public Func<AuthenticationFailedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions>, Task> AuthenticationFailed { get; set; } = notification => Task.FromResult(0);
+        /// <seealso cref="https://docs.microsoft.com/en-us/previous-versions/aspnet/dn800270(v=vs.113)"/>
+        public OpenIdConnectAuthenticationNotifications OpenIdConnectEvents { get; set; }
     }
 }

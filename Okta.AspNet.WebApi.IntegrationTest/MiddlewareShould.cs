@@ -23,14 +23,18 @@ namespace Okta.AspNet.WebApi.IntegrationTest
 
         private string ProtectedEndpoint { get; set; }
 
+        private MockHttpMessageHandler MockHttpHandler { get; set; }
+
         public MiddlewareShould()
         {
             BaseUrl = "http://localhost:8080";
             ProtectedEndpoint = string.Format("{0}/api/messages", BaseUrl);
+            MockHttpHandler = new MockHttpMessageHandler();
 
             _server = TestServer.Create(app =>
             {
                 var startup = new Startup();
+                startup.HttpMessageHandler = MockHttpHandler;
                 startup.Configuration(app);
 
                 HttpConfiguration config = new HttpConfiguration();
@@ -63,6 +67,34 @@ namespace Okta.AspNet.WebApi.IntegrationTest
             {
                 var response = await client.SendAsync(request);
                 Assert.True(response.StatusCode == System.Net.HttpStatusCode.Unauthorized);
+            }
+        }
+
+        [Fact]
+        public async Task InvokeCustomEventsAsync()
+        {
+            var accessToken = "thisIsAnInvalidToken";
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, ProtectedEndpoint);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            using (var client = new HttpClient(_server.Handler))
+            {
+                var response = await client.SendAsync(request);
+                Assert.True(response.Headers.Contains("myCustomHeader"));
+            }
+        }
+
+        [Fact]
+        public async Task InvokeCustomHandlerAsync()
+        {
+            var accessToken = "thisIsAnInvalidToken";
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, ProtectedEndpoint);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            using (var client = new HttpClient(_server.Handler))
+            {
+                var response = await client.SendAsync(request);
+                Assert.True(MockHttpHandler.NumberOfCalls > 0);
             }
         }
 
