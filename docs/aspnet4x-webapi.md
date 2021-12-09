@@ -57,7 +57,7 @@ public class Startup
     }
 }
 ```
-> Note: The proxy configuration is ignored when an `BackchannelHttpClientHandler` is provided.
+> Note: The proxy configuration is ignored when a `BackchannelHttpClientHandler` is provided.
 
 ## Configure your own HttpMessageHandler implementation
 
