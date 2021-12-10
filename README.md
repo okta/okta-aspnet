@@ -25,12 +25,14 @@ This library uses semantic versioning and follows Okta's [library version policy
 
 :heavy_check_mark: The current stable major version series is: 1.x
 
-|Package| Version | Status                    | Compatibility| Branch |
-| ------- | ------- | ------------------------- | ----------------------- | -------------------- |
-|`Okta.AspNet.Abstractions`| 3.x   | :heavy_check_mark: Stable | .NET Standard 2.0 and .NET Framework 4.5.2 or higher.| master |
-|`Okta.AspNet`| 1.x | :heavy_check_mark: Stable | .NET Framework 4.5.2 | master |
-|`Okta.AspNetCore`| 1.x | :warning: Retiring | .NET Standard 2.0 and .NET Core 2.x | [okta-aspnetcore-2.x](https://github.com/okta/okta-aspnet/tree/okta-aspnetcore-2.x) |
-|`Okta.AspNetCore`| 3.x | :heavy_check_mark: Stable | .NET Core 3.x and .NET 5.0 | master |
+|Package| Version | Status                    | Compatibility|
+| ------- | ------- | ------------------------- | ----------------------- | 
+|`Okta.AspNet.Abstractions`| 4.x   | heavy_check_mark: Stable | .NET Standard 2.0 and .NET Framework 4.5.2 or higher.|
+|`Okta.AspNet.Abstractions`| 3.x   | :warning: Retiring | .NET Standard 2.0 and .NET Framework 4.5.2 or higher.|
+|`Okta.AspNet`| 2.x | :heavy_check_mark: Stable | .NET Framework 4.5.2 |
+|`Okta.AspNet`| 1.x | :warning: Retiring | .NET Framework 4.5.2 |
+|`Okta.AspNetCore`| 4.x | :heavy_check_mark: Stable | .NET Core 3.x and .NET 5.0 |
+|`Okta.AspNetCore`| 3.x | :warning: Retiring | .NET Standard 2.0 and .NET Core 2.x |
  
 
 The latest release can always be found on the [releases page][github-releases].
