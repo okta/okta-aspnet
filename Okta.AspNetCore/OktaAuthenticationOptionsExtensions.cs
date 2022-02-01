@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Okta.AspNet.Abstractions;
 
@@ -36,6 +37,23 @@ namespace Okta.AspNetCore
             new OktaMvcOptionsValidator().Validate(options);
 
             return AddCodeFlow(builder, options);
+        }
+
+        /// <summary>
+        /// Configures Okta for Web API apps, from global configuration.
+        /// </summary>
+        /// <param name="builder">The application builder.</param>
+        /// <param name="configuration">The configuration to load the Okta properties from.</param>
+        /// <returns>The authentication builder.</returns>
+        public static AuthenticationBuilder AddOktaWebApi(this AuthenticationBuilder builder, IConfiguration configuration)
+        {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            var options = new OktaWebApiOptions(configuration);
+            return AddOktaWebApi(builder, options);
         }
 
         /// <summary>
