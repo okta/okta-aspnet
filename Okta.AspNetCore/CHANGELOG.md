@@ -1,12 +1,26 @@
 # Changelog
 Running changelog of releases since `3.2.0`
 
-
-## v3.5.2
+## v4.1.0
 
 ### Features
 
 - Add support for .NET 6.0 framework
+
+
+## v4.0.0
+
+### Features
+
+- Add support for OIDC events configuration in MVC projects.
+- Add support for JWT events configuration in Web API projects.
+- Add support for BackchannelHttpHandler configuration.
+- Add support for BackchannelTimeout configuration.
+
+### Breaking changes
+
+- Remove `OnTokenValidated`, `OnUserInformationReceived`, `OnOktaApiFailure` and `OnAuthenticationFailed` events in favor of `OpenIdConnectEvents` (MVC).
+- Remove `ClientId` property from `WebApiOptions`.
 
 ## v3.5.1
 

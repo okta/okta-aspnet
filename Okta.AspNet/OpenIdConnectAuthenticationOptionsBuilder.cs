@@ -3,6 +3,7 @@
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
@@ -54,6 +55,17 @@ namespace Okta.AspNet
             var definedScopes = _oktaMvcOptions.Scope?.ToArray() ?? OktaDefaults.Scope;
             var scopeString = string.Join(" ", definedScopes);
 
+            var redirectEvent = _oktaMvcOptions.OpenIdConnectEvents?.RedirectToIdentityProvider;
+            var tokenEvent = _oktaMvcOptions.OpenIdConnectEvents?.SecurityTokenValidated;
+            _oktaMvcOptions.OpenIdConnectEvents =
+                _oktaMvcOptions.OpenIdConnectEvents ?? new OpenIdConnectAuthenticationNotifications();
+
+            _oktaMvcOptions.OpenIdConnectEvents.RedirectToIdentityProvider = context =>
+                BeforeRedirectToIdentityProviderAsync(context, redirectEvent);
+
+            _oktaMvcOptions.OpenIdConnectEvents.SecurityTokenValidated =
+                context => SecurityTokenValidatedAsync(context, tokenEvent);
+
             var oidcOptions = new OpenIdConnectAuthenticationOptions
             {
                 ClientId = _oktaMvcOptions.ClientId,
@@ -68,18 +80,18 @@ namespace Okta.AspNet
                 SecurityTokenValidator = new StrictSecurityTokenValidator(),
                 AuthenticationMode = (_oktaMvcOptions.LoginMode == LoginMode.SelfHosted) ? AuthenticationMode.Passive : AuthenticationMode.Active,
                 SaveTokens = true,
-                Notifications = new OpenIdConnectAuthenticationNotifications
-                {
-                    RedirectToIdentityProvider = BeforeRedirectToIdentityProviderAsync,
-                    SecurityTokenValidated = SecurityTokenValidatedAsync,
-                    AuthenticationFailed = _oktaMvcOptions.AuthenticationFailed,
-                },
+                Notifications = _oktaMvcOptions.OpenIdConnectEvents,
+                BackchannelHttpHandler = _oktaMvcOptions.BackchannelHttpClientHandler,
+                BackchannelTimeout = _oktaMvcOptions.BackchannelTimeout,
             };
 
             return oidcOptions;
         }
 
-        private Task BeforeRedirectToIdentityProviderAsync(RedirectToIdentityProviderNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions> redirectToIdentityProviderNotification)
+        private Task BeforeRedirectToIdentityProviderAsync(
+            RedirectToIdentityProviderNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions>
+                redirectToIdentityProviderNotification,
+            Func<RedirectToIdentityProviderNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions>, Task> redirectEvent)
         {
             // If signing out, add the id_token_hint
             if (redirectToIdentityProviderNotification.ProtocolMessage.RequestType == OpenIdConnectRequestType.Logout)
@@ -106,10 +118,15 @@ namespace Okta.AspNet
                 }
             }
 
+            if (redirectEvent != null)
+            {
+                return redirectEvent(redirectToIdentityProviderNotification);
+            }
+
             return Task.FromResult(false);
         }
 
-        private async Task SecurityTokenValidatedAsync(SecurityTokenValidatedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions> context)
+        private async Task SecurityTokenValidatedAsync(SecurityTokenValidatedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions> context, Func<SecurityTokenValidatedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions>, Task> tokenEvent)
         {
             context.AuthenticationTicket.Identity.AddClaim(new Claim("id_token", context.ProtocolMessage.IdToken));
             context.AuthenticationTicket.Identity.AddClaim(new Claim("access_token", context.ProtocolMessage.AccessToken));
@@ -126,7 +143,10 @@ namespace Okta.AspNet
                 await _userInformationProvider.EnrichIdentityViaUserInfoAsync(context.AuthenticationTicket.Identity, context.ProtocolMessage.AccessToken).ConfigureAwait(false);
             }
 
-            await _oktaMvcOptions.SecurityTokenValidated(context).ConfigureAwait(false);
+            if (tokenEvent != null)
+            {
+                await tokenEvent(context).ConfigureAwait(false);
+            }
         }
 
         /// <summary>

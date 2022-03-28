@@ -1,6 +1,20 @@
 # Changelog
 Running changelog of releases since `1.6.0`
 
+## v2.0.0
+
+### Features
+
+- Add support for OIDC events configuration in MVC projects.
+- Add support for JWT events configuration in Web API projects.
+- Add support for BackchannelHttpHandler configuration.
+- Add support for BackchannelTimeout configuration.
+
+### Breaking changes
+
+- Remove `SecurityTokenValidated` and `AuthenticationFailed` events in favor of `OpenIdConnectEvents` (MVC).
+- Remove `ClientId` property from `WebApiOptions`.
+
 ## v1.8.2
 
 ### Bug Fix

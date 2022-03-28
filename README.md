@@ -5,11 +5,12 @@
 Okta ASP.NET middleware
 ========================
 
-* [Release status](#release-status)
-* [Need help?](#need-help)
-* [What you need](#what-you-need)
-* [Getting started](#getting-started)
-* [Contributing](#contributing)
+- [Okta ASP.NET middleware](#okta-aspnet-middleware)
+- [Release status](#release-status)
+- [Need help?](#need-help)
+- [What you need](#what-you-need)
+- [Getting Started](#getting-started)
+- [Contributing](#contributing)
 
 This package will enable your ASP.NET application to work with Okta via OAuth 2.0/OIDC. You can follow our instructions below, check out our examples on GitHub or [jump to our guides](https://developer.okta.com/docs/guides/sign-into-web-app/aspnet/before-you-begin/) to see how to configure Okta with your ASP.NET applications. 
 
@@ -22,14 +23,16 @@ We also publish these other libraries for .NET:
 
 This library uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/).
 
-:heavy_check_mark: The current stable major version series is: 1.x
+:heavy_check_mark: The current stable major version series is: 4.x for Okta.AspNetCore and 2.x for Okta.AspNet.
 
-|Package| Version | Status                    | Compatibility| Branch |
-| ------- | ------- | ------------------------- | ----------------------- | -------------------- |
-|`Okta.AspNet.Abstractions`| 3.x   | :heavy_check_mark: Stable | .NET Standard 2.0 and .NET Framework 4.5.2 or higher.| master |
-|`Okta.AspNet`| 1.x | :heavy_check_mark: Stable | .NET Framework 4.5.2 | master |
-|`Okta.AspNetCore`| 1.x | :warning: Retiring | .NET Standard 2.0 and .NET Core 2.x | [okta-aspnetcore-2.x](https://github.com/okta/okta-aspnet/tree/okta-aspnetcore-2.x) |
-|`Okta.AspNetCore`| 3.x | :heavy_check_mark: Stable | .NET Core 3.x, .NET 5.0 and  .NET 6.0 | master |
+|Package| Version | Status                    | Compatibility|
+| ------- | ------- | ------------------------- | ----------------------- | 
+|`Okta.AspNet.Abstractions`| 4.x   | heavy_check_mark: Stable | .NET Standard 2.0 and .NET Framework 4.5.2 or higher.|
+|`Okta.AspNet.Abstractions`| 3.x   | :warning: Retiring | .NET Standard 2.0 and .NET Framework 4.5.2 or higher.|
+|`Okta.AspNet`| 2.x | :heavy_check_mark: Stable | .NET Framework 4.5.2 |
+|`Okta.AspNet`| 1.x | :warning: Retiring | .NET Framework 4.5.2 |
+|`Okta.AspNetCore`| 4.x | :heavy_check_mark: Stable | .NET Core 3.x, .NET 5.0 and .NET 6.0 |
+|`Okta.AspNetCore`| 3.x | :warning: Retiring | .NET Standard 2.0 and .NET Core 2.x |
  
 
 The latest release can always be found on the [releases page][github-releases].
@@ -86,6 +89,8 @@ sn.exe -Vr (path-to)\Okta.AspNet.dll
 sn.exe -Vr (path-to)\Okta.AspNet.Abstractions.dll
 sn.exe -Vr (path-to)\Okta.AspNet.Test.dll
 ```
+
+You should restart Visual Studio after making these changes.
 
 Check out the [Contributing Guide](https://github.com/okta/okta-aspnet/tree/master/CONTRIBUTING.md).
 
