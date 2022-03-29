@@ -6,7 +6,7 @@ Running changelog of releases since `3.2.0`
 ### Features
 
 - Add support for .NET 6.0 framework
-
+- Update `Microsoft.AspNetCore.Authentication.JwtBearer` and `Microsoft.AspNetCore.Authentication.OpenIdConnect` dependencies to the latest version of each target framework supported by the SDK. (#199)
 
 ## v4.0.0
 
