@@ -29,13 +29,40 @@ namespace Okta.AspNetCore.Test
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void SetOpenIdConnectsOptions(bool getClaimsFromUserInfoEndpoint)
+        public async Task SetOpenIdConnectsOptions(bool getClaimsFromUserInfoEndpoint)
         {
-            var mockTokenValidatedEvent = Substitute.For<Func<OpenIdConnectTokenValidatedContext, Task>>();
-            var mockUserInfoReceivedEvent = Substitute.For<Func<UserInformationReceivedContext, Task>>();
-            var mockOktaExceptionEvent = Substitute.For<Func<RemoteFailureContext, Task>>();
-            var mockAuthenticationFailedEvent = Substitute.For<Func<OpenIdConnectAuthenticationFailedContext, Task>>();
-            var mockRedirectToIdentityProvider = Substitute.For<Func<RedirectContext, Task>>();
+            bool invoked = false;
+
+            Func<OpenIdConnectTokenValidatedContext, Task> mockTokenValidatedEvent = context =>
+            {
+                invoked = true;
+                return Task.CompletedTask;
+            };
+
+            Func<UserInformationReceivedContext, Task> mockUserInfoReceivedEvent = context =>
+            {
+                invoked = true;
+                return Task.CompletedTask;
+            };
+
+            Func<RemoteFailureContext, Task> mockOktaExceptionEvent = context =>
+            {
+                invoked = true;
+                return Task.CompletedTask;
+            };
+
+            Func<OpenIdConnectAuthenticationFailedContext, Task> mockAuthenticationFailedEvent = context =>
+            {
+                invoked = true;
+                return Task.CompletedTask;
+            };
+
+            Func<RedirectContext, Task> mockRedirectToIdentityProvider = context =>
+            {
+                invoked = true;
+                return Task.CompletedTask;
+            };
+
             var mockHttpHandler = Substitute.For<HttpMessageHandler>();
 
             var oktaMvcOptions = new OktaMvcOptions
@@ -88,21 +115,31 @@ namespace Okta.AspNetCore.Test
             oidcOptions.CallbackPath.Value.Should().Be(oktaMvcOptions.CallbackPath);
             
             // Check the event was call once with a null parameter
-            oidcOptions.Events.OnTokenValidated(null);
-            mockTokenValidatedEvent.Received(1).Invoke(null);
-            oidcOptions.Events.OnAuthenticationFailed(null);
-            mockAuthenticationFailedEvent.Received(1).Invoke(null);
-            oidcOptions.Events.OnRemoteFailure(null);
-            mockOktaExceptionEvent.Received(1).Invoke(null);
-            oidcOptions.Events.OnRedirectToIdentityProvider(null);
-            mockRedirectToIdentityProvider.Received(1).Invoke(null);
+            await oidcOptions.Events.OnTokenValidated(default);
+            invoked.Should().BeTrue();
+            invoked = false;
+            
+            await oidcOptions.Events.OnAuthenticationFailed(default);
+            invoked.Should().BeTrue();
+            invoked = false;
+
+            
+            await oidcOptions.Events.OnRemoteFailure(default);
+            invoked.Should().BeTrue();
+            invoked = false;
+
+            
+            await oidcOptions.Events.OnRedirectToIdentityProvider(default);
+            invoked.Should().BeTrue();
+            invoked = false;
 
             // UserInfo event is mapped only when GetClaimsFromUserInfoEndpoint = true
             if (oidcOptions.GetClaimsFromUserInfoEndpoint)
             {
                 // Check the event was call once with a null parameter
-                oidcOptions.Events.OnUserInformationReceived(null);
-                mockUserInfoReceivedEvent.Received(1).Invoke(null);
+                await oidcOptions.Events.OnUserInformationReceived(default);
+                invoked.Should().BeTrue();
+                invoked = false;
             }
         }
 
@@ -123,6 +160,7 @@ namespace Okta.AspNetCore.Test
                 invoked = true;
                 return Task.CompletedTask;
             };
+
             var oktaWebApiOptions = new OktaWebApiOptions
             {
                 AuthorizationServerId = "bar",
