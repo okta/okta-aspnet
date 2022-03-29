@@ -107,12 +107,22 @@ namespace Okta.AspNetCore.Test
         }
 
         [Fact]
-        public void SetJwtBearerOptions()
+        public async Task SetJwtBearerOptions()
         {
-            var mockTokenValidatedEvent = Substitute.For<Func<JwtTokenValidatedContext, Task>>();
-            var mockAuthenticationFailedEvent = Substitute.For<Func<JwtAuthenticationFailedContext, Task>>();
             var mockHttpHandler = Substitute.For<HttpMessageHandler>();
+            bool invoked = false;
 
+            Func<JwtTokenValidatedContext, Task> mockTokenValidatedEvent = context =>
+            {
+                invoked = true;
+                return Task.CompletedTask;
+            };
+
+            Func<JwtAuthenticationFailedContext, Task> mockAuthenticationFailedEvent = context =>
+            {
+                invoked = true;
+                return Task.CompletedTask;
+            };
             var oktaWebApiOptions = new OktaWebApiOptions
             {
                 AuthorizationServerId = "bar",
@@ -136,10 +146,11 @@ namespace Okta.AspNetCore.Test
             jwtBearerOptions.BackchannelTimeout.Should().Be(TimeSpan.FromMinutes(5));
             ((DelegatingHandler)jwtBearerOptions.BackchannelHttpHandler).InnerHandler.Should().Be(mockHttpHandler);
 
-            jwtBearerOptions.Events.OnTokenValidated(default);
-            mockTokenValidatedEvent.Received().Invoke(default);
-            jwtBearerOptions.Events.OnAuthenticationFailed(default);
-            mockAuthenticationFailedEvent.Received().Invoke(default);
+            await jwtBearerOptions.Events.OnTokenValidated(default);
+            invoked.Should().BeTrue();
+            invoked = false;
+            await jwtBearerOptions.Events.OnAuthenticationFailed(default);
+            invoked.Should().BeTrue();
         }
     }
 }
