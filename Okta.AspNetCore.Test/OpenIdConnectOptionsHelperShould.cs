@@ -136,10 +136,10 @@ namespace Okta.AspNetCore.Test
             jwtBearerOptions.BackchannelTimeout.Should().Be(TimeSpan.FromMinutes(5));
             ((DelegatingHandler)jwtBearerOptions.BackchannelHttpHandler).InnerHandler.Should().Be(mockHttpHandler);
 
-            jwtBearerOptions.Events.OnTokenValidated(null);
-            mockTokenValidatedEvent.Received().Invoke(null);
-            jwtBearerOptions.Events.OnAuthenticationFailed(null);
-            mockAuthenticationFailedEvent.Received().Invoke(null);
+            jwtBearerOptions.Events.OnTokenValidated(default);
+            mockTokenValidatedEvent.Received().Invoke(default);
+            jwtBearerOptions.Events.OnAuthenticationFailed(default);
+            mockAuthenticationFailedEvent.Received().Invoke(default);
         }
     }
 }
