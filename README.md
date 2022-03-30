@@ -23,7 +23,7 @@ We also publish these other libraries for .NET:
 
 This library uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/).
 
-:heavy_check_mark: The current stable major version series is: 1.x
+:heavy_check_mark: The current stable major version series is: 4.x for Okta.AspNetCore and 2.x for Okta.AspNet.
 
 |Package| Version | Status                    | Compatibility|
 | ------- | ------- | ------------------------- | ----------------------- | 
@@ -31,7 +31,7 @@ This library uses semantic versioning and follows Okta's [library version policy
 |`Okta.AspNet.Abstractions`| 3.x   | :warning: Retiring | .NET Standard 2.0 and .NET Framework 4.5.2 or higher.|
 |`Okta.AspNet`| 2.x | :heavy_check_mark: Stable | .NET Framework 4.5.2 |
 |`Okta.AspNet`| 1.x | :warning: Retiring | .NET Framework 4.5.2 |
-|`Okta.AspNetCore`| 4.x | :heavy_check_mark: Stable | .NET Core 3.x and .NET 5.0 |
+|`Okta.AspNetCore`| 4.x | :heavy_check_mark: Stable | .NET Core 3.x, .NET 5.0 and .NET 6.0 |
 |`Okta.AspNetCore`| 3.x | :warning: Retiring | .NET Standard 2.0 and .NET Core 2.x |
  
 
