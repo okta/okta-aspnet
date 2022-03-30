@@ -6,6 +6,7 @@
 using System;
 using System.Net.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 
 namespace Okta.AspNetCore
 {
@@ -14,6 +15,50 @@ namespace Okta.AspNetCore
     /// </summary>
     public sealed class OktaWebApiOptions : AspNet.Abstractions.OktaWebApiOptions
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OktaWebApiOptions"/> class.
+        /// </summary>
+        public OktaWebApiOptions()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OktaWebApiOptions"/> class.
+        /// </summary>
+        /// <param name="configuration">The configuration object.</param>
+        public OktaWebApiOptions(IConfiguration configuration)
+        {
+            var domain = configuration["Okta:OktaDomain"];
+            if (!string.IsNullOrWhiteSpace(domain))
+            {
+                this.OktaDomain = domain;
+            }
+
+            var authServerId = configuration["Okta:AuthorizationServerId"];
+            if (!string.IsNullOrWhiteSpace(authServerId))
+            {
+                this.AuthorizationServerId = authServerId;
+            }
+
+            var audience = configuration["Okta:Audience"];
+            if (!string.IsNullOrWhiteSpace(audience))
+            {
+                this.Audience = audience;
+            }
+
+            var timeout = configuration["Okta:BackchannelTimeout"];
+            if (!string.IsNullOrWhiteSpace(timeout))
+            {
+                this.BackchannelTimeout = TimeSpan.Parse(timeout);
+            }
+
+            var clockSkew = configuration["Okta:ClockSkew"];
+            if (!string.IsNullOrWhiteSpace(clockSkew))
+            {
+                this.ClockSkew = TimeSpan.Parse(clockSkew);
+            }
+        }
+
         /// <summary>
         /// Gets or sets the JwtBearerEvents.
         /// </summary>
