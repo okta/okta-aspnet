@@ -75,6 +75,24 @@ namespace Okta.AspNetCore.Test
             action.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == nameof(OktaMvcOptions.CallbackPath));
         }
 
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void FailWhenNameClaimTypeIsNullOrEmpty(string badNameClaimType)
+        {
+            var options = new OktaMvcOptions()
+            {
+                OktaDomain = ValidOktaDomain,
+                ClientId = "ClientId",
+                ClientSecret = "ClientSecret",
+                NameClaimType = badNameClaimType,
+            };
+
+            Action action = () => new OktaMvcOptionsValidator().Validate(options);
+            action.Should().Throw<ArgumentNullException>().Where(e => e.ParamName == nameof(OktaMvcOptions.NameClaimType));
+        }
+
         [Fact]
         public void NotThrowWhenParamsAreProvided()
         {

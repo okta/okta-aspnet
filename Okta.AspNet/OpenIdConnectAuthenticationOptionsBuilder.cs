@@ -47,7 +47,7 @@ namespace Okta.AspNet
         {
             var tokenValidationParameters = new DefaultTokenValidationParameters(_oktaMvcOptions, _issuer)
             {
-                NameClaimType = "name",
+                NameClaimType = _oktaMvcOptions.NameClaimType,
                 ValidAudience = _oktaMvcOptions.ClientId,
             };
 

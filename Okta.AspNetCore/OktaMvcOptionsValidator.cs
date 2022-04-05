@@ -52,6 +52,15 @@ namespace Okta.AspNetCore
                     nameof(options.CallbackPath),
                     "Your Okta Application callback path is missing. It should match the path of the redirect URI you specified in the Okta Developer Console for this application.");
             }
+
+            if (string.IsNullOrEmpty(options.NameClaimType))
+            {
+                throw new ArgumentNullException(
+                        nameof(options.NameClaimType),
+                        $"Your NameClaimType is missing.  Either set it to a valid claim type or leave it as the default '{OktaDefaults.NameClaimType}'");
+            }
+
+
         }
     }
 }

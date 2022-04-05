@@ -33,6 +33,14 @@ namespace Okta.AspNet
                     "Your client secret is missing. You can copy it from the Okta Developer Console in the details for the Application you created. Follow these instructions to find it: https://bit.ly/finding-okta-app-credentials");
             }
 
+            if (string.IsNullOrEmpty(options.NameClaimType))
+            {
+                throw new ArgumentNullException(
+                    nameof(options.ClientSecret),
+                    $"Your NameClaimType is missing.  Either set it to a valid claim type or leave it as the default '{OktaDefaults.NameClaimType}'");
+
+            }
+
             if (options.ClientSecret.IndexOf("{ClientSecret}", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(

@@ -18,5 +18,7 @@ namespace Okta.AspNet
         public const string ApiAuthenticationType = OAuthDefaults.AuthenticationType;
 
         public static readonly string[] Scope = new string[] { "openid", "profile" };
+
+        public static readonly string NameClaimType = "name";
     }
 }

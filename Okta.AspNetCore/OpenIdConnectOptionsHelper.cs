@@ -59,7 +59,7 @@ namespace Okta.AspNetCore
             oidcOptions.TokenValidationParameters = new DefaultTokenValidationParameters(oktaMvcOptions, issuer)
             {
                 ValidAudience = oktaMvcOptions.ClientId,
-                NameClaimType = "name",
+                NameClaimType = oktaMvcOptions.NameClaimType,
             };
 
             if (oktaMvcOptions.OpenIdConnectEvents != null)

@@ -19,5 +19,7 @@ namespace Okta.AspNetCore
         public const string SignOutCallbackPath = "/signout/callback";
 
         public static readonly string[] Scope = new string[] { "openid", "profile" };
+
+        public static readonly string NameClaimType = "name";
     }
 }

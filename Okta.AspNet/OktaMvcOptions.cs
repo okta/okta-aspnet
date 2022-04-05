@@ -61,5 +61,11 @@ namespace Okta.AspNet
         /// </summary>
         /// <seealso cref="https://docs.microsoft.com/en-us/previous-versions/aspnet/dn800270(v=vs.113)"/>
         public OpenIdConnectAuthenticationNotifications OpenIdConnectEvents { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name claim type.
+        /// </summary>
+        /// <value>The name claim type.</value>
+        public string NameClaimType { get; set; } = OktaDefaults.NameClaimType;
     }
 }
