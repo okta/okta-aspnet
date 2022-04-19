@@ -21,7 +21,7 @@ namespace Okta.AspNetCore
     public static class OktaAuthenticationOptionsExtensions
     {
         /// <summary>
-        /// Configures Okta for MVC applications.
+        /// Configures Okta for MVC applications using the default authentication scheme <see cref="OpenIdConnectDefaults.AuthenticationScheme"/>.
         /// </summary>
         /// <param name="builder">The application builder.</param>
         /// <param name="options">The Okta MVC options.</param>
@@ -35,11 +35,35 @@ namespace Okta.AspNetCore
 
             new OktaMvcOptionsValidator().Validate(options);
 
-            return AddCodeFlow(builder, options);
+            return AddCodeFlow(builder, OpenIdConnectDefaults.AuthenticationScheme, options);
         }
 
         /// <summary>
-        /// Configures Okta for Web API apps.
+        /// Configures Okta for MVC applications using the specified authentication scheme.
+        /// </summary>
+        /// <param name="builder">The application builder.</param>
+        /// <param name="authenticationScheme">The authentication scheme.</param>
+        /// <param name="options">The Okta MVC options.</param>
+        /// <returns>The authentication builder.</returns>
+        public static AuthenticationBuilder AddOktaMvc(this AuthenticationBuilder builder, string authenticationScheme, OktaMvcOptions options)
+        {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (authenticationScheme == null)
+            {
+                throw new ArgumentNullException(nameof(authenticationScheme));
+            }
+
+            new OktaMvcOptionsValidator().Validate(options);
+
+            return AddCodeFlow(builder, authenticationScheme, options);
+        }
+
+        /// <summary>
+        /// Configures Okta for Web API apps using the default authentication scheme <see cref="JwtBearerDefaults.AuthenticationScheme"/>.
         /// </summary>
         /// <param name="builder">The application builder.</param>
         /// <param name="options">The Okta Web API options.</param>
@@ -53,10 +77,33 @@ namespace Okta.AspNetCore
 
             new OktaWebApiOptionsValidator().Validate(options);
 
-            return AddJwtValidation(builder, options);
+            return AddJwtValidation(builder, JwtBearerDefaults.AuthenticationScheme, options);
         }
 
-        private static AuthenticationBuilder AddCodeFlow(AuthenticationBuilder builder, OktaMvcOptions options)
+        /// <summary>
+        /// Configures Okta for Web API apps using the specified authentication scheme.
+        /// </summary>
+        /// <param name="builder">The application builder.</param>
+        /// <param name="options">The Okta Web API options.</param>
+        /// <returns>The authentication builder.</returns>
+        public static AuthenticationBuilder AddOktaWebApi(this AuthenticationBuilder builder, string authenticationScheme, OktaWebApiOptions options)
+        {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (authenticationScheme == null)
+            {
+                throw new ArgumentNullException(nameof(authenticationScheme));
+            }
+
+            new OktaWebApiOptionsValidator().Validate(options);
+
+            return AddJwtValidation(builder, authenticationScheme, options);
+        }
+
+        private static AuthenticationBuilder AddCodeFlow(AuthenticationBuilder builder, string authenticationScheme, OktaMvcOptions options)
         {
             Func<RedirectContext, Task> redirectEvent = options.OpenIdConnectEvents?.OnRedirectToIdentityProvider;
             options.OpenIdConnectEvents ??= new OpenIdConnectEvents();
@@ -64,7 +111,7 @@ namespace Okta.AspNetCore
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            builder.AddOpenIdConnect(oidcOptions => OpenIdConnectOptionsHelper.ConfigureOpenIdConnectOptions(options, oidcOptions));
+            builder.AddOpenIdConnect(authenticationScheme, oidcOptions => OpenIdConnectOptionsHelper.ConfigureOpenIdConnectOptions(options, oidcOptions));
 
             return builder;
         }
@@ -92,6 +139,6 @@ namespace Okta.AspNetCore
             return Task.CompletedTask;
         }
 
-        private static AuthenticationBuilder AddJwtValidation(AuthenticationBuilder builder, OktaWebApiOptions options) => builder.AddJwtBearer(opt => OpenIdConnectOptionsHelper.ConfigureJwtBearerOptions(options, opt));
+        private static AuthenticationBuilder AddJwtValidation(AuthenticationBuilder builder, string authenticationScheme, OktaWebApiOptions options) => builder.AddJwtBearer(authenticationScheme, opt => OpenIdConnectOptionsHelper.ConfigureJwtBearerOptions(options, opt));
     }
 }
