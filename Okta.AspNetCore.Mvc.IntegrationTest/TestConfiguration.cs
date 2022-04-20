@@ -15,8 +15,9 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
             if (_configuration == null)
             {
                 _configuration = new ConfigurationBuilder()
-                .AddEnvironmentVariables()
-                .Build();
+                    .AddJsonFile("appsettings.json")
+                    .AddEnvironmentVariables()
+                    .Build();
             }
 
             return _configuration;
