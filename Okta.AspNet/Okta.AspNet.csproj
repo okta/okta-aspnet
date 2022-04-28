@@ -5,7 +5,7 @@
     <Copyright>(c) 2019 Okta, Inc.</Copyright>
     <Version>2.0.0</Version>
     <Authors>Okta, Inc.</Authors>
-    <TargetFramework>net452</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <AssemblyName>Okta.AspNet</AssemblyName>
     <PackageId>Okta.AspNet</PackageId>
     <PackageTags>okta,token,authentication,authorization,oauth,sso,oidc</PackageTags>
@@ -18,7 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Okta.AspNet.Abstractions\Okta.AspNet.Abstractions.csproj" />
     <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003" PrivateAssets="All" />
-    <PackageReference Include="IdentityModel" Version="3.10.10" />
+    <PackageReference Include="IdentityModel" Version="6.0.0" />
     <PackageReference Include="Microsoft.Owin.Security" Version="4.1.1" />
     <PackageReference Include="Microsoft.Owin.Security.Jwt" Version="4.1.1" />
     <PackageReference Include="Microsoft.Owin.Security.OpenIdConnect" Version="4.1.1" />
