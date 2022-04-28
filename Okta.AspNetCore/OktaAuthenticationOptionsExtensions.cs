@@ -84,6 +84,7 @@ namespace Okta.AspNetCore
         /// Configures Okta for Web API apps using the specified authentication scheme.
         /// </summary>
         /// <param name="builder">The application builder.</param>
+        /// <param name="authenticationScheme">The authentication scheme.</param>
         /// <param name="options">The Okta Web API options.</param>
         /// <returns>The authentication builder.</returns>
         public static AuthenticationBuilder AddOktaWebApi(this AuthenticationBuilder builder, string authenticationScheme, OktaWebApiOptions options)
