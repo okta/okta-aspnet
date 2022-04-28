@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Okta.AspNetCore.Mvc.IntegrationTest
 {
-    public class OktaMiddlewareShouldWithCustomSchemeShould : IDisposable
+    public class OktaMiddlewareWithCustomSchemeShould : IDisposable
     {
         private readonly TestServer _server;
 
@@ -18,7 +18,7 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
 
         public IConfiguration Configuration { get; set; }
 
-        public OktaMiddlewareShouldWithCustomSchemeShould()
+        public OktaMiddlewareWithCustomSchemeShould()
         {
             Configuration = TestConfiguration.GetConfiguration();
             BaseUrl = "http://localhost:57451";
