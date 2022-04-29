@@ -1,6 +1,13 @@
 # Changelog
 Running changelog of releases since `1.6.0`
 
+## v3.0.0
+
+### Updates
+
+- Update target framework to v4.6.2
+- Update IdentityModel dependency version to v6.0.0
+
 ## v2.0.0
 
 ### Features

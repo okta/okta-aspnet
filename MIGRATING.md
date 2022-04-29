@@ -2,6 +2,10 @@
 
 This library uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/). In short, we don't make breaking changes unless the major version changes!
 
+## Migrating from Okta.AspNet 2.0.0 to 3.0.0
+
+To stay aligned with the official [.Net Framework Support Policy](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-framework), this library now supports .Net Framework version 4.6.2 or later and has dropped support for earlier framework versions.  Please be sure to update your deployed runtime to .NET Framework 4.6.2 or later to continue to use this library.
+
 ## Migrating from Okta.AspNet 1.x to 2.x
 
 In previous versions, the `OktaMvcOptions` exposed the `SecurityTokenValidated` and `AuthenticationFailed` events you could hook into. Starting in 2.x series, the  `OktaMvcOptions` exposes the `OpenIdConnectEvents` property which allows you to hook into all the events provided by the uderlying OIDC middleware.

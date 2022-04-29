@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="Okta.AspNet.Test.WebApi.WebApiApplication" Language="C#" %>
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="Okta.AspNet.WebApi.IntegrationTest.WebApiApplication" Language="C#" %>
