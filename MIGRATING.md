@@ -2,7 +2,7 @@
 
 This library uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/). In short, we don't make breaking changes unless the major version changes!
 
-## Migrating from Okta.AspNet 2.0.0 to 2.0.1
+## Migrating from Okta.AspNet 2.0.0 to 3.0.0
 
 To stay aligned with the official [.Net Framework Support Policy](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-framework), this library now supports .Net Framework version 4.6.2 or later and has dropped support for earlier framework versions.  Please be sure to update your deployed runtime to .NET Framework 4.6.2 or later to continue to use this library.
 

@@ -1,7 +1,7 @@
 # Changelog
 Running changelog of releases since `1.6.0`
 
-## v2.0.1
+## v3.0.0
 
 ### Updates
 
