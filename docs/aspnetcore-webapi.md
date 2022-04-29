@@ -35,6 +35,8 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
+> Note: Starting in v4.2.0 you can now configure the authentication scheme: `.AddOktaWebApi("myScheme", oktaWebApiOptions);`.
+
 ## That's it!
 
 Placing the `[Authorize]` attribute on your controllers or actions will require a valid access token for those routes. This package will [parse and validate the access token](https://developer.okta.com/blog/2017/06/21/what-the-heck-is-oauth#oauth-flows) and populate `Http.Context` with a limited set of user information.

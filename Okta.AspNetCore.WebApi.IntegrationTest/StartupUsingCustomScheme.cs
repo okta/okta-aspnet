@@ -1,18 +1,20 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Okta.AspNetCore.Mvc.IntegrationTest
+namespace Okta.AspNetCore.WebApi.IntegrationTest
 {
-    public class Startup
+    public class StartupUsingCustomScheme
     {
-        public Startup()
+        private const string CustomScheme = "CustomScheme";
+
+        public StartupUsingCustomScheme()
         {
             var builder = new ConfigurationBuilder();
             builder
@@ -24,39 +26,29 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            Func<RedirectContext, Task> myRedirectEvent = context =>
+            JwtBearerEvents events = new JwtBearerEvents();
+            events.OnChallenge = context =>
             {
-                context.ProtocolMessage.SetParameter("myCustomParamKey", "myCustomParamValue");
+                context.HttpContext.Response.Headers.Add("myCustomHeader", "myCustomValue");
                 return Task.CompletedTask;
-            };
-
-            var events = new OpenIdConnectEvents
-            {
-                OnRedirectToIdentityProvider = myRedirectEvent,
             };
 
             services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = CustomScheme;
+                options.DefaultChallengeScheme = CustomScheme;
+                options.DefaultSignInScheme = CustomScheme;
             })
-            .AddCookie()
-            .AddOktaMvc(new OktaMvcOptions()
+            .AddOktaWebApi(CustomScheme, new OktaWebApiOptions()
             {
-                ClientId = Configuration["Okta:ClientId"],
-                ClientSecret = Configuration["Okta:ClientSecret"],
                 OktaDomain = Configuration["Okta:OktaDomain"],
-                OpenIdConnectEvents = events,
-                
+                JwtBearerEvents = events,
             });
+
             services.AddAuthorization();
             services.AddControllers();
-
-            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,9 +66,7 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                   name: "default",
-                   pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
         }
     }

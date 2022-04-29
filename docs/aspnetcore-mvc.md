@@ -45,6 +45,8 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
+> Note: Starting in v4.2.0 you can now configure the authentication scheme: `.AddOktaMvc("myScheme", oktaMvcOptions);`.
+
 
 ASP.NET Core Identity framework uses "Identity.Application" authentication scheme. Here is how configuration code looks like in such case:
 
