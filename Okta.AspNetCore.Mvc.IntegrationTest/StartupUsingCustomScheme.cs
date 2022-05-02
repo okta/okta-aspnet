@@ -10,9 +10,11 @@ using Microsoft.Extensions.Hosting;
 
 namespace Okta.AspNetCore.Mvc.IntegrationTest
 {
-    public class Startup
+    public class StartupUsingCustomScheme
     {
-        public Startup()
+        private const string CustomScheme = "CustomScheme";
+
+        public StartupUsingCustomScheme()
         {
             var builder = new ConfigurationBuilder();
             builder
@@ -41,11 +43,11 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CustomScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             })
             .AddCookie()
-            .AddOktaMvc(new OktaMvcOptions()
+            .AddOktaMvc(CustomScheme, new OktaMvcOptions()
             {
                 ClientId = Configuration["Okta:ClientId"],
                 ClientSecret = Configuration["Okta:ClientSecret"],

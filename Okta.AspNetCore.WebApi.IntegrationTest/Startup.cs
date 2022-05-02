@@ -15,7 +15,9 @@ namespace Okta.AspNetCore.WebApi.IntegrationTest
         public Startup()
         {
             var builder = new ConfigurationBuilder();
-            builder.AddEnvironmentVariables();
+            builder
+                .AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
 

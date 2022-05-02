@@ -1,6 +1,12 @@
 # Changelog
 Running changelog of releases since `3.2.0`
 
+## v4.2.0
+
+### Features
+
+- Add support for authentication scheme configuration (#191)
+
 ## v4.1.0
 
 ### Features
