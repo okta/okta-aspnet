@@ -142,6 +142,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="MiddlewareWithCustomAuthTypeShould.cs" />
     <Compile Include="MockHttpMessageHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -149,6 +150,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="StartupWithCustomAuthType.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="MiddlewareShould.cs" />
     <Compile Include="WebApiResolver.cs" />

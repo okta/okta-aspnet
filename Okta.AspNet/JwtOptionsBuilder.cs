@@ -24,9 +24,10 @@ namespace Okta.AspNet
         /// <summary>
         /// Builds the JwtBearerAuthenticationOptions object used during the authentication process.
         /// </summary>
+        /// <param name="authenticationType">The authentication type.</param>
         /// <param name="options">The Okta options.</param>
         /// <returns>An instance of JwtBearerAuthenticationOptions.</returns>
-        public static JwtBearerAuthenticationOptions BuildJwtBearerAuthenticationOptions(OktaWebApiOptions options)
+        public static JwtBearerAuthenticationOptions BuildJwtBearerAuthenticationOptions(string authenticationType, OktaWebApiOptions options)
         {
             var issuer = UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
 
@@ -55,6 +56,7 @@ namespace Okta.AspNet
                 TokenValidationParameters = tokenValidationParameters,
                 TokenHandler = new StrictTokenHandler(),
                 Provider = options.OAuthBearerAuthenticationProvider ?? new OAuthBearerAuthenticationProvider(),
+                AuthenticationType = authenticationType,
             };
         }
     }

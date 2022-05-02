@@ -43,7 +43,7 @@ namespace Okta.AspNet.Test
                 BackchannelHttpClientHandler = new MockHttpClientHandler(),
             };
 
-            var oidcOptions = new OpenIdConnectAuthenticationOptionsBuilder(oktaMvcOptions).BuildOpenIdConnectAuthenticationOptions();
+            var oidcOptions = new OpenIdConnectAuthenticationOptionsBuilder("customAuthType", oktaMvcOptions).BuildOpenIdConnectAuthenticationOptions();
 
             oidcOptions.ClientId.Should().Be(oktaMvcOptions.ClientId);
             oidcOptions.ClientSecret.Should().Be(oktaMvcOptions.ClientSecret);
@@ -51,6 +51,7 @@ namespace Okta.AspNet.Test
             oidcOptions.AuthenticationMode.Should().Be(AuthenticationMode.Active);
             oidcOptions.BackchannelTimeout.Should().Be(TimeSpan.MaxValue);
             oidcOptions.BackchannelHttpHandler.GetType().Should().Be(typeof(MockHttpClientHandler));
+            oidcOptions.AuthenticationType.Should().Be("customAuthType");
 
             var issuer = UrlHelper.CreateIssuerUrl(oktaMvcOptions.OktaDomain, oktaMvcOptions.AuthorizationServerId);
             oidcOptions.Authority.Should().Be(issuer);
@@ -82,12 +83,13 @@ namespace Okta.AspNet.Test
             List<Claim> claims = new List<Claim>();
             claims.Add(new Claim("testClaimType", "testClaimValue"));
 
-            var oidcOptions = new OpenIdConnectAuthenticationOptionsBuilder(oktaMvcOptions, new MockUserInformationProvider(claims)).BuildOpenIdConnectAuthenticationOptions();
+            var oidcOptions = new OpenIdConnectAuthenticationOptionsBuilder(OktaDefaults.MvcAuthenticationType, oktaMvcOptions, new MockUserInformationProvider(claims)).BuildOpenIdConnectAuthenticationOptions();
 
             oidcOptions.ClientId.Should().Be(oktaMvcOptions.ClientId);
             oidcOptions.ClientSecret.Should().Be(oktaMvcOptions.ClientSecret);
             oidcOptions.PostLogoutRedirectUri.Should().Be(oktaMvcOptions.PostLogoutRedirectUri);
             oidcOptions.AuthenticationMode.Should().Be(AuthenticationMode.Active);
+            oidcOptions.AuthenticationType.Should().Be(OktaDefaults.MvcAuthenticationType);
 
             var issuer = UrlHelper.CreateIssuerUrl(oktaMvcOptions.OktaDomain, oktaMvcOptions.AuthorizationServerId);
             oidcOptions.Authority.Should().Be(issuer);
@@ -118,7 +120,7 @@ namespace Okta.AspNet.Test
                 LoginMode = LoginMode.SelfHosted,
             };
 
-            var oidcOptions = new OpenIdConnectAuthenticationOptionsBuilder(oktaMvcOptions).BuildOpenIdConnectAuthenticationOptions();
+            var oidcOptions = new OpenIdConnectAuthenticationOptionsBuilder(OktaDefaults.MvcAuthenticationType, oktaMvcOptions).BuildOpenIdConnectAuthenticationOptions();
 
             oidcOptions.AuthenticationMode.Should().Be(AuthenticationMode.Passive);
         }

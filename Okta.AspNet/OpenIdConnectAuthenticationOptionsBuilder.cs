@@ -24,8 +24,9 @@ namespace Okta.AspNet
         private readonly string _issuer;
         private readonly ConfigurationManager<OpenIdConnectConfiguration> _configurationManager;
         private readonly HttpClient _httpClient;
+        private readonly string _authenticationType;
 
-        public OpenIdConnectAuthenticationOptionsBuilder(OktaMvcOptions oktaMvcOptions, IUserInformationProvider userInformationProvider = null)
+        public OpenIdConnectAuthenticationOptionsBuilder(string authenticationType, OktaMvcOptions oktaMvcOptions, IUserInformationProvider userInformationProvider = null)
         {
             _oktaMvcOptions = oktaMvcOptions;
             _issuer = UrlHelper.CreateIssuerUrl(oktaMvcOptions.OktaDomain, oktaMvcOptions.AuthorizationServerId);
@@ -34,7 +35,7 @@ namespace Okta.AspNet
                     _issuer + "/.well-known/openid-configuration",
                     new OpenIdConnectConfigurationRetriever(),
                     new HttpDocumentRetriever(_httpClient));
-
+            _authenticationType = authenticationType;
             _userInformationProvider = userInformationProvider ?? new UserInformationProvider(oktaMvcOptions, _issuer, _configurationManager);
         }
 
@@ -83,6 +84,7 @@ namespace Okta.AspNet
                 Notifications = _oktaMvcOptions.OpenIdConnectEvents,
                 BackchannelHttpHandler = _oktaMvcOptions.BackchannelHttpClientHandler,
                 BackchannelTimeout = _oktaMvcOptions.BackchannelTimeout,
+                AuthenticationType = _authenticationType,
             };
 
             return oidcOptions;
