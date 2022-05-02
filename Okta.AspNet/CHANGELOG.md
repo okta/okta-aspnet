@@ -7,6 +7,7 @@ Running changelog of releases since `1.6.0`
 
 - Update target framework to v4.6.2
 - Update IdentityModel dependency version to v6.0.0
+- Add support for Authentication Type configuration (#191)
 
 ## v2.0.0
 
