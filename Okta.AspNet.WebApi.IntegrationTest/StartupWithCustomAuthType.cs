@@ -12,11 +12,11 @@ using Microsoft.Owin.Security.OAuth;
 using Microsoft.Owin.Security.Provider;
 using Owin;
 
-[assembly: OwinStartup(typeof(Okta.AspNet.WebApi.IntegrationTest.Startup))]
+[assembly: OwinStartup(typeof(Okta.AspNet.WebApi.IntegrationTest.StartupWithCustomAuthType))]
 
 namespace Okta.AspNet.WebApi.IntegrationTest
 {
-    public class Startup
+    public class StartupWithCustomAuthType
     {
         public HttpMessageHandler HttpMessageHandler { get; set; }
 
@@ -31,7 +31,7 @@ namespace Okta.AspNet.WebApi.IntegrationTest
                     return Task.CompletedTask;
                 },
             };
-            app.UseOktaWebApi(OktaDefaults.ApiAuthenticationType, new OktaWebApiOptions()
+            app.UseOktaWebApi("myCustomAuthType", new OktaWebApiOptions()
                 {
                     OktaDomain = oktaDomain,
                     OAuthBearerAuthenticationProvider = jwtProvider,

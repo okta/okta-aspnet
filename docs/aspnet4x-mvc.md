@@ -43,6 +43,7 @@ public class Startup
     }
 }
 ```
+> Note: Starting in v3.0.0 you can now configure the authentication type: `.UseOktaMvc("myScheme", oktaMvcOptions);`.
 
 ### That's it!
 

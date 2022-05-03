@@ -30,7 +30,25 @@ namespace Okta.AspNet
             }
 
             new OktaMvcOptionsValidator().Validate(options);
-            AddOpenIdConnectAuthentication(app, options);
+            AddOpenIdConnectAuthentication(app, OktaDefaults.MvcAuthenticationType, options);
+
+            return app;
+        }
+
+        public static IAppBuilder UseOktaMvc(this IAppBuilder app, string authenticationType, OktaMvcOptions options)
+        {
+            if (app == null)
+            {
+                throw new ArgumentNullException(nameof(app));
+            }
+
+            if (string.IsNullOrEmpty(authenticationType))
+            {
+                throw new ArgumentNullException(nameof(authenticationType));
+            }
+
+            new OktaMvcOptionsValidator().Validate(options);
+            AddOpenIdConnectAuthentication(app, authenticationType, options);
 
             return app;
         }
@@ -43,17 +61,35 @@ namespace Okta.AspNet
             }
 
             new OktaWebApiOptionsValidator().Validate(options);
-            app.UseJwtBearerAuthentication(JwtOptionsBuilder.BuildJwtBearerAuthenticationOptions(options));
+            app.UseJwtBearerAuthentication(JwtOptionsBuilder.BuildJwtBearerAuthenticationOptions(OktaDefaults.ApiAuthenticationType, options));
 
             return app;
         }
 
-        private static void AddOpenIdConnectAuthentication(IAppBuilder app, OktaMvcOptions options)
+        public static IAppBuilder UseOktaWebApi(this IAppBuilder app, string authenticationType, OktaWebApiOptions options)
+        {
+            if (app == null)
+            {
+                throw new ArgumentNullException(nameof(app));
+            }
+
+            if (string.IsNullOrEmpty(authenticationType))
+            {
+                throw new ArgumentNullException(nameof(authenticationType));
+            }
+
+            new OktaWebApiOptionsValidator().Validate(options);
+            app.UseJwtBearerAuthentication(JwtOptionsBuilder.BuildJwtBearerAuthenticationOptions(authenticationType, options));
+
+            return app;
+        }
+
+        private static void AddOpenIdConnectAuthentication(IAppBuilder app, string authenticationType, OktaMvcOptions options)
         {
             // Stop the default behavior of remapping JWT claim names to legacy MS/SOAP claim names
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptionsBuilder(options).BuildOpenIdConnectAuthenticationOptions());
+            app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptionsBuilder(authenticationType, options).BuildOpenIdConnectAuthenticationOptions());
         }
     }
 }

@@ -24,9 +24,11 @@ namespace Okta.AspNet
         /// <summary>
         /// Builds the JwtBearerAuthenticationOptions object used during the authentication process.
         /// </summary>
+        /// <param name="authenticationType">The authentication type.</param>
         /// <param name="options">The Okta options.</param>
         /// <returns>An instance of JwtBearerAuthenticationOptions.</returns>
-        public static JwtBearerAuthenticationOptions BuildJwtBearerAuthenticationOptions(OktaWebApiOptions options)
+        public static JwtBearerAuthenticationOptions BuildJwtBearerAuthenticationOptions(string authenticationType,
+            OktaWebApiOptions options)
         {
             var issuer = UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
 
@@ -38,7 +40,9 @@ namespace Okta.AspNet
             // Stop the default behavior of remapping JWT claim names to legacy MS/SOAP claim names
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            var signingKeyCachingProvider = new DiscoveryDocumentCachingSigningKeyProvider(new DiscoveryDocumentSigningKeyProvider(configurationManager));
+            var signingKeyCachingProvider =
+                new DiscoveryDocumentCachingSigningKeyProvider(
+                    new DiscoveryDocumentSigningKeyProvider(configurationManager));
 
             var tokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
             {
@@ -55,7 +59,16 @@ namespace Okta.AspNet
                 TokenValidationParameters = tokenValidationParameters,
                 TokenHandler = new StrictTokenHandler(),
                 Provider = options.OAuthBearerAuthenticationProvider ?? new OAuthBearerAuthenticationProvider(),
+                AuthenticationType = authenticationType,
             };
         }
+
+        /// <summary>
+        /// Builds the JwtBearerAuthenticationOptions object used during the authentication process.
+        /// </summary>
+        /// <param name="options">The Okta options.</param>
+        /// <returns>An instance of JwtBearerAuthenticationOptions.</returns>
+        public static JwtBearerAuthenticationOptions BuildJwtBearerAuthenticationOptions(OktaWebApiOptions options) =>
+            BuildJwtBearerAuthenticationOptions(OktaDefaults.ApiAuthenticationType, options);
     }
 }

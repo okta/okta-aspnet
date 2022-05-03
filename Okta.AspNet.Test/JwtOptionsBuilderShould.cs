@@ -26,9 +26,10 @@ namespace Okta.AspNet.Test
                 OAuthBearerAuthenticationProvider = mockAuthnProvider,
             };
 
-            var jwtOptions = JwtOptionsBuilder.BuildJwtBearerAuthenticationOptions(oktaWebApiOptions);
+            var jwtOptions = JwtOptionsBuilder.BuildJwtBearerAuthenticationOptions("customAuthType", oktaWebApiOptions);
             jwtOptions.Should().NotBeNull();
             jwtOptions.Provider.Should().Be(mockAuthnProvider);
+            jwtOptions.AuthenticationType.Should().Be("customAuthType");
         }
     }
 }
