@@ -12,9 +12,6 @@ jobs:
       #image: ubuntu-2004:202201-01
     steps:
       - checkout # check out the code in the project directory
-      - run:
-          name: "Set Execution Policy"
-          command: Set-ExecutionPolicy AllSigned
       - run: 
           name: "Install Chocolatey"
           command: Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
