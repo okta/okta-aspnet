@@ -18,6 +18,9 @@ jobs:
       - run:
           name: "Install dotnet 6"
           command: choco install dotnet-6.0-sdk
+      - run:
+          name: "Install mono"
+          command: choco install mono
       - run: 
           name: "Default Cake Job"
           command: ./build.bat
