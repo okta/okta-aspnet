@@ -22,8 +22,8 @@ jobs:
           name: "Install Visual Studio Build Tools"
           command: choco install visualstudio2022buildtools
       - run: 
-          name: "Where sn.exe"
-          command: "where sn.exe"
+          name: "Install mono"
+          command: "choco install mono"
       - run: 
           name: "Default Cake Job"
           command: ./build.bat
