@@ -17,7 +17,7 @@ jobs:
           command: Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
       - run:
           name: "Install dotnet 6"
-          command: choco install dotnet-6.0-aspnetruntime
+          command: choco install dotnet-6.0-sdk
       - run: 
           name: "Default Cake Job"
           command: ./build.bat
