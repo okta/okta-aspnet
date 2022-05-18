@@ -1,11 +1,23 @@
 version: 2.1
+
+#orbs:
+ # win: circleci/windows@4.1 # The Windows orb give you everything you need to start using the Windows executor.
+
 jobs:
   build:
-    docker:
-      - image: cimg/node:17.2.0 # the primary container, where your job's commands are run
-        auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+    #executor:
+    #  name: win/default # executor type
+    #  size: "medium" # resource class, can be "medium", "large", "xlarge", "2xlarge", defaults to "medium" if not specified
+    machine: 
+      image: ubuntu-2004:202201-01
     steps:
       - checkout # check out the code in the project directory
-      - run: echo "hello world" # run the `echo` command
+      - run: 
+          name: "Install dotnet 6"
+          command: sudo apt-get install dotnet-sdk-6.0
+      - run: 
+          name: "Install dotnet 3.1"
+          command: sudo apt-get install dotnet-sdk-3.1
+      - run: 
+          name: "Default Cake Job"
+          command: ./build.sh
