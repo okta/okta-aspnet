@@ -107,7 +107,7 @@ Task("Strongname")
 
         foreach (var binary in snBinaries)
         {
-            StartProcess("c:/Program Files (x86)/Mono/bin/sn.exe", $"-Rc \"{binary}\" OktaDotnetStrongname");
+            StartProcess("c:/Program Files/Mono/bin/sn.exe", $"-Rc \"{binary}\" OktaDotnetStrongname");
         }
 	}
 });
