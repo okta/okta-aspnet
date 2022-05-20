@@ -1,4 +1,4 @@
-[<img src="https://devforum.okta.com/uploads/oktadev/original/1X/bf54a16b5fda189e4ad2706fb57cbb7a1e5b8deb.png" align="right" width="256px"/>](https://devforum.okta.com/)
+[<img src="https://aws1.discourse-cdn.com/oktadev/original/1X/0c6402653dfb70edc661d4976a43a46f33e5e919.png" align="right" width="112px" height="40"/>](https://devforum.okta.com/)
 
 [![Support](https://img.shields.io/badge/support-Developer%20Forum-blue.svg)](https://devforum.okta.com/)
 
@@ -26,7 +26,7 @@ This library uses semantic versioning and follows Okta's [library version policy
 
 |Package| Version | Status                    | Compatibility|
 | ------- | ------- | ------------------------- | ----------------------- |
-|`Okta.AspNet.Abstractions`| 4.x   | heavy_check_mark: Stable | .NET Standard 2.0 and .NET Framework 4.5.2 or higher.|
+|`Okta.AspNet.Abstractions`| 4.x   | :heavy_check_mark: Stable | .NET Standard 2.0 and .NET Framework 4.5.2 or higher.|
 |`Okta.AspNet.Abstractions`| 3.x   | :warning: Retiring | .NET Standard 2.0 and .NET Framework 4.5.2 or higher.|
 |`Okta.AspNet`| 3.x | :heavy_check_mark: Stable | .NET Framework 4.6.2 |
 |`Okta.AspNet`| 2.x | :warning: Retiring | .NET Framework 4.5.2 |
