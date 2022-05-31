@@ -1,6 +1,13 @@
 # Changelog
 Running changelog of releases since `3.0.5`
 
+## v4.0.1
+
+### Features
+
+- Update `Microsoft.IdentityModel.Tokens` dependency to `6.17.0`
+- Update `System.IdentityModel.Tokens.Jwt` dependency to `6.17.0`
+
 ## v4.0.0
 
 ### Features
