@@ -1,4 +1,4 @@
-[<img src="https://aws1.discourse-cdn.com/oktadev/original/1X/0c6402653dfb70edc661d4976a43a46f33e5e919.png" align="right" width="112px" height="40"/>](https://devforum.okta.com/)
+[<img src="https://cdn.brandfolder.io/2VK5Y09C/at/bb3mqsj5ssrgxtc5fbvtx/Logo-H_Developer-blue.svg" align="right" width="112px" height="40"/>](https://devforum.okta.com/)
 
 [![Support](https://img.shields.io/badge/support-Developer%20Forum-blue.svg)](https://devforum.okta.com/)
 
