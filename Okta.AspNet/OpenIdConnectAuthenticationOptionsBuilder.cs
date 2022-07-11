@@ -58,6 +58,12 @@ namespace Okta.AspNet
 
             var redirectEvent = _oktaMvcOptions.OpenIdConnectEvents?.RedirectToIdentityProvider;
             var tokenEvent = _oktaMvcOptions.OpenIdConnectEvents?.SecurityTokenValidated;
+            var backchannelHandler = _oktaMvcOptions.BackchannelHttpClientHandler;
+            if (_oktaMvcOptions.Proxy != null && backchannelHandler == null)
+            {
+                backchannelHandler = new OktaHttpMessageHandler("okta-aspnet", typeof(OktaMiddlewareExtensions).Assembly.GetName().Version, _oktaMvcOptions);
+            }
+
             _oktaMvcOptions.OpenIdConnectEvents =
                 _oktaMvcOptions.OpenIdConnectEvents ?? new OpenIdConnectAuthenticationNotifications();
 
@@ -82,7 +88,7 @@ namespace Okta.AspNet
                 AuthenticationMode = (_oktaMvcOptions.LoginMode == LoginMode.SelfHosted) ? AuthenticationMode.Passive : AuthenticationMode.Active,
                 SaveTokens = true,
                 Notifications = _oktaMvcOptions.OpenIdConnectEvents,
-                BackchannelHttpHandler = _oktaMvcOptions.BackchannelHttpClientHandler,
+                BackchannelHttpHandler = backchannelHandler,
                 BackchannelTimeout = _oktaMvcOptions.BackchannelTimeout,
                 AuthenticationType = _authenticationType,
             };
