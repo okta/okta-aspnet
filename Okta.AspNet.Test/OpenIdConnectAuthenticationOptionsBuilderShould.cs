@@ -6,6 +6,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -123,6 +125,34 @@ namespace Okta.AspNet.Test
             var oidcOptions = new OpenIdConnectAuthenticationOptionsBuilder(OktaDefaults.MvcAuthenticationType, oktaMvcOptions).BuildOpenIdConnectAuthenticationOptions();
 
             oidcOptions.AuthenticationMode.Should().Be(AuthenticationMode.Passive);
+        }
+
+        [Fact]
+        public void SetBackchannelHttpHandlerWhenProxyConfigurationIsProvided()
+        {
+            var testProxy = "http://testproxy.cxm";
+            var testPort = 8080;
+            var oktaMvcOptions = new OktaMvcOptions()
+            {
+                PostLogoutRedirectUri = "http://postlogout.com",
+                OktaDomain = "http://myoktadomain.com",
+                ClientId = "foo",
+                ClientSecret = "bar",
+                RedirectUri = "/redirectUri",
+                Scope = new List<string> { "openid", "profile", "email" },
+                Proxy = new ProxyConfiguration
+                {
+                    Host = testProxy,
+                    Port = testPort,
+                },
+            };
+
+            var oidcOptions = new OpenIdConnectAuthenticationOptionsBuilder(OktaDefaults.MvcAuthenticationType, oktaMvcOptions).BuildOpenIdConnectAuthenticationOptions();
+            oidcOptions.BackchannelHttpHandler.Should().BeOfType<OktaHttpMessageHandler>();
+            OktaHttpMessageHandler oktaHandler = (OktaHttpMessageHandler)oidcOptions.BackchannelHttpHandler;
+            var proxy = ((HttpClientHandler)oktaHandler.InnerHandler).Proxy;
+            proxy.Should().BeOfType<DefaultProxy>();
+            proxy.GetProxy(new Uri("https://any.com")).ToString().Should().Be($"{testProxy}:{testPort}/");
         }
     }
 }
