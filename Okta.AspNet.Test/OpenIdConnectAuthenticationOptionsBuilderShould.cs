@@ -149,7 +149,7 @@ namespace Okta.AspNet.Test
 
             var oidcOptions = new OpenIdConnectAuthenticationOptionsBuilder(OktaDefaults.MvcAuthenticationType, oktaMvcOptions).BuildOpenIdConnectAuthenticationOptions();
             oidcOptions.BackchannelHttpHandler.Should().BeOfType<OktaHttpMessageHandler>();
-            OktaHttpMessageHandler oktaHandler = (OktaHttpMessageHandler)oidcOptions.BackchannelHttpHandler;
+            var oktaHandler = (OktaHttpMessageHandler)oidcOptions.BackchannelHttpHandler;
             var proxy = ((HttpClientHandler)oktaHandler.InnerHandler).Proxy;
             proxy.Should().BeOfType<DefaultProxy>();
             proxy.GetProxy(new Uri("https://any.com")).ToString().Should().Be($"{testProxy}:{testPort}/");
