@@ -1,6 +1,12 @@
 # Changelog
 Running changelog of releases since `1.6.0`
 
+## v3.0.1
+
+### Bug Fix
+
+- Fix handling of proxy configuration
+
 ## v3.0.0
 
 ### Updates
