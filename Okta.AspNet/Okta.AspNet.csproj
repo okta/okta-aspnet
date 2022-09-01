@@ -19,9 +19,10 @@
     <ProjectReference Include="..\Okta.AspNet.Abstractions\Okta.AspNet.Abstractions.csproj" />
     <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003" PrivateAssets="All" />
     <PackageReference Include="IdentityModel" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Owin.Security" Version="4.2.1" />
-    <PackageReference Include="Microsoft.Owin.Security.Jwt" Version="4.2.1" />
-    <PackageReference Include="Microsoft.Owin.Security.OpenIdConnect" Version="4.2.1" />
+    <PackageReference Include="Microsoft.Owin.Security" Version="4.2.2" />
+    <PackageReference Include="Microsoft.Owin.Security.Jwt" Version="4.2.2" />
+    <PackageReference Include="Microsoft.Owin.Security.OpenIdConnect" Version="4.2.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.17.0" />
     <AdditionalFiles Include="..\stylecop.json" />
