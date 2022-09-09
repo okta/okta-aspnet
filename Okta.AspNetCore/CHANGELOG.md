@@ -5,7 +5,9 @@ Running changelog of releases since `3.2.0`
 
 ### Updates
 
-- Update Microsoft.AspNetCore.Authentication.JwtBearer to version 6.0.8
+- Add explicit reference to Newtonsoft.Json v 13.0.1
+- Update Microsoft.AspNetCore.Authentication.JwtBearer to v3.1.28
+- Update Microsoft.AspNetCore.Authentication.OpenIdConnect for net6.0 to v 6.23.0
 
 ## v4.2.0
 
