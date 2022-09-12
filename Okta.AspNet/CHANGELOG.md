@@ -1,6 +1,12 @@
 # Changelog
 Running changelog of releases since `1.6.0`
 
+## v3.0.2
+
+### Updates
+
+- Update Microsoft.Owin.* dependencies to v4.2.2
+
 ## v3.0.1
 
 ### Bug Fix
