@@ -181,6 +181,31 @@ public ActionResult Login()
 }
 ```
 
+## Specifying the `acr_values` parameter
+
+The `acr_values` parameter allows you to indicate Okta the required level of authentication. For more details check out the [Okta documentation](https://developer.okta.com/docs/reference/api/oidc/#request-parameters).
+
+Add the following action in your controller: 
+
+```csharp
+public ActionResult Login()
+{
+    if (!HttpContext.User.Identity.IsAuthenticated)
+    {
+        var properties = new AuthenticationProperties();
+        properties.Dictionary.Add(OktaParams.AcrValues, "urn:okta:loa:1fa:pwd");
+        properties.RedirectUri = "/Home/About";
+
+        HttpContext.GetOwinContext().Authentication.Challenge(properties,
+            OktaDefaults.MvcAuthenticationType);
+
+        return new HttpUnauthorizedResult();
+    }
+
+    return RedirectToAction("Index", "Home");
+}
+```
+
 ## Login with an external identity provider
 
 Add the following action in your controller: 

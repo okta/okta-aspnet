@@ -68,6 +68,18 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
         }
 
         [Fact]
+        public async Task IncludeAcrValuesInAuthorizeUrlAsync()
+        {
+            var loginWithLoginHintEndpoint = string.Format("{0}/Account/LoginWithAcrValues", BaseUrl);
+            using (var client = _server.CreateClient())
+            {
+                var response = await client.GetAsync(loginWithLoginHintEndpoint);
+                Assert.True(response.StatusCode == System.Net.HttpStatusCode.Found);
+                Assert.Contains("acr_values=foo", response.Headers.Location.AbsoluteUri);
+            }
+        }
+
+        [Fact]
         public async Task CallCustomRedirectEventAfterInternalEventAsync()
         {
             var loginWithIdpEndpoint = string.Format("{0}/Account/LoginWithIdp", BaseUrl);
