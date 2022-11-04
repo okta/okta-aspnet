@@ -270,7 +270,7 @@ public IActionResult SignIn()
 
 ## Specifying the `acr_values` parameter
 
-The `acr_values` parameter allows you to indicate Okta the required level of authentication. For more details check out the [Okta documentation](https://developer.okta.com/docs/reference/api/oidc/#request-parameters).
+The optional `acr_values` parameter, when included in the authentication request, increases the level of user assurance. For more details see the [Okta documentation](https://developer.okta.com/docs/reference/api/oidc/#request-parameters).
 
 Add the following action in your controller: 
 
