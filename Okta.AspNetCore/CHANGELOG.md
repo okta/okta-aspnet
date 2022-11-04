@@ -1,6 +1,12 @@
 # Changelog
 Running changelog of releases since `3.2.0`
 
+## v4.3.0
+
+### Features
+
+- Add support for AcrValues
+
 ## v4.2.1
 
 ### Updates

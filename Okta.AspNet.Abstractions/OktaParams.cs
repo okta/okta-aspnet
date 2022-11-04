@@ -27,9 +27,15 @@ namespace Okta.AspNet.Abstractions
         /// </summary>
         public const string Idp = "idp";
 
+
+        /// <summary>
+        /// Used to pass acr_values.
+        /// </summary>
+        public const string AcrValues = "acr_values";
+
         /// <summary>
         /// A list with all Okta well-known params.
         /// </summary>
-        public static readonly IList<string> AllParams = new List<string>() { SessionToken, Idp, LoginHint };
+        public static readonly IList<string> AllParams = new List<string>() { SessionToken, Idp, LoginHint, AcrValues };
     }
 }

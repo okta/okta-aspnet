@@ -47,6 +47,20 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public IActionResult LoginWithAcrValues()
+        {
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                var properties = new AuthenticationProperties();
+                properties.Items.Add(OktaParams.AcrValues, "foo");
+                properties.RedirectUri = "/Home/";
+
+                return Challenge(properties, OktaDefaults.MvcAuthenticationScheme);
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
         [HttpPost]
         public IActionResult Logout()
         {
