@@ -38,7 +38,7 @@ namespace Okta.AspNet.Abstractions
         /// Used to support enrollment of a factor during an /authorize call.
         /// </summary>
         public const string Prompt = "prompt";
-        `
+        
         /// <summary>
         /// Used to pass a case-sensitive string that represents a list of authenticator method references.
         /// </summary>
