@@ -1,11 +1,17 @@
 # Changelog
 Running changelog of releases since `1.6.0`
 
+## v3.2.0
+
+### Features
+
+- Add support for `prompt` and `enroll_amr_values`
+
 ## v3.1.0
 
 ### Features
 
-- Add support for AcrValues
+- Add support for `acr_values`
 
 
 ## v3.0.2

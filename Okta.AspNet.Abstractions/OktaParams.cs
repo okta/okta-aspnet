@@ -33,9 +33,20 @@ namespace Okta.AspNet.Abstractions
         /// </summary>
         public const string AcrValues = "acr_values";
 
+
+        /// <summary>
+        /// Used to support enrollment of a factor during an /authorize call.
+        /// </summary>
+        public const string Prompt = "prompt";
+        `
+        /// <summary>
+        /// Used to pass a case-sensitive string that represents a list of authenticator method references.
+        /// </summary>
+        public const string EnrollAmrValues = "enroll_amr_values";
+
         /// <summary>
         /// A list with all Okta well-known params.
         /// </summary>
-        public static readonly IList<string> AllParams = new List<string>() { SessionToken, Idp, LoginHint, AcrValues };
+        public static readonly IList<string> AllParams = new List<string>() { SessionToken, Idp, LoginHint, AcrValues, Prompt, EnrollAmrValues };
     }
 }

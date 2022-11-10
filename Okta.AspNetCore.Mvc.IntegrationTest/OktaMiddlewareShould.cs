@@ -68,6 +68,19 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
         }
 
         [Fact]
+        public async Task IncludePromptAndAmrEnrollValuesInAuthorizeUrlAsync()
+        {
+            var loginWithLoginHintEndpoint = string.Format("{0}/Account/LoginWithEnrollAmrValues", BaseUrl);
+            using (var client = _server.CreateClient())
+            {
+                var response = await client.GetAsync(loginWithLoginHintEndpoint);
+                Assert.True(response.StatusCode == System.Net.HttpStatusCode.Found);
+                Assert.Contains("prompt=enroll_authenticator", response.Headers.Location.AbsoluteUri);
+                Assert.Contains("enroll_amr_values=sms okta_verify", response.Headers.Location.AbsoluteUri);
+            }
+        }
+
+        [Fact]
         public async Task IncludeAcrValuesInAuthorizeUrlAsync()
         {
             var loginWithLoginHintEndpoint = string.Format("{0}/Account/LoginWithAcrValues", BaseUrl);
