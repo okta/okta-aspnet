@@ -267,12 +267,15 @@ public IActionResult SignIn()
     return RedirectToAction("Index", "Home");
 }
 ```
+## Specifying the `acr_values`, `enroll_amr_values` and `prompt` parameters
 
-## Specifying the `acr_values` parameter
+| Parameter | Description | Required? |
+| ------- |  ------------------------- | ------- |
+|`acr_values` | When included in the authentication request, increases the level of user assurance. | No |
+|`prompt` | Indicate the pipeline the intent of the request, such as, support enrollment of a new factor. | No |
+|`enroll_amr_values` |  A space-delimited, case-sensitive string that represents a list of authenticator method references. | No |
 
-The optional `acr_values` parameter, when included in the authentication request, increases the level of user assurance. For more details see the [Okta documentation](https://developer.okta.com/docs/reference/api/oidc/#request-parameters).
-
-Add the following action in your controller: 
+For more details see the [Okta documentation](https://developer.okta.com/docs/reference/api/oidc/#request-parameters).
 
 ```csharp
 public IActionResult SignIn()
@@ -280,7 +283,13 @@ public IActionResult SignIn()
     if (!HttpContext.User.Identity.IsAuthenticated)
     {
         var properties = new AuthenticationProperties();
+        // Example 1
         properties.Items.Add(OktaParams.AcrValues, "urn:okta:loa:1fa:pwd");
+
+        // Example 2
+        properties.Dictionary.Add(OktaParams.Prompt, "enroll_authenticator");
+        properties.Dictionary.Add(OktaParams.EnrollAmrValues, "sms okta_verify");
+        
         properties.RedirectUri = "/Home/";
 
         return Challenge(properties, OktaDefaults.MvcAuthenticationScheme);

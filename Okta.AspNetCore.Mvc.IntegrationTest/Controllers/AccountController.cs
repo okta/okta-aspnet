@@ -61,6 +61,21 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public IActionResult LoginWithEnrollAmrValues()
+        {
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                var properties = new AuthenticationProperties();
+                properties.Items.Add(OktaParams.Prompt, "enroll_authenticator");
+                properties.Items.Add(OktaParams.EnrollAmrValues, "sms okta_verify ");
+                properties.RedirectUri = "/Home/";
+
+                return Challenge(properties, OktaDefaults.MvcAuthenticationScheme);
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
         [HttpPost]
         public IActionResult Logout()
         {

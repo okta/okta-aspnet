@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using Xunit;
 
 namespace Okta.AspNetCore.Mvc.IntegrationTest
@@ -64,6 +65,19 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
                 var response = await client.GetAsync(loginWithLoginHintEndpoint);
                 Assert.True(response.StatusCode == System.Net.HttpStatusCode.Found);
                 Assert.Contains("login_hint=foo", response.Headers.Location.AbsoluteUri);
+            }
+        }
+
+        [Fact]
+        public async Task IncludePromptAndAmrEnrollValuesInAuthorizeUrlAsync()
+        {
+            var loginWithLoginHintEndpoint = string.Format("{0}/Account/LoginWithEnrollAmrValues", BaseUrl);
+            using (var client = _server.CreateClient())
+            {
+                var response = await client.GetAsync(loginWithLoginHintEndpoint);
+                Assert.True(response.StatusCode == System.Net.HttpStatusCode.Found);
+                Assert.Contains("prompt=enroll_authenticator", response.Headers.Location.AbsoluteUri);
+                Assert.Contains(HttpUtility.UrlPathEncode("enroll_amr_values=sms okta_verify"), response.Headers.Location.AbsoluteUri);
             }
         }
 
