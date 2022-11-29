@@ -124,6 +124,23 @@ namespace Okta.AspNet
                         redirectToIdentityProviderNotification.ProtocolMessage.SetParameter(oktaParamKey, oktaRequestParamValue);
                     }
                 }
+
+                if (OktaParams.IsPromptEnrollAuthenticator(redirectToIdentityProviderNotification.ProtocolMessage.Parameters))
+                {
+                    var redirectUri =
+                        redirectToIdentityProviderNotification.OwinContext.Authentication
+                            .AuthenticationResponseChallenge?.Properties?.RedirectUri ??
+                        redirectToIdentityProviderNotification.ProtocolMessage.RedirectUri;
+
+                    // ACR values should be provided by the user.
+                    // scope, nonce, and resource must be omitted.
+                    redirectToIdentityProviderNotification.ProtocolMessage.ResponseType = "none";
+                    redirectToIdentityProviderNotification.ProtocolMessage.MaxAge = "0";
+                    redirectToIdentityProviderNotification.ProtocolMessage.Nonce = null;
+                    redirectToIdentityProviderNotification.ProtocolMessage.Scope = null;
+                    redirectToIdentityProviderNotification.ProtocolMessage.Resource = null;
+                    redirectToIdentityProviderNotification.ProtocolMessage.RedirectUri = redirectUri;
+                }
             }
 
             if (redirectEvent != null)

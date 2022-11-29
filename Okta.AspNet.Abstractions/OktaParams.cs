@@ -3,6 +3,7 @@
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 
 namespace Okta.AspNet.Abstractions
@@ -44,9 +45,20 @@ namespace Okta.AspNet.Abstractions
         /// </summary>
         public const string EnrollAmrValues = "enroll_amr_values";
 
+        private const string EnrollAuthenticator = "enroll_authenticator";
+
         /// <summary>
         /// A list with all Okta well-known params.
         /// </summary>
         public static readonly IList<string> AllParams = new List<string>() { SessionToken, Idp, LoginHint, AcrValues, Prompt, EnrollAmrValues };
+
+        /// <summary>
+        /// Returns true if the request includes prompt=enroll_authenticator, false otherwise.
+        /// </summary>
+        /// <param name="parameters">The request parameters</param>
+        public static bool IsPromptEnrollAuthenticator(IDictionary<string, string> parameters) =>
+            parameters != null &&
+            parameters.ContainsKey(Prompt) &&
+            parameters[Prompt].Equals(EnrollAuthenticator, StringComparison.InvariantCultureIgnoreCase);
     }
 }

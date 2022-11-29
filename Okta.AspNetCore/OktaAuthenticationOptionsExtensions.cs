@@ -132,6 +132,19 @@ namespace Okta.AspNetCore
                 }
             }
 
+            if (OktaParams.IsPromptEnrollAuthenticator(context.ProtocolMessage.Parameters))
+            {
+                // ACR values should be provided by the user.
+                // scope, nonce, and resource must be omitted by the server.
+                context.ProtocolMessage.ResponseType = "none";
+                context.ProtocolMessage.MaxAge = "0";
+                context.ProtocolMessage.Nonce = null;
+                context.ProtocolMessage.Scope = null;
+                context.ProtocolMessage.Resource = null;
+                context.ProtocolMessage.RedirectUri = context.Properties.RedirectUri;
+
+            }
+
             if (redirectEvent != null)
             {
                 return redirectEvent(context);
