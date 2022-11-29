@@ -275,6 +275,9 @@ public IActionResult SignIn()
 |`prompt` | Indicate the pipeline the intent of the request, such as, support enrollment of a new factor. | No |
 |`enroll_amr_values` |  A space-delimited, case-sensitive string that represents a list of authenticator method references. | No |
 
+
+> Note: When `prompt` is equals to `enroll_authenticator` you have to also indicate the `redirect_uri`. The `redirect_uri` cannot be the same as the normal OIDC flow `/authorization_code/callback` since there's no code involved in this flow. Instead, you have to specify a callback URI (which has to be added to your application's allowed URLs in your Okta dashboard) in your application where, for example, you can process the response and redirect accordingly. Also, it's expected you to already have a session before triggering the authenticator enrollment flow.
+
 For more details see the [Okta documentation](https://developer.okta.com/docs/reference/api/oidc/#request-parameters).
 
 ```csharp
@@ -283,18 +286,22 @@ public IActionResult SignIn()
     if (!HttpContext.User.Identity.IsAuthenticated)
     {
         var properties = new AuthenticationProperties();
-        // Example 1
         properties.Items.Add(OktaParams.AcrValues, "urn:okta:loa:1fa:pwd");
-
-        // Example 2
         properties.Dictionary.Add(OktaParams.Prompt, "enroll_authenticator");
         properties.Dictionary.Add(OktaParams.EnrollAmrValues, "sms okta_verify");
         
-        properties.RedirectUri = "/Home/";
+        properties.RedirectUri = "https://localhost:44314/Account/EnrollCallback";
 
         return Challenge(properties, OktaDefaults.MvcAuthenticationScheme);
     }
 
+    return RedirectToAction("Index", "Home");
+}
+
+public IActionResult Callback()
+{
+    //...
+    // If enrollment was successful
     return RedirectToAction("Index", "Home");
 }
 ```

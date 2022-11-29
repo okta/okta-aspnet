@@ -141,7 +141,7 @@ namespace Okta.AspNetCore
                 context.ProtocolMessage.Nonce = null;
                 context.ProtocolMessage.Scope = null;
                 context.ProtocolMessage.Resource = null;
-                context.ProtocolMessage.RedirectUri = context.Properties.RedirectUri;
+                context.ProtocolMessage.RedirectUri = context?.Properties?.RedirectUri ?? context.ProtocolMessage.RedirectUri;
 
             }
 
