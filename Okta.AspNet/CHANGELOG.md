@@ -1,6 +1,12 @@
 # Changelog
 Running changelog of releases since `1.6.0`
 
+## 3.2.1
+
+### Features
+
+- Update authorization request's params accordingly when `prompt=enroll_authenticator`
+
 ## v3.2.0
 
 ### Features
