@@ -1,6 +1,6 @@
 version: '2.1'
 orbs:
-  win: circleci/win@5.0
+  win: circleci/windows@5.0
 jobs:
   build:
     executor:
