@@ -1,0 +1,10 @@
+version: '2.1'
+orbs:
+  win: circleci/windows@5.0
+jobs:
+  build:
+    executor:
+      name: win/default
+    steps:
+      - checkout
+      - run: build.bat
