@@ -1,10 +1,18 @@
 version: '2.1'
 orbs:
-  win: circleci/windows@5.0
+  win: circleci/node@5.0.3
 jobs:
   build:
     executor:
-      name: win/default
+      name: node/default
     steps:
       - checkout
-      - run: .\build.bat
+      - run:
+          command: sudo apt-get update && sudo apt-get install -y apt-transport-https && sudo apt-get update && sudo apt-get install -y dotnet-sdk-6.0
+          name: Install dotnet-skd-6.0
+      - run:
+          command: sudo apt-get update && sudo apt-get install -y apt-transport-https && sudo apt-get update && sudo apt-get install -y dotnet-sdk-3.1
+          name: Install dotnet-skd-3.1
+      - run: 
+          command: ./build.sh
+          name: Build
