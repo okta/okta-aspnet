@@ -7,4 +7,4 @@ jobs:
       name: win/default
     steps:
       - checkout
-      - run: build.bat
+      - run: .\build.bat
