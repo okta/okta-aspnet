@@ -8,5 +8,5 @@ jobs:
     steps:
       - checkout
       - run: 
-          command: ./build.sh
+          command: .\build.bat
           name: Build
