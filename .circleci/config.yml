@@ -8,5 +8,5 @@ jobs:
     steps:
       - checkout
       - run: 
-          command: dir "C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin"
-          name: Dir
+          command: .\build.bat
+          name: Build
