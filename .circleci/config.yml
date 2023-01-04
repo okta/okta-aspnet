@@ -7,6 +7,9 @@ jobs:
       name: win/server-2022
     steps:
       - checkout
+      - run:
+          command: .\install-signing-key.bat
+          name: Install strong name signing key
       - run: 
           command: .\build.bat
           name: Build
