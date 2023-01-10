@@ -30,8 +30,8 @@
 
   <PropertyGroup>
     <CodeAnalysisRuleSet>..\OktaSdk.ruleset</CodeAnalysisRuleSet>
-    <AssemblyVersion>3.0.2.1</AssemblyVersion>
-    <FileVersion>3.0.2.1</FileVersion>
+    <AssemblyVersion>3.0.2.2</AssemblyVersion>
+    <FileVersion>3.0.2.2</FileVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>okta.aspnet.public.snk</AssemblyOriginatorKeyFile>
     <DelaySign>true</DelaySign>
