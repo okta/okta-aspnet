@@ -1,6 +1,12 @@
 # Changelog
 Running changelog of releases since `3.0.5`
 
+## v4.2.1
+
+### Bug Fixes
+
+- Fix "Method not found:Boolean Okta.AspNet.Abstractions.OktaParams.IsPromptEnrollAuthenticator" issue (#228)
+
 ## v4.2.0
 
 ### Features

@@ -267,13 +267,41 @@ public class HomeController : Controller
 
 This example assumes you have a view called `Claim` whose model is of type `System.Security.Claims.Claim`. The claim types for OIDC tokens are `id_token` and `access_token` as well as `refresh_token` if available.
 
-## Handling failures
+## Hooking into OIDC events
 
-This library exposes [OpenIdConnectEvents](https://docs.microsoft.com/en-us/previous-versions/aspnet/mt180963(v=vs.113)) so you can hook into specific events during the authentication process. For more information see [`AuthenticationFailed`](https://docs.microsoft.com/en-us/previous-versions/aspnet/mt180967(v=vs.113)).
+This library exposes [OpenIdConnectEvents](https://docs.microsoft.com/en-us/previous-versions/aspnet/mt180963(v=vs.113)) so you can hook into specific events during the authentication process.
 
+### Adding custom claims  
+
+The following is an example of how to use events to add custom claims to the token:
+
+```csharp
+public class Startup
+{
+    public void Configuration(IAppBuilder app)
+    {
+        app.UseOktaMvc(new OktaMvcOptions()
+        {
+            // ... other configuration options removed for brevity ...
+             OpenIdConnectEvents = new OpenIdConnectAuthenticationNotifications
+                {
+                    SecurityTokenValidated = (notification) =>
+                    {
+                        notification.AuthenticationTicket.Identity.AddClaim(new Claim("CodeCustomClaimKey", "CodeCustomClaimValue"));
+
+                        return Task.CompletedTask;
+                    }
+                },
+        });
+    }
+}
+```
+
+> Note: For more information see [`SecurityTokenValidated`](https://learn.microsoft.com/en-us/previous-versions/aspnet/mt180993(v=vs.113))
+
+### Handling failures
 
  The following is an example of how to use events to handle failures:
-
 
 ```csharp
 public class Startup
@@ -300,6 +328,7 @@ public class Startup
     }
 }
 ```
+> Note: For more information see [`AuthenticationFailed`](https://docs.microsoft.com/en-us/previous-versions/aspnet/mt180967(v=vs.113))
 
 # Configuration Reference
 
