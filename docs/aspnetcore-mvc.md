@@ -357,10 +357,39 @@ public class HomeController : Controller
 
 This example assumes you have a view called `OIDCToken` whose model is of type `TokenModel`. The OIDC tokens are `id_token` and `access_token` as well as `refresh_token` if available.
 
-## Handling failures
+## Hooking into OIDC events
 
-In the event a failure occurs, the Okta.AspNetCore library exposes [OpenIdConnectEvents](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectevents.onauthenticationfailed) so you can hook into specific events during the authentication process. For more information See [`OnAuthenticationFailed`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectevents.onauthenticationfailed) or [`OnRemoteFailure`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.remoteauthenticationevents.onremotefailure).
+In the event a failure occurs, the Okta.AspNetCore library exposes [OpenIdConnectEvents](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectevents.onauthenticationfailed) so you can hook into specific events during the authentication process.
 
+### Customizing claims
+
+ The following is an example of how to use events to add custom claims to the token:
+
+```csharp
+public class Startup
+{
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddOktaMvc(new OktaMvcOptions
+        {
+            // ... other configuration options removed for brevity ...
+            OpenIdConnectEvents = new OpenIdConnectEvents
+                                {
+                                    OnTokenValidated = context =>
+                                    {
+                                        ClaimsIdentity claimsIdentity = context.Principal.Identity as ClaimsIdentity;
+                                        claimsIdentity.AddClaim(new Claim("MyCustomClaimKey", "MyCustomClaimValue"));
+
+                                        return Task.CompletedTask;
+                                    }
+                                },
+        });
+    }
+```
+
+> Note: For more information See [`OnTokenValidated`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectevents.ontokenvalidated).
+
+### Handling failures
 
  The following is an example of how to use events to handle failures:
 
@@ -399,6 +428,9 @@ public class Startup
     }
 }
 ```
+
+> Note:  For more information See [`OnAuthenticationFailed`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectevents.onauthenticationfailed) or [`OnRemoteFailure`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.remoteauthenticationevents.onremotefailure).
+
 # Configuration Reference 
 
 The `OktaMvcOptions` class configures the Okta middleware. You can see all the available options in the table below:
