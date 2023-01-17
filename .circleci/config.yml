@@ -3,6 +3,8 @@ version: 2.1
 orbs:
   general-platform-helpers: okta/general-platform-helpers@1.0.1
 
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   cache-secrets:
     machine: true
@@ -24,16 +26,25 @@ jobs:
       - checkout
       - general-platform-helpers/load-dependencies
 
+  build:
+    docker:
+      - image: dotnet/sdk
+    steps:
+      - checkout
+      - run: dotnet --version
+      - run:
+          name: "build okta aspnet"
+          command: ./build.sh
+
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  "Circle CI Build":
+  "Circle CI Tests":
     jobs:
       - cache-secrets
       - load-secrets:
-          requires: cache-secrets
+          requires:
+            - cache-secrets
       - build:
-          - requires:
-              - load-secrets
-          - run:
-              command: ./build.sh
-              name: Build
-    
+          requires:
+            - load-secrets
