@@ -29,11 +29,10 @@ workflows:
     jobs:
       - cache-secrets
       - load-secrets:
-          requires:
-            - cache-secrets
+          requires: cache-secrets
       - build:
-          requires:
-            - load-secrets
+          - requires:
+              - load-secrets
           - run:
               command: ./build.sh
               name: Build
