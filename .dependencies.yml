@@ -1,9 +1,9 @@
 vault:
   - USERNAME:
-      devex/okta-jwt-verifier-golang: USERNAME
+      devex/okta-aspnet: USERNAME
   - PASSWORD:
-      devex/okta-jwt-verifier-golang: PASSWORD
+      devex/okta-aspnet: PASSWORD
   - CLIENT_ID:
-      devex/okta-jwt-verifier-golang: CLIENT_ID
+      devex/okta-aspnet: CLIENT_ID
   - ISSUER:
-      devex/okta-jwt-verifier-golang: ISSUER
+      devex/okta-aspnet: ISSUER
