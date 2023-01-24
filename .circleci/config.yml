@@ -29,11 +29,11 @@ jobs:
   build:
     docker:
       - image: dotnet/sdk
-    environment:
-      CIRCLE_CI: true 
     steps:
       - checkout
-      - general-platform-helpers/load-dependencies
+      - run:
+          name: "Setup custom environment variables"
+          command: echo 'export CIRCLE_CI=true' >> "$BASH_ENV"
       - run: dotnet --version
       - run:
           name: "build okta aspnet"
@@ -44,4 +44,8 @@ jobs:
 workflows:
   "Circle CI Build":
     jobs:
+      - cache-secrets
+      - load-secrets:
+          requires:
+            - cache-secrets
       - build:
