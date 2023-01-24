@@ -28,7 +28,7 @@ jobs:
 
   build:
     docker:
-      - image: dotnet/sdk
+      - image: cimg/openjdk:11.0
     steps:
       - checkout
       - run:
