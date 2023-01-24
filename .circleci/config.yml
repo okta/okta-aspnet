@@ -10,11 +10,10 @@ jobs:
   build:
     executor:
       name: windows/default
+    environment:
+      CIRCLE_CI: True
     steps:
-      - checkout
-      - run:
-          name: "Setup custom environment variables"
-          command: echo 'export CIRCLE_CI=True' >> "$BASH_ENV"
+      - checkout      
       - run:
           name: "build okta aspnet"
           command: .\build.ps1
