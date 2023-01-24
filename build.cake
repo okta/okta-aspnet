@@ -29,7 +29,7 @@ var netCoreProjects = new List<string>()
     "Okta.AspNetCore.Test"
 };
 
-if(travisEnabled) 
+if(travisEnabled || circleCiEnabled) 
 {
     Projects = netCoreProjects;
 }
