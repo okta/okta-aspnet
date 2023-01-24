@@ -34,7 +34,6 @@ jobs:
       - run:
           name: "Setup custom environment variables"
           command: echo 'export CIRCLE_CI=true' >> "$BASH_ENV"
-      - run: dotnet --version
       - run:
           name: "build okta aspnet"
           command: ./build.sh
