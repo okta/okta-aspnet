@@ -4,7 +4,7 @@ var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
 Boolean.TryParse(EnvironmentVariable("TRAVIS"), out var travisEnabled);
-Boolean.TryParse(EnvironmentVariable("CIRCLE_CI"), out circleCiEnbabled);
+Boolean.TryParse(EnvironmentVariable("CIRCLE_CI"), out var circleCiEnbabled);
 Console.WriteLine($"\n Travis enabled: {travisEnabled}");
 Console.WriteLine($"\n Circle Ci enabled: {circleCiEnabled}");
 Console.WriteLine($"\n Jenkins build: {BuildSystem.IsRunningOnJenkins}");
