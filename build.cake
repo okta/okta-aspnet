@@ -109,7 +109,7 @@ Task("Strongname")
 
         foreach (var binary in snBinaries)
         {
-            StartProcess("C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8.1 Tools\\sn.exe", $"-Rc \"{binary}\" OktaDotnetStrongname");
+            StartProcess("sn.exe", $"-Rc \"{binary}\" OktaDotnetStrongname");
         }
 	}
 });
