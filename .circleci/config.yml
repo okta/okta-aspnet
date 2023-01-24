@@ -44,4 +44,4 @@ jobs:
 workflows:
   "Circle CI Build":
     jobs:
-      - build:
+      build:
