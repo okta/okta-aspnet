@@ -1,9 +1,0 @@
-vault:
-  - USERNAME:
-      devex/okta-aspnet: USERNAME
-  - PASSWORD:
-      devex/okta-aspnet: PASSWORD
-  - CLIENT_ID:
-      devex/okta-aspnet: CLIENT_ID
-  - ISSUER:
-      devex/okta-aspnet: ISSUER
