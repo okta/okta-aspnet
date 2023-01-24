@@ -4,7 +4,9 @@ var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
 Boolean.TryParse(EnvironmentVariable("TRAVIS"), out var travisEnabled);
+Boolean.TryParse(EnvironmentVariable("CIRCLE_CI"), out circleCiEnbabled);
 Console.WriteLine($"\n Travis enabled: {travisEnabled}");
+Console.WriteLine($"\n Circle Ci enabled: {circleCiEnabled}");
 Console.WriteLine($"\n Jenkins build: {BuildSystem.IsRunningOnJenkins}");
 
 var Projects = new List<string>()
@@ -99,7 +101,7 @@ Task("Strongname")
 .IsDependentOn("Build")
 .Does(() =>
 {    
-    if (!travisEnabled)
+    if (!travisEnabled && !circleCiEnabled)
 	{
         var snBinaries = GetFiles("./Okta.AspNet/bin/Release/net4*/Okta.AspNet.dll")
                         .Concat(GetFiles("./Okta.AspNet.Abstractions/bin/Release/net4*/Okta.AspNet.Abstractions.dll"))

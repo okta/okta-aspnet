@@ -29,6 +29,8 @@ jobs:
   build:
     docker:
       - image: dotnet/sdk
+    environment:
+      CIRCLE_CI: true 
     steps:
       - checkout
       - run: dotnet --version
@@ -41,10 +43,4 @@ jobs:
 workflows:
   "Circle CI Build":
     jobs:
-      - cache-secrets
-      - load-secrets:
-          requires:
-            - cache-secrets
-      - build:
-          requires:
-            - load-secrets
+      - build
