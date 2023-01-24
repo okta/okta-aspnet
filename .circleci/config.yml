@@ -33,6 +33,7 @@ jobs:
       CIRCLE_CI: true 
     steps:
       - checkout
+      - general-platform-helpers/load-dependencies
       - run: dotnet --version
       - run:
           name: "build okta aspnet"
@@ -43,4 +44,4 @@ jobs:
 workflows:
   "Circle CI Build":
     jobs:
-      - build
+      - build:
