@@ -32,6 +32,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: "Install dotnet"
+          command: sudo apt-get install dotnet-sdk-6.0
+      - run:
           name: "Setup custom environment variables"
           command: echo 'export CIRCLE_CI=true' >> "$BASH_ENV"
       - run: dotnet --version
