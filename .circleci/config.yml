@@ -36,7 +36,7 @@ jobs:
           command: echo 'export CIRCLE_CI=true' >> "$BASH_ENV"
       - run:
           name: "build okta aspnet"
-          command: ./build.sh
+          command: .\build.ps1
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
