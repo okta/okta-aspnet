@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  general-platform-helpers: okta/general-platform-helpers@1.2.0
+  windows: circleci/windows@2.2.0
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
@@ -27,13 +27,10 @@ jobs:
       - general-platform-helpers/load-dependencies
 
   build:
-    docker:
-      - image: cimg/openjdk:11.0
+    executor:
+      name: windows/default
     steps:
       - checkout
-      - run:
-          name: "Install dotnet"
-          command: sudo apt-get install dotnet-sdk-6.0
       - run:
           name: "Setup custom environment variables"
           command: echo 'export CIRCLE_CI=true' >> "$BASH_ENV"
