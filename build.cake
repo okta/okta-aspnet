@@ -3,8 +3,8 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
-Boolean.TryParse(EnvironmentVariable("TRAVIS"), out var travisEnabled);
-Console.WriteLine($"\n Travis enabled: {travisEnabled}");
+Boolean.TryParse(EnvironmentVariable("CIRCLE_CI"), out var circleCiEnabled);
+Console.WriteLine($"\n Circle Ci enabled: {circleCiEnabled}");
 Console.WriteLine($"\n Jenkins build: {BuildSystem.IsRunningOnJenkins}");
 
 var Projects = new List<string>()
@@ -27,7 +27,7 @@ var netCoreProjects = new List<string>()
     "Okta.AspNetCore.Test"
 };
 
-if(travisEnabled) 
+if(circleCiEnabled) 
 {
     Projects = netCoreProjects;
 }
@@ -62,7 +62,7 @@ Task("Build")
     {
         Console.WriteLine($"\nBuilding {name}");
        
-        if(travisEnabled && name == "Okta.AspNet.Abstractions")
+        if(circleCiEnabled && name == "Okta.AspNet.Abstractions")
         {
             DotNetCoreBuild($"./{name}", new DotNetCoreBuildSettings
             {
@@ -99,7 +99,7 @@ Task("Strongname")
 .IsDependentOn("Build")
 .Does(() =>
 {    
-    if (!travisEnabled)
+    if (!circleCiEnabled)
 	{
         var snBinaries = GetFiles("./Okta.AspNet/bin/Release/net4*/Okta.AspNet.dll")
                         .Concat(GetFiles("./Okta.AspNet.Abstractions/bin/Release/net4*/Okta.AspNet.Abstractions.dll"))
@@ -124,7 +124,7 @@ Task("PackNuget")
     {
         Console.WriteLine($"\nCreating NuGet package for {name}");
         
-        if(travisEnabled && name == "Okta.AspNet.Abstractions") 
+        if(circleCiEnabled && name == "Okta.AspNet.Abstractions") 
         {
             var msBuildSettings = new DotNetCoreMSBuildSettings();
             msBuildSettings.SetTargetFramework("netstandard2.0");
