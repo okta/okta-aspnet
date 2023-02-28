@@ -26,7 +26,8 @@ This library uses semantic versioning and follows Okta's [library version policy
 
 |Package| Version | Status                    | Compatibility|
 | ------- | ------- | ------------------------- | ----------------------- |
-|`Okta.AspNet.Abstractions`| 4.x   | :heavy_check_mark: Stable | .NET Standard 2.0 and .NET Framework 4.5.2 or higher.|
+|`Okta.AspNet.Abstractions`| 5.x   | :heavy_check_mark: Stable | .NET Standard 2.0 and .NET Framework 4.6.2 or higher.|
+|`Okta.AspNet.Abstractions`| 4.x   | :warning: Retiring | .NET Standard 2.0 and .NET Framework 4.5.2 or higher.|
 |`Okta.AspNet.Abstractions`| 3.x   | :warning: Retiring | .NET Standard 2.0 and .NET Framework 4.5.2 or higher.|
 |`Okta.AspNet`| 3.x | :heavy_check_mark: Stable | .NET Framework 4.6.2 |
 |`Okta.AspNet`| 2.x | :warning: Retiring | .NET Framework 4.5.2 |
