@@ -1,6 +1,10 @@
 # Changelog
 Running changelog of releases since `3.0.5`
 
+## v5.0.0
+
+- Update target framework to v4.6.2
+
 ## v4.2.1
 
 ### Bug Fixes
