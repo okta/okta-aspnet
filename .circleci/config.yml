@@ -1,7 +1,8 @@
 version: 2.1
 
 orbs:
-  windows: circleci/windows@5
+  windows: circleci/windows@5.0
+  general-platform-helpers: okta/general-platform-helpers@1.2
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
@@ -17,6 +18,13 @@ jobs:
       - run:
           name: "build okta aspnet"
           command: .\build.ps1
+      - when:
+          condition:
+            equal: [ "<<pipeline.git.branch>>", "master" ]
+          steps:
+            - general-platform-helpers/step-artifacts-prepare-and-upload-windows:
+                files-to-upload: "artifacts"
+                location: "com/okta/okta-aspnet"
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
