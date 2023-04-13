@@ -24,7 +24,7 @@ jobs:
           steps:
             - general-platform-helpers/step-artifacts-prepare-and-upload-windows:
                 files-to-upload: "artifacts"
-                location: "com/okta/okta-aspnet"
+                location: "com/okta/devex/okta-aspnet"
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
