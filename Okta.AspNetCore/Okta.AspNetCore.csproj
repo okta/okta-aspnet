@@ -7,8 +7,8 @@
 	<PropertyGroup>
 		<Description>Official Okta middleware for ASP.NET Core 3.1+. Easily add authentication and authorization to ASP.NET Core applications.</Description>
 		<Copyright>(c) 2020 - present Okta, Inc. All rights reserved.</Copyright>
-		<Version>4.4.2</Version>
-		<VersionPrefix>4.4.2</VersionPrefix>
+		<Version>4.5.0</Version>
+		<VersionPrefix>4.5.0</VersionPrefix>
 		<Authors>Okta, Inc.</Authors>
 		<AssemblyName>Okta.AspNetCore</AssemblyName>
 		<PackageId>Okta.AspNetCore</PackageId>
@@ -28,6 +28,12 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<AdditionalFiles Include="..\stylecop.json" />
+	</ItemGroup>
+
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.10" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
