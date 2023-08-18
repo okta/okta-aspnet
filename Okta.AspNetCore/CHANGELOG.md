@@ -1,6 +1,12 @@
 # Changelog
 Running changelog of releases since `3.2.0`
 
+## v4.5.0
+
+### Features
+
+- Add support for .NET 7
+
 ## v4.4.2
 
 ### Bug Fixes
