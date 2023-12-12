@@ -27,10 +27,10 @@ var netCoreProjects = new List<string>()
     "Okta.AspNetCore.Test"
 };
 
-if(circleCiEnabled) 
-{
-    Projects = netCoreProjects;
-}
+// if(circleCiEnabled) 
+// {
+//     Projects = netCoreProjects;
+// }
 
 Task("Clean").Does(() =>
 {
