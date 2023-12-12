@@ -3,7 +3,8 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
-Boolean.TryParse(EnvironmentVariable("CIRCLE_CI"), out var circleCiEnabled);
+//Boolean.TryParse(EnvironmentVariable("CIRCLE_CI"), out var circleCiEnabled);
+var circleCiEnabled = false
 Console.WriteLine($"\n Circle Ci enabled: {circleCiEnabled}");
 Console.WriteLine($"\n Jenkins build: {BuildSystem.IsRunningOnJenkins}");
 
@@ -27,10 +28,10 @@ var netCoreProjects = new List<string>()
     "Okta.AspNetCore.Test"
 };
 
-// if(circleCiEnabled) 
-// {
-//     Projects = netCoreProjects;
-// }
+if(circleCiEnabled) 
+{
+    Projects = netCoreProjects;
+}
 
 Task("Clean").Does(() =>
 {
