@@ -4,7 +4,7 @@ var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
 //Boolean.TryParse(EnvironmentVariable("CIRCLE_CI"), out var circleCiEnabled);
-var circleCiEnabled = false
+var circleCiEnabled = false;
 Console.WriteLine($"\n Circle Ci enabled: {circleCiEnabled}");
 Console.WriteLine($"\n Jenkins build: {BuildSystem.IsRunningOnJenkins}");
 
