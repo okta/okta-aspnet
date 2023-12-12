@@ -20,7 +20,7 @@ namespace Okta.AspNet
         public DiscoveryDocumentCachingSigningKeyProvider(IDiscoveryDocumentSigningKeyProvider provider)
         {
             _discoveryDocumentSigningKeyProvider = provider ?? throw new ArgumentNullException(nameof(provider), "The provider cannot be null.");
-            RefreshMetadata();
+            RetrieveMetadata();
         }
 
         /// <summary>
