@@ -30,7 +30,7 @@ This library uses semantic versioning and follows Okta's [library version policy
 |`Okta.AspNet.Abstractions`| 4.x   | :warning: Retiring November 28th, 2023 | .NET Standard 2.0 and .NET Framework 4.5.2 or higher.|
 |`Okta.AspNet`| 3.x | :heavy_check_mark: Stable | .NET Framework 4.6.2 |
 |`Okta.AspNet`| 2.x | :warning: Retiring | .NET Framework 4.5.2 |
-|`Okta.AspNetCore`| 4.x | :heavy_check_mark: Stable | .NET Core 3.x, .NET 5.0, .NET 6.0 and .NET 7.0 |
+|`Okta.AspNetCore`| 4.x | :heavy_check_mark: Stable | .NET Core 3.x, .NET 5.0, .NET 6.0, .NET 7.0 and .NET 8.0 |
 |`Okta.AspNetCore`| 3.x | :warning: Retiring | .NET Standard 2.0 and .NET Core 2.x |
 
 
