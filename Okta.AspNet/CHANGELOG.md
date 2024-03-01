@@ -1,6 +1,12 @@
 # Changelog
 Running changelog of releases since `1.6.0`
 
+## 3.2.3
+
+### Bug Fixes
+
+Fix "initial request before signing keys are cached is rejected as unauthorized" issue (#243) (#249)
+
 ## 3.2.2
 
 ### Bug Fixes
