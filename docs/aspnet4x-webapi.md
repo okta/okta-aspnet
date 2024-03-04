@@ -81,7 +81,7 @@ public class MyLoggingHandler : DelegatingHandler
 {
     private readonly ILogger _logger;
 
-    public MyLoggingHandler(ILogger logger)
+    public MyLoggingHandler(ILogger logger) : base(new HttpClientHandler())
     {
         _logger = logger;
     }

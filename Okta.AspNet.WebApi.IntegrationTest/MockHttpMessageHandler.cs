@@ -14,6 +14,7 @@ namespace Okta.AspNet.WebApi.IntegrationTest
         public int NumberOfCalls { get; private set; }
 
         public MockHttpMessageHandler()
+            : base(new HttpClientHandler())
         {
             NumberOfCalls = 0;
         }
