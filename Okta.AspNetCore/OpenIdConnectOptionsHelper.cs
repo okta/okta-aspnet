@@ -37,7 +37,9 @@ namespace Okta.AspNetCore
             oidcOptions.SignedOutRedirectUri = oktaMvcOptions.PostLogoutRedirectUri;
             oidcOptions.ResponseType = OpenIdConnectResponseType.Code;
             oidcOptions.GetClaimsFromUserInfoEndpoint = oktaMvcOptions.GetClaimsFromUserInfoEndpoint;
+
 #if NET8_0_OR_GREATER
+            oidcOptions.UseSecurityTokenValidator = true;
             oidcOptions.TokenHandler = new StrictTokenHandler();
 #else
             oidcOptions.SecurityTokenValidator = new StrictSecurityTokenValidator();
