@@ -40,10 +40,8 @@ namespace Okta.AspNetCore
 
 #if NET8_0_OR_GREATER
             oidcOptions.UseSecurityTokenValidator = true;
-            oidcOptions.TokenHandler = new StrictTokenHandler();
-#else
-            oidcOptions.SecurityTokenValidator = new StrictSecurityTokenValidator();
 #endif
+            oidcOptions.SecurityTokenValidator = new StrictSecurityTokenValidator();
             oidcOptions.SaveTokens = true;
             oidcOptions.UseTokenLifetime = false;
             oidcOptions.BackchannelHttpHandler = new OktaHttpMessageHandler(
