@@ -61,7 +61,7 @@ namespace Okta.AspNet.Abstractions.Test
             var fakeAudience = "aud://default";
 
             var credentials = new SigningCredentials(
-                new SymmetricSecurityKey(Encoding.UTF8.GetBytes("fakesigningsecret!")),
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes("extralongtosatisfynewrequirementsfakesigningsecret!")),
                 SecurityAlgorithms.HmacSha256);
 
             // Create the JWT and write it to a string

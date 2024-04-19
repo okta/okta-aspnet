@@ -20,7 +20,7 @@ namespace Okta.AspNet.Test
 
             var oktaWebApiOptions = new OktaWebApiOptions
             {
-                OktaDomain = "http://myoktadomain.com",
+                OktaDomain = "https://myoktadomain.com",
                 BackchannelTimeout = TimeSpan.FromMinutes(5),
                 BackchannelHttpClientHandler = new MockHttpClientHandler(),
                 OAuthBearerAuthenticationProvider = mockAuthnProvider,
