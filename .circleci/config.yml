@@ -17,7 +17,7 @@ jobs:
 
       - run: 
           name: build Binary to scan
-          command: dotnet build ./src/Okta.Sdk.sln
+          command: dotnet build ./src/Okta.AspNet.sln
        
       // Necessary to Install rl wrapper   
       - run:
