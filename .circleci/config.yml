@@ -88,7 +88,7 @@ workflows:
     jobs:
       - reversing-labs:
           context:
-            - okta-dcp 
+            - static-analysis
   "Circle CI Build":
     jobs:
       - build
