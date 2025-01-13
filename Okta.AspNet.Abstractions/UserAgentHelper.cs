@@ -22,7 +22,13 @@ namespace Okta.AspNet.Abstractions
         /// <returns>The normalized framework desctiption.</returns>
         public static string GetFrameworkDescription(string runtimeFrameworkDescription = "", string runtimeAssemblyCodeBase = "")
         {
+            #if NET8_0_OR_GREATER
+            /* For .NET 8.0 and newer, use Environment.Version for framework description */
+            var frameworkDescription = string.IsNullOrEmpty(runtimeFrameworkDescription) ? Environment.Version.ToString() : runtimeFrameworkDescription;
+            #else
+            /* For Older .Net versions, continue using RuntimeInformation.FrameworkDescription for framework description */
             var frameworkDescription = string.IsNullOrEmpty(runtimeFrameworkDescription) ? RuntimeInformation.FrameworkDescription : runtimeFrameworkDescription;
+            #endif
             var assemblyCodeBase = runtimeAssemblyCodeBase;
 
             // RuntimeInformation.FrameworkDescription only returns the CLI version for .NET Core.
