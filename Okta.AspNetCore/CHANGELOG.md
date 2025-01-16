@@ -1,6 +1,17 @@
 # Changelog
 Running changelog of releases since `3.2.0`
 
+## v4.6.2
+
+- Replace RuntimeInformation dependency with Environment.Version for .Net8+ (#275) for Okta.AspNet.Abstractions.
+
+## v4.6.1
+
+- Dependency Upgrades: Upgraded vulnerable dependency, System.IdentityModel.Tokens.Jwt to version 6.35
+- Security Enhancements: Added oidcOptions.UseSecurityTokenValidator = true for .NET 8.
+- Framework Compatibility: Added .NET 8 as a valid frameworkTarget for Okta.AspNet.Abstractions.
+- Bug Fixes: Fixed Blazor .NET 8 Error (#260), Okta.AspNetCore (#259), (#261).
+
 ## v4.6.0
 
 ### Features
