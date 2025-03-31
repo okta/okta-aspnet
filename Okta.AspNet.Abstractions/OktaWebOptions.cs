@@ -61,5 +61,23 @@ namespace Okta.AspNet.Abstractions
         /// Timeout value in milliseconds for back channel communications with Okta.
         /// </value>
         public TimeSpan BackchannelTimeout { get; set; } = TimeSpan.FromSeconds(60);
+        
+        /// <summary>
+        /// Executes an HTTP request with retry logic for transient failures.
+        /// </summary>
+        /// <param name="httpClient">The HttpClient to use for the request.</param>
+        /// <param name="request">The HttpRequestMessage to send.</param>
+        /// <returns>The HttpResponseMessage from the request.</returns>
+        public async Task<HttpResponseMessage> ExecuteWithRetryAsync(HttpClient httpClient, HttpRequestMessage request)
+        {
+            // Define retry policy: Retry up to 3 times with exponential backoff
+            AsyncRetryPolicy<HttpResponseMessage> retryPolicy = Policy
+                .HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode) // Retry on non-success status codes
+                .Or<HttpRequestException>() // Retry on transient network errors
+                .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+
+            // Execute the request with the retry policy
+            return await retryPolicy.ExecuteAsync(() => httpClient.SendAsync(request));
+        }
     }
 }
