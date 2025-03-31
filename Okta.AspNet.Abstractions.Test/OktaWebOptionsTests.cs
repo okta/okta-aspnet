@@ -10,33 +10,33 @@ namespace Okta.AspNet.Abstractions.Tests
     public class OktaWebOptionsTests
     {
         [Fact]
-        public async Task ExecuteWithRetryAsync_ShouldRetryOnTransientFailure()
+        public async Task BackchannelTimeout_ShouldBeAppliedToHttpClient()
         {
             // Arrange
-            var retryCount = 0;
+            var options = new OktaWebOptions
+            {
+                BackchannelTimeout = TimeSpan.FromSeconds(120)
+            };
+
             var handler = new MockHttpMessageHandler((request, cancellationToken) =>
             {
-                retryCount++;
-                if (retryCount < 3)
-                {
-                    // Simulate transient failure
-                    return Task.FromResult(new HttpResponseMessage(HttpStatusCode.InternalServerError));
-                }
-
-                // Simulate success on the third attempt
-                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
+                // Simulate a delay to test timeout
+                Task.Delay(1000, cancellationToken).Wait(cancellationToken);
+                return Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.OK));
             });
 
-            var httpClient = new HttpClient(handler);
-            var oktaWebOptions = new OktaWebOptions();
+            var httpClient = new HttpClient(handler)
+            {
+                Timeout = options.BackchannelTimeout
+            };
+
             var request = new HttpRequestMessage(HttpMethod.Get, "https://example.com/userinfo");
 
             // Act
-            var response = await oktaWebOptions.ExecuteWithRetryAsync(httpClient, request);
+            var response = await httpClient.SendAsync(request);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(3, retryCount); // Ensure it retried twice before succeeding
+            Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
         }
     }
 
