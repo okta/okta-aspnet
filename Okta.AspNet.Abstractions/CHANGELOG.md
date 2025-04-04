@@ -1,6 +1,10 @@
 # Changelog
 Running changelog of releases since `3.0.5`
 
+## v5.1.2
+- Vulnerable Package Upgrades
+- Increase in Backchannel Timeout 
+
 ## v5.1.1
 
 - Replace RuntimeInformation dependency with Environment.Version for .Net8+ (#275)

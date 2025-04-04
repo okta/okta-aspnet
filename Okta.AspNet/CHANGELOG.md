@@ -1,6 +1,10 @@
 # Changelog
 Running changelog of releases since `1.6.0`
 
+## v3.2.6
+- Vulnerable Package Upgrades
+- Upgrade in Okta.AspNet.Abstractions
+
 ## v3.2.5
 
 - Replace RuntimeInformation dependency with Environment.Version for .Net8+ (#275) for Okta.AspNet.Abstractions.

@@ -7,9 +7,8 @@
 	<PropertyGroup>
 		<Description>Official Okta middleware for ASP.NET Core 3.1+. Easily add authentication and authorization to ASP.NET Core applications.</Description>
 		<Copyright>(c) 2020 - present Okta, Inc. All rights reserved.</Copyright>
-		<Version>4.6.2</Version>
-		<VersionPrefix>4.6.2</VersionPrefix>
-		<Authors>Okta, Inc.</Authors>
+		<Version>4.6.3</Version>
+		<VersionPrefix>4.6.3</Authors>
 		<AssemblyName>Okta.AspNetCore</AssemblyName>
 		<PackageId>Okta.AspNetCore</PackageId>
 		<PackageTags>okta,token,authentication,authorization</PackageTags>
