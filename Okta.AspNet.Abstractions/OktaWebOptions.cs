@@ -60,6 +60,6 @@ namespace Okta.AspNet.Abstractions
         /// <value>
         /// Timeout value in milliseconds for back channel communications with Okta.
         /// </value>
-        public TimeSpan BackchannelTimeout { get; set; } = TimeSpan.FromSeconds(60);
+        public TimeSpan BackchannelTimeout { get; set; } = TimeSpan.FromSeconds(120);
     }
 }
