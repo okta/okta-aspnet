@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Okta.AspNet.Abstractions;
 
@@ -39,7 +40,7 @@ namespace Okta.AspNetCore
             oidcOptions.GetClaimsFromUserInfoEndpoint = oktaMvcOptions.GetClaimsFromUserInfoEndpoint;
 
 #if NET8_0_OR_GREATER
-            oidcOptions.UseSecurityTokenValidator = true;
+            oidcOptions.TokenHandler = new JsonWebTokenHandler();
 #endif
             oidcOptions.SecurityTokenValidator = new StrictSecurityTokenValidator();
             oidcOptions.SaveTokens = true;
@@ -98,7 +99,7 @@ namespace Okta.AspNetCore
             };
 #if NET8_0_OR_GREATER
             jwtBearerOptions.TokenHandlers.Clear();
-            jwtBearerOptions.TokenHandlers.Add(new StrictTokenHandler());
+            jwtBearerOptions.TokenHandlers.Add(new JsonWebTokenHandler());
 
 #else
             jwtBearerOptions.SecurityTokenValidators.Clear();
