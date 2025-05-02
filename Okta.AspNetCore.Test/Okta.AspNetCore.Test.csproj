@@ -24,5 +24,13 @@
   <ItemGroup>
     <ProjectReference Include="..\Okta.AspNetCore\Okta.AspNetCore.csproj" />
   </ItemGroup>
+	
+	
+  <PropertyGroup>
+	<CodeAnalysisRuleSet>..\OktaSdk.Tests.ruleset</CodeAnalysisRuleSet>
+	<SignAssembly>true</SignAssembly>
+	<AssemblyOriginatorKeyFile>okta.aspnet.public.snk</AssemblyOriginatorKeyFile>
+	<DelaySign>true</DelaySign>
+  </PropertyGroup>
 
 </Project>
