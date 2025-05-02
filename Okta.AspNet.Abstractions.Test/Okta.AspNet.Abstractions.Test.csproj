@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="okta.aspnet.public.snk" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="6.6.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0-preview-20220726-02" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
@@ -26,5 +30,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Okta.AspNet.Abstractions\Okta.AspNet.Abstractions.csproj" />
   </ItemGroup>
+
+  <PropertyGroup>
+	<CodeAnalysisRuleSet>..\OktaSdk.Tests.ruleset</CodeAnalysisRuleSet>
+	<SignAssembly>true</SignAssembly>
+	<AssemblyOriginatorKeyFile>okta.aspnet.public.snk</AssemblyOriginatorKeyFile>
+	<DelaySign>true</DelaySign>
+  </PropertyGroup>
 
 </Project>
