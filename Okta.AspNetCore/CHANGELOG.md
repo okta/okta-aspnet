@@ -1,6 +1,10 @@
 # Changelog
 Running changelog of releases since `3.2.0`
 
+## v4.6.4
+- feat: Use JsonWebTokenHandler in .NET 8 for improved token handling (#281)
+- feat: Add strong name signing to Okta.AspNetCore assembly (#280)
+
 ## v4.6.3
 - Vulnerable Package Upgrades
 - Upgrade in Okta.AspNet.Abstractions

@@ -1,6 +1,9 @@
 # Changelog
 Running changelog of releases since `3.0.5`
 
+## v5.1.3
+- Upgrade in Okta.AspNetCore
+
 ## v5.1.2
 - Vulnerable Package Upgrades
 - Increase in Backchannel Timeout 

@@ -1,6 +1,9 @@
 # Changelog
 Running changelog of releases since `1.6.0`
 
+## v3.2.7
+- Upgrade in Okta.AspNetCore
+
 ## v3.2.6
 - Vulnerable Package Upgrades
 - Upgrade in Okta.AspNet.Abstractions
