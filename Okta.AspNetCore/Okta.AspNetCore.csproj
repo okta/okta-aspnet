@@ -23,6 +23,10 @@
 
 		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.2.0" />
 
+		<PackageReference Include="Microsoft.IdentityModel.Protocols" Version="8.2.0" />
+
+		<PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.2.0" />
+
 		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.2.0" />
 
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
