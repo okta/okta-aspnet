@@ -1,6 +1,9 @@
 # Changelog
 Running changelog of releases since `3.0.5`
 
+## v5.1.4
+Updated IdentityModel Package to 8.2.0
+
 ## v5.1.3
 - Upgrade in Okta.AspNetCore
 

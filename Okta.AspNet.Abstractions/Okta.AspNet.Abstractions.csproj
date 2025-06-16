@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net462;netstandard2.0;net8.0</TargetFrameworks>
-    <Version>5.1.3</Version>
+    <Version>5.1.4</Version>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -37,8 +37,8 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>okta.aspnet.public.snk</AssemblyOriginatorKeyFile>
     <DelaySign>true</DelaySign>
-    <AssemblyVersion>5.1.3.0</AssemblyVersion>
-    <FileVersion>5.1.3.0</FileVersion>
+    <AssemblyVersion>5.1.4.0</AssemblyVersion>
+    <FileVersion>5.1.4.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
