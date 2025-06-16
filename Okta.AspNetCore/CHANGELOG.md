@@ -1,6 +1,9 @@
 # Changelog
 Running changelog of releases since `3.2.0`
 
+## v4.6.5
+Updated IdentityModel Package to 8.2.0
+
 ## v4.6.4
 - feat: Use JsonWebTokenHandler in .NET 8 for improved token handling (#281)
 - feat: Add strong name signing to Okta.AspNetCore assembly (#280)
