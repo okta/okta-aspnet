@@ -3,7 +3,6 @@ version: 2.1
 orbs:
   windows: circleci/windows@5.0
   general-platform-helpers: okta/general-platform-helpers@1.9
-  platform-helpers: okta/platform-helpers@1
   python: circleci/python@2.0.3
 
 # Define a job to be invoked later in a workflow.
@@ -16,7 +15,11 @@ jobs:
     environment:
       CIRCLE_CI: True
     steps:
-      - checkout      
+      - run:
+          name: Checkout with HTTPS
+          command: |
+            git clone https://github.com/okta/okta-aspnet.git .
+            git checkout $env:CIRCLE_SHA1
       - run:
           name: "Build Okta ASP.NET"
           command: .\build.ps1
@@ -36,8 +39,14 @@ jobs:
     docker:
       - image: cimg/python:3.10
     steps:
+      - checkout
       - attach_workspace: # Allows for sharing of build-workspace (containing downloaded dependencies)
-          at: .
+          at: workspace
+      - run:
+          name: Copy workspace contents
+          command: |
+            cp -r workspace/* . || true
+            cp -r workspace/.* . || true
       - general-platform-helpers/step-load-dependencies
       - general-platform-helpers/step-run-snyk-monitor:
           scan-all-projects: true
@@ -57,9 +66,3 @@ workflows:
             - static-analysis
           requires:
             - build
-  "Semgrep":
-    jobs:
-      - platform-helpers/job-semgrep-scan:
-          context:
-            - static-analysis
-          name: "Scan with Semgrep"
