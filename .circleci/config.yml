@@ -39,7 +39,11 @@ jobs:
     docker:
       - image: cimg/python:3.10
     steps:
-      - checkout
+      - run:
+          name: Checkout with HTTPS
+          command: |
+            git clone https://github.com/okta/okta-aspnet.git .
+            git checkout $CIRCLE_SHA1
       - attach_workspace: # Allows for sharing of build-workspace (containing downloaded dependencies)
           at: workspace
       - run:
