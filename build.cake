@@ -23,6 +23,8 @@ var netCoreProjects = new List<string>()
 {
     "Okta.AspNet.Abstractions",
     "Okta.AspNet.Abstractions.Test",
+    "Okta.AspNet",
+    "Okta.AspNet.Test",
     "Okta.AspNetCore",
     "Okta.AspNetCore.Test"
 };
