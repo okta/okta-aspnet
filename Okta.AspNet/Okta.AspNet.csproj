@@ -5,7 +5,7 @@
     <Copyright>(c) 2019 Okta, Inc.</Copyright>
     <Version>3.2.8</Version>
     <Authors>Okta, Inc.</Authors>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <AssemblyName>Okta.AspNet</AssemblyName>
     <PackageId>Okta.AspNet</PackageId>
     <PackageTags>okta,token,authentication,authorization,oauth,sso,oidc</PackageTags>
