@@ -44,13 +44,6 @@ jobs:
           command: |
             git clone https://github.com/okta/okta-aspnet.git .
             git checkout $CIRCLE_SHA1
-      - attach_workspace: # Allows for sharing of build-workspace (containing downloaded dependencies)
-          at: workspace
-      - run:
-          name: Copy workspace contents
-          command: |
-            cp -r workspace/* . || true
-            cp -r workspace/.* . || true
       - general-platform-helpers/step-load-dependencies
       - general-platform-helpers/step-run-snyk-monitor:
           scan-all-projects: true
