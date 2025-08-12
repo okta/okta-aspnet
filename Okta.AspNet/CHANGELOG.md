@@ -1,6 +1,9 @@
 # Changelog
 Running changelog of releases since `1.6.0`
 
+## v3.2.9
+Upgraded .NET Framework from 4.6.2 to 4.8
+
 ## v3.2.8
 Updated IdentityModel Package to 8.2.0
 
