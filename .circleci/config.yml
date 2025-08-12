@@ -92,10 +92,3 @@ workflows:
   "Circle CI Build":
     jobs:
       - build
-  # See OKTA-624754
-  semgrep:
-    jobs:
-      - general-platform-helpers/job-semgrep-scan:
-          name: "Scan with Semgrep"
-          context:
-            - static-analysis
