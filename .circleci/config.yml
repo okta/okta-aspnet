@@ -3,45 +3,30 @@ version: 2.1
 orbs:
   windows: circleci/windows@5.0
   general-platform-helpers: okta/general-platform-helpers@1.9
+  python: circleci/python@2.0.3
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   build:
+    description: Run tests and build
     executor:
       name: windows/default
     environment:
       CIRCLE_CI: True
     steps:
       - run:
-          name: Manual HTTPS checkout (avoid SSH)
+          name: Checkout with HTTPS
           command: |
-            git --version
-            if (Test-Path .git) { Remove-Item -Recurse -Force .git }
-            git init .
-            git remote add origin https://github.com/$env:CIRCLE_PROJECT_USERNAME/$env:CIRCLE_PROJECT_REPONAME.git
-            git fetch --depth=1 origin $env:CIRCLE_SHA1
-            git checkout --force $env:CIRCLE_SHA1
+            git clone https://github.com/okta/okta-aspnet.git .
+            git checkout $env:CIRCLE_SHA1
       - run:
-          name: "build okta aspnet"
+          name: "Build Okta ASP.NET"
           command: .\build.ps1
-      - persist_to_workspace: # Share code, git metadata, and build artifacts for Snyk scan
-          root: ~/project
+      - persist_to_workspace: # Allows for sharing of build-workspace (containing downloaded dependencies)
+          root: .
           paths:
-            - .git
-            - artifacts
-            - Okta.AspNet
-            - Okta.AspNet.Abstractions
-            - Okta.AspNet.Abstractions.Test
-            - Okta.AspNet.Test
-            - Okta.AspNetCore
-            - Okta.AspNetCore.Mvc.IntegrationTest
-            - Okta.AspNetCore.Test
-            - Okta.AspNetCore.WebApi.IntegrationTest
-            - Okta.AspNet.WebApi.IntegrationTest
-            - packages
-            - tools
-            - Okta.AspNet.sln
+            - .
       - when:
           condition:
             equal: [ "<<pipeline.git.branch>>", "master" ]
@@ -50,43 +35,24 @@ jobs:
                 files-to-upload: "artifacts"
                 location: "com/okta/devex/okta-aspnet"
 
-  # Snyk Software Composition Analysis (SCA) scan on Windows to support net48/packages.config
   snyk-scan:
-    executor:
-      name: windows/default
-    working_directory: ~/project
-    environment:
-      SNYK_DISABLE_ANALYTICS: "1"
+    docker:
+      - image: cimg/python:3.10
+
     steps:
-      - attach_workspace:
+      - attach_workspace: # Allows for sharing of build-workspace (containing downloaded dependencies) (optional)
           at: ~/project
-      - run:
-          name: Download Snyk CLI (Windows standalone)
-          command: |
-            $ErrorActionPreference = 'Stop'
-            $snykDir = Join-Path $env:USERPROFILE 'snyk'
-            New-Item -ItemType Directory -Force -Path $snykDir | Out-Null
-            $snykExe = Join-Path $snykDir 'snyk.exe'
-            Invoke-WebRequest -UseBasicParsing -Uri 'https://static.snyk.io/cli/latest/snyk-win.exe' -OutFile $snykExe
-            & $snykExe --version
-      - run:
-          name: Run Snyk monitor (Windows; exclude tools and packages only)
-          command: |
-            $ErrorActionPreference = 'Stop'
-            $env:SNYK_DISABLE_ANALYTICS = "1"
-            if (-not (Test-Path .git)) { Write-Error "No .git found"; exit 1 }
-            $snykExe = Join-Path $env:USERPROFILE 'snyk/snyk.exe'
-            $EXCLUDES = 'tools,packages'
-            & $snykExe monitor `
-              --all-projects `
-              --detection-depth=4 `
-              --prune-repeated-subdependencies `
-              --exclude=$EXCLUDES
+      - general-platform-helpers/step-load-dependencies
+      - general-platform-helpers/step-run-snyk-monitor:
+          scan-all-projects: true
+          skip-unresolved: false
+          run-on-non-main: true
+          detection-depth: 4
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  "Circle CI Build & Snyk Scan":
+  "Circle CI Build, Test, and Snyk Scan":
     jobs:
       - build
       - snyk-scan:
@@ -95,3 +61,9 @@ workflows:
             - static-analysis
           requires:
             - build
+  "Semgrep":
+    jobs:
+      - platform-helpers/job-semgrep-scan:
+          context:
+            - static-analysis
+          name: "Scan with Semgrep"
