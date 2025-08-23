@@ -3,11 +3,89 @@ version: 2.1
 orbs:
   windows: circleci/windows@5.0
   general-platform-helpers: okta/general-platform-helpers@1.9
+  platform-helpers: okta/platform-helpers@1
   python: circleci/python@2.0.3
+  aws-cli: circleci/aws-cli@5.1
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
+  reversing-labs:
+    docker:
+      - image: mcr.microsoft.com/dotnet/sdk:8.0
+    steps:
+      - run:
+          name: Manual HTTPS checkout (avoid SSH)
+          command: |
+            git --version
+            rm -rf .git || true
+            git init .
+            git remote add origin https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git
+            git fetch --depth=1 origin $CIRCLE_SHA1
+            git checkout --force $CIRCLE_SHA1
+
+      - run: dotnet --version
+
+      - run:
+          name: Build Binary to scan
+          command: |
+            # Build all projects 
+            dotnet build Okta.AspNet.Abstractions/Okta.AspNet.Abstractions.csproj --configuration Release
+            dotnet build Okta.AspNet/Okta.AspNet.csproj --configuration Release
+            dotnet build Okta.AspNet.Test/Okta.AspNet.Test.csproj --configuration Release
+            dotnet build Okta.AspNetCore/Okta.AspNetCore.csproj --configuration Release
+            dotnet build Okta.AspNetCore.Test/Okta.AspNetCore.Test.csproj --configuration Release
+            dotnet build Okta.AspNetCore.Mvc.IntegrationTest/Okta.AspNetCore.Mvc.IntegrationTest.csproj --configuration Release
+            dotnet build Okta.AspNetCore.WebApi.IntegrationTest/Okta.AspNetCore.WebApi.IntegrationTest.csproj --configuration Release
+            dotnet build Okta.AspNet.Abstractions.Test/Okta.AspNet.Abstractions.Test.csproj --configuration Release
+
+      # Necessary to Install rl wrapper
+      - run:
+          name: Install Python
+          command: |
+            apt-get update
+            apt-get install -y curl python3 python3-pip unzip
+            pip3 install --upgrade pip
+
+      # Download the scanner from Okta Security
+      - run:
+          name: Download Reverse Labs Scanner
+          command: |
+            curl https://dso-resources.oktasecurity.com/scanner \
+              -H "x-api-key: $DSO_RLSECURE_TOKEN" \
+              --output rl_wrapper-0.0.2+35ababa-py3-none-any.whl
+
+      # Install the wrapper that was downloaded
+      - run:
+          name: Install RL Wrapper
+          command: |
+            pip3 install ./rl_wrapper-0.0.2+35ababa-py3-none-any.whl
+
+      # Setup the AWS profile
+      - aws-cli/setup:
+          profile_name: default
+          role_arn: $AWS_ARN
+          region: us-east-1
+
+      # Get the credentials and save to env
+      - run:
+          name: Export AWS credentials to environment
+          command: >-
+            eval "$(aws configure export-credentials --profile default --format env)" 2> /dev/null
+
+      # Run the wrapper, do not change anything here
+      - run:
+          name: Run Reversing Labs Wrapper Scanner
+          command: |
+            rl-wrapper \
+              --artifact ${CIRCLE_WORKING_DIRECTORY/#\~/$HOME} \
+              --name $CIRCLE_PROJECT_REPONAME\
+              --version $CIRCLE_SHA1\
+              --repository $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME \
+              --commit $CIRCLE_SHA1 \
+              --build-env "circleci" \
+              --suppress_output
+
   build:
     description: Run tests and build
     executor:
@@ -37,7 +115,7 @@ jobs:
 
   snyk-scan:
     docker:
-      - image: cimg/python:3.10
+      - image: "cimg/openjdk:13.0"
 
     steps:
       - attach_workspace: # Allows for sharing of build-workspace (containing downloaded dependencies) (optional)
@@ -48,11 +126,12 @@ jobs:
           skip-unresolved: false
           run-on-non-main: true
           detection-depth: 4
+          additional-arguments: "--exclude=tools"
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  "Circle CI Build, Test, and Snyk Scan":
+  "Build and Scan":
     jobs:
       - build
       - snyk-scan:
@@ -61,9 +140,14 @@ workflows:
             - static-analysis
           requires:
             - build
-  "Semgrep":
-    jobs:
       - platform-helpers/job-semgrep-scan:
           context:
             - static-analysis
           name: "Scan with Semgrep"
+          requires:
+            - build
+      - reversing-labs:
+          context:
+            - static-analysis
+          requires:
+            - build
