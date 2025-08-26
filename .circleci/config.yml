@@ -41,11 +41,13 @@ jobs:
 
       # Necessary to Install rl wrapper
       - run:
-          name: Install Python
+          name: Install Python and Setup Virtual Environment
           command: |
             apt-get update
-            apt-get install -y curl python3 python3-pip unzip
-            pip3 install --upgrade pip
+            apt-get install -y curl python3 python3-pip python3-venv unzip
+            python3 -m venv venv
+            source venv/bin/activate
+            pip install --upgrade pip
 
       # Download the scanner from Okta Security
       - run:
@@ -59,7 +61,8 @@ jobs:
       - run:
           name: Install RL Wrapper
           command: |
-            pip3 install ./rl_wrapper-0.0.2+35ababa-py3-none-any.whl
+            source venv/bin/activate
+            pip install ./rl_wrapper-0.0.2+35ababa-py3-none-any.whl
 
       # Setup the AWS profile
       - aws-cli/setup:
@@ -77,6 +80,7 @@ jobs:
       - run:
           name: Run Reversing Labs Wrapper Scanner
           command: |
+            source venv/bin/activate
             rl-wrapper \
               --artifact ${CIRCLE_WORKING_DIRECTORY/#\~/$HOME} \
               --name $CIRCLE_PROJECT_REPONAME\
@@ -116,7 +120,6 @@ jobs:
   snyk-scan:
     docker:
       - image: "cimg/openjdk:13.0"
-
     steps:
       - attach_workspace: # Allows for sharing of build-workspace (containing downloaded dependencies) (optional)
           at: ~/project
