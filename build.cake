@@ -101,18 +101,18 @@ Task("Strongname")
 .IsDependentOn("Build")
 .Does(() =>
 {    
-    if (!circleCiEnabled)
-	{
-        var snBinaries = GetFiles("./Okta.AspNet/bin/Release/net4*/Okta.AspNet.dll")
-                        .Concat(GetFiles("./Okta.AspNet.Abstractions/bin/Release/net4*/Okta.AspNet.Abstractions.dll"))
-                        .Concat(GetFiles("./Okta.AspNetCore/bin/Release/net4*/Okta.AspNetCore.dll"))
-                        .Concat(GetFiles("./Okta.AspNet.Test/bin/Release/net4*/Okta.AspNet.Test.dll"));
+    // Always apply strong name signing to ensure production assemblies are properly signed
+    // This fixes issue #291: Strong name verification failure in production environments
+    var snBinaries = GetFiles("./Okta.AspNet/bin/Release/net4*/Okta.AspNet.dll")
+                    .Concat(GetFiles("./Okta.AspNet.Abstractions/bin/Release/net4*/Okta.AspNet.Abstractions.dll"))
+                    .Concat(GetFiles("./Okta.AspNetCore/bin/Release/net4*/Okta.AspNetCore.dll"))
+                    .Concat(GetFiles("./Okta.AspNet.Test/bin/Release/net4*/Okta.AspNet.Test.dll"));
 
-        foreach (var binary in snBinaries)
-        {
-            StartProcess("sn.exe", $"-Rc \"{binary}\" OktaDotnetStrongname");
-        }
-	}
+    foreach (var binary in snBinaries)
+    {
+        Information($"Applying strong name signature to: {binary}");
+        StartProcess("sn.exe", $"-Rc \"{binary}\" OktaDotnetStrongname");
+    }
 });
 
 Task("PackNuget")
