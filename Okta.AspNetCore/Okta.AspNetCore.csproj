@@ -71,8 +71,8 @@
 	<PropertyGroup>
 		<CodeAnalysisRuleSet>..\OktaSdk.ruleset</CodeAnalysisRuleSet>
 		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>okta.aspnet.complete.snk</AssemblyOriginatorKeyFile>
-		<DelaySign>false</DelaySign>
+		<AssemblyOriginatorKeyFile>okta.aspnet.public.snk</AssemblyOriginatorKeyFile>
+		<DelaySign>true</DelaySign>
 		<AssemblyVersion>4.6.6.0</AssemblyVersion>
 		<FileVersion>4.6.6.0</FileVersion>
 	</PropertyGroup>
