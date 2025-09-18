@@ -1,6 +1,12 @@
 # Changelog
 Running changelog of releases since `1.6.0`
 
+## v3.2.10
+
+### Bug Fixes
+
+- Fix strong name signing build process validation issue (#291)
+
 ## v3.2.9
 Upgraded .NET Framework from 4.6.2 to 4.8
 
