@@ -61,6 +61,10 @@ namespace Okta.AspNet.Abstractions.Test
         [InlineData("https://myOktaOrg-admin.oktapreview.com")]
         [InlineData("https://myOktaOrg-admin.okta.com")]
         [InlineData("https://myOktaOrg-admin.okta-emea.com")]
+        [InlineData("https://myOktaOrg-admin.okta-gov.com")]
+        [InlineData("https://myOktaOrg-admin.okta.mil")]
+        [InlineData("https://myOktaOrg-admin.okta-miltest.com")]
+        [InlineData("https://myOktaOrg-admin.trex-gov.com")]
         public void FailIfOktaDomainIsIncludingAdmin(string oktaDomain)
         {
             var options = new OktaWebOptions()
@@ -84,6 +88,22 @@ namespace Okta.AspNet.Abstractions.Test
 
             Action action = () => new OktaWebOptionsValidator<OktaWebOptions>().Validate(options);
             action.Should().Throw<ArgumentException>().Where(e => e.ParamName == nameof(OktaWebOptions.OktaDomain));
+        }
+
+        [Theory]
+        [InlineData("https://myOktaDomain.okta-gov.com")]
+        [InlineData("https://myOktaDomain.okta.mil")]
+        [InlineData("https://myOktaDomain.okta-miltest.com")]
+        [InlineData("https://myOktaDomain.trex-gov.com")]
+        public void AllowNewTldDomains(string oktaDomain)
+        {
+            var options = new OktaWebOptions()
+            {
+                OktaDomain = oktaDomain,
+            };
+
+            Action action = () => new OktaWebOptionsValidator<OktaWebOptions>().Validate(options);
+            action.Should().NotThrow();
         }
     }
 }
