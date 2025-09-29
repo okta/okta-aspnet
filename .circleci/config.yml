@@ -13,6 +13,7 @@ jobs:
   reversing-labs:
     docker:
       - image: mcr.microsoft.com/dotnet/sdk:8.0
+    resource_class: large
     steps:
       - run:
           name: Manual HTTPS checkout (avoid SSH)
