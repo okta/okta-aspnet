@@ -45,7 +45,11 @@ namespace Okta.AspNet.Abstractions
 
             if (options.OktaDomain.IndexOf("-admin.oktapreview.com", StringComparison.OrdinalIgnoreCase) >= 0 ||
                 options.OktaDomain.IndexOf("-admin.okta.com", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                options.OktaDomain.IndexOf("-admin.okta-emea.com", StringComparison.OrdinalIgnoreCase) >= 0)
+                options.OktaDomain.IndexOf("-admin.okta-emea.com", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                options.OktaDomain.IndexOf("-admin.okta-gov.com", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                options.OktaDomain.IndexOf("-admin.okta.mil", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                options.OktaDomain.IndexOf("-admin.okta-miltest.com", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                options.OktaDomain.IndexOf("-admin.trex-gov.com", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 throw new ArgumentException(
                     $"Your Okta domain should not contain -admin. Current value: {options.OktaDomain}. You can copy your domain from the Okta Developer Console. Follow these instructions to find it: https://bit.ly/finding-okta-domain", nameof(options.OktaDomain));
