@@ -40,7 +40,10 @@ namespace Okta.AspNetCore
             oidcOptions.GetClaimsFromUserInfoEndpoint = oktaMvcOptions.GetClaimsFromUserInfoEndpoint;
 
 #if NET8_0_OR_GREATER
-            oidcOptions.TokenHandler = new JsonWebTokenHandler();
+            oidcOptions.TokenHandler = new JsonWebTokenHandler
+            {
+                MapInboundClaims = true,
+            };
 #endif
             oidcOptions.SecurityTokenValidator = new StrictSecurityTokenValidator();
             oidcOptions.SaveTokens = true;
@@ -99,7 +102,10 @@ namespace Okta.AspNetCore
             };
 #if NET8_0_OR_GREATER
             jwtBearerOptions.TokenHandlers.Clear();
-            jwtBearerOptions.TokenHandlers.Add(new JsonWebTokenHandler());
+            jwtBearerOptions.TokenHandlers.Add(new JsonWebTokenHandler
+            {
+                MapInboundClaims = true, // Maintain backward compatibility by mapping JWT claim names to .NET ClaimTypes
+            });
 
 #else
             jwtBearerOptions.SecurityTokenValidators.Clear();
