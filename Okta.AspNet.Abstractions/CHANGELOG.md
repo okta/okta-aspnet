@@ -1,6 +1,13 @@
 # Changelog
 Running changelog of releases since `3.0.5`
 
+## v5.1.7
+
+### Bug Fixes
+
+- Remove unnecessary System.Runtime.InteropServices.RuntimeInformation package dependency (#298)
+- Fix strong name signing in CI builds by using full path to sn.exe (#296)
+
 ## v5.1.6
 
 ### Bug Fixes
