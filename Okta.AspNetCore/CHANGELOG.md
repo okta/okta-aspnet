@@ -1,15 +1,6 @@
 # Changelog
 Running changelog of releases since `3.2.0`
 
-## v4.6.8
-
-### Bug Fixes
-
-- Fix JWT claim type mapping for .NET 8+ by enabling MapInboundClaims (#286)
-  - Resolved issue where JWT claims like 'sub' and 'email' were not being mapped to standard .NET ClaimTypes (e.g., ClaimTypes.NameIdentifier, ClaimTypes.Email)
-  - This regression was introduced in v4.6.5 when upgrading to IdentityModel 8.2.0, which changed the default behavior of JsonWebTokenHandler.MapInboundClaims from true to false
-  - Applications using ClaimTypes constants to access user claims now work correctly on .NET 8+
-
 ## v4.6.7
 
 ### Bug Fixes

@@ -42,7 +42,7 @@ namespace Okta.AspNetCore
 #if NET8_0_OR_GREATER
             oidcOptions.TokenHandler = new JsonWebTokenHandler
             {
-                MapInboundClaims = true, // Maintain backward compatibility by mapping JWT claim names to .NET ClaimTypes
+                MapInboundClaims = true,
             };
 #endif
             oidcOptions.SecurityTokenValidator = new StrictSecurityTokenValidator();
