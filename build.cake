@@ -106,14 +106,23 @@ Task("Strongname")
                     .Concat(GetFiles("./Okta.AspNetCore/bin/Release/net4*/Okta.AspNetCore.dll"))
                     .Concat(GetFiles("./Okta.AspNet.Test/bin/Release/net4*/Okta.AspNet.Test.dll"));
 
+    // Use full path to sn.exe as recommended by CircleCI team
+    var snExePath = @"C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe";
+    
+    // Fallback to sn.exe in PATH for local development
+    if (!System.IO.File.Exists(snExePath))
+    {
+        snExePath = "sn.exe";
+    }
+
     foreach (var binary in snBinaries)
     {
         Information($"Attempting to complete strong name signing for: {binary}");
         
         try 
         {
-            // Try to complete delay signing with key container (for CI environments)
-            StartProcess("sn.exe", $"-Rc \"{binary}\" OktaDotnetStrongname");
+            // Complete delay signing with key container
+            StartProcess(snExePath, $"-Rc \"{binary}\" OktaDotnetStrongname");
             Information($"Successfully applied strong name signature to: {binary}");
         }
         catch (Exception ex)
