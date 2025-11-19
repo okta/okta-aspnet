@@ -1,6 +1,13 @@
 # Changelog
 Running changelog of releases since `3.2.0`
 
+## v4.6.8
+
+### Bug Fixes
+
+- Fix JWT claim type mapping for .NET 8+ (#286)
+- Fix strong name signing in CI builds by using full path to sn.exe (#296)
+
 ## v4.6.7
 
 ### Bug Fixes

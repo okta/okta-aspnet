@@ -1,6 +1,13 @@
 # Changelog
 Running changelog of releases since `1.6.0`
 
+## v3.2.11
+
+### Bug Fixes
+
+- Upgrade to Okta.AspNet.Abstractions v5.1.7
+- Fix strong name signing in CI builds by using full path to sn.exe (#296)
+
 ## v3.2.10
 
 ### Bug Fixes
