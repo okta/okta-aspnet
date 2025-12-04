@@ -38,7 +38,7 @@
 	<CodeAnalysisRuleSet>..\OktaSdk.Tests.ruleset</CodeAnalysisRuleSet>
 	<SignAssembly>true</SignAssembly>
 	<AssemblyOriginatorKeyFile>okta.aspnet.public.snk</AssemblyOriginatorKeyFile>
-	<DelaySign>true</DelaySign>
+	<PublicSign>true</PublicSign>
   </PropertyGroup>
 
 </Project>
