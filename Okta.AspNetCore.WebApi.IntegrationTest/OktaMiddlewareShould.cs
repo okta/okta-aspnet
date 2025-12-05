@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -12,6 +13,7 @@ namespace Okta.AspNetCore.WebApi.IntegrationTest
     public sealed class OktaMiddlewareShould : IDisposable
     {
         private readonly TestServer _server;
+        private readonly IHost _host;
 
         private string BaseUrl { get; set; }
 
@@ -24,12 +26,18 @@ namespace Okta.AspNetCore.WebApi.IntegrationTest
             Configuration = TestConfiguration.GetConfiguration();
             BaseUrl = "http://localhost:58533";
             ProtectedEndpoint = $"{BaseUrl}/api/messages";
-            _server = new TestServer(new WebHostBuilder()
-            .UseStartup<Startup>()
-            .UseConfiguration(Configuration))
-            {
-                BaseAddress = new Uri(BaseUrl),
-            };
+            
+            _host = Host.CreateDefaultBuilder()
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder
+                        .UseStartup<Startup>()
+                        .UseConfiguration(Configuration);
+                })
+                .Build();
+            
+            _server = _host.GetTestServer();
+            _server.BaseAddress = new Uri(BaseUrl);
         }
 
         [Fact]
@@ -73,6 +81,7 @@ namespace Okta.AspNetCore.WebApi.IntegrationTest
         public void Dispose()
         {
             _server.Dispose();
+            _host.Dispose();
         }
     }
 }

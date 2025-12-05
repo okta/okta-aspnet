@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
     public sealed class OktaMiddlewareWithCustomSchemeShould : IDisposable
     {
         private readonly TestServer _server;
+        private readonly IHost _host;
 
         private string BaseUrl { get; set; }
 
@@ -23,12 +25,18 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
             Configuration = TestConfiguration.GetConfiguration();
             BaseUrl = "http://localhost:57451";
             ProtectedEndpoint = string.Format("{0}/AccountWithScheme/Claims", BaseUrl);
-            _server = new TestServer(new WebHostBuilder()
-            .UseStartup<StartupUsingCustomScheme>()
-            .UseConfiguration(Configuration))
-            {
-                BaseAddress = new Uri(BaseUrl),
-            };
+            
+            _host = Host.CreateDefaultBuilder()
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder
+                        .UseStartup<StartupUsingCustomScheme>()
+                        .UseConfiguration(Configuration);
+                })
+                .Build();
+            
+            _server = _host.GetTestServer();
+            _server.BaseAddress = new Uri(BaseUrl);
         }
 
         [Fact]
@@ -83,6 +91,7 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
         public void Dispose()
         {
             _server.Dispose();
+            _host.Dispose();
         }
     }
 }
