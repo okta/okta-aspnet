@@ -86,7 +86,6 @@ Task("Build")
 Task("RunTests")
 .IsDependentOn("Restore")
 .IsDependentOn("Build")
-.IsDependentOn("Strongname")
 .Does(() =>
 {
     Projects
@@ -97,49 +96,8 @@ Task("RunTests")
     });
 });
 
-Task("Strongname")
-.IsDependentOn("Build")
-.Does(() =>
-{    
-    var snBinaries = GetFiles("./Okta.AspNet/bin/Release/net4*/Okta.AspNet.dll")
-                    .Concat(GetFiles("./Okta.AspNet.Abstractions/bin/Release/net4*/Okta.AspNet.Abstractions.dll"))
-                    .Concat(GetFiles("./Okta.AspNetCore/bin/Release/net4*/Okta.AspNetCore.dll"))
-                    .Concat(GetFiles("./Okta.AspNet.Test/bin/Release/net4*/Okta.AspNet.Test.dll"));
-
-    // Use full path to sn.exe as recommended by CircleCI team
-    var snExePath = @"C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe";
-    
-    // Fallback to sn.exe in PATH for local development
-    if (!System.IO.File.Exists(snExePath))
-    {
-        snExePath = "sn.exe";
-    }
-
-    foreach (var binary in snBinaries)
-    {
-        Information($"Attempting to complete strong name signing for: {binary}");
-        
-        try 
-        {
-            // Complete delay signing with key container
-            StartProcess(snExePath, $"-Rc \"{binary}\" OktaDotnetStrongname");
-            Information($"Successfully applied strong name signature to: {binary}");
-        }
-        catch (Exception ex)
-        {
-            Warning($"Could not complete strong name signing for {binary}: {ex.Message}");
-            Warning("This is expected in development environments without the private key container.");
-            Warning("The assembly remains delay-signed with correct public key token: a5a8152428dc4790");
-        }
-    }
-    
-    Information("Strong name signing process completed. In production CI, assemblies should be fully signed.");
-    Information("In development, assemblies remain delay-signed which is sufficient for debugging.");
-});
-
 Task("PackNuget")
 .IsDependentOn("RunTests")
-.IsDependentOn("Strongname")
 .Does(() =>
 {
     Projects
@@ -189,7 +147,6 @@ Task("Default")
     .IsDependentOn("Clean")
     .IsDependentOn("Restore")
     .IsDependentOn("Build")
-    .IsDependentOn("Strongname")
     .IsDependentOn("RunTests")
     .IsDependentOn("PackNuget");
     

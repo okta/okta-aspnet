@@ -36,11 +36,14 @@
     <CodeAnalysisRuleSet>..\OktaSdk.ruleset</CodeAnalysisRuleSet>
     <AssemblyVersion>3.2.10.0</AssemblyVersion>
     <FileVersion>3.2.10.0</FileVersion>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>okta.aspnet.public.snk</AssemblyOriginatorKeyFile>
-    <DelaySign>true</DelaySign>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
+
+  <!-- Strong name signing removed for .NET Framework target -->
+  <!-- PublicSign is not production-ready on .NET Framework per Microsoft: -->
+  <!-- https://github.com/dotnet/runtime/blob/main/docs/project/public-signing.md -->
+  <!-- "Microsoft does not guarantee that you can successfully load public signed -->
+  <!-- assemblies in all scenarios that are required for production use." -->
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile></DocumentationFile>
