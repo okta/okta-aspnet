@@ -29,7 +29,7 @@ namespace Okta.AspNetCore.WebApi.IntegrationTest
             JwtBearerEvents events = new JwtBearerEvents();
             events.OnChallenge = context =>
             {
-                context.HttpContext.Response.Headers.Add("myCustomHeader", "myCustomValue");
+                context.HttpContext.Response.Headers["myCustomHeader"] = "myCustomValue";
                 return Task.CompletedTask;
             };
 

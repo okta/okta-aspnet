@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Okta.AspNetCore.Mvc.IntegrationTest
 {
-    public class OktaMiddlewareShould : IDisposable
+    public sealed class OktaMiddlewareShould : IDisposable
     {
         private readonly TestServer _server;
 

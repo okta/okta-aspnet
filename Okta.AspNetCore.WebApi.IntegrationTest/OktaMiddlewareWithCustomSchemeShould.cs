@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Okta.AspNetCore.WebApi.IntegrationTest
 {
-    public class OktaMiddlewareWithCustomSchemeShould : IDisposable
+    public sealed class OktaMiddlewareWithCustomSchemeShould : IDisposable
     {
         private readonly TestServer _server;
 

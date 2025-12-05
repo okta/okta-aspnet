@@ -28,18 +28,15 @@ namespace Okta.AspNet.Abstractions
         /// </summary>
         public const string Idp = "idp";
 
-
         /// <summary>
         /// Used to pass acr_values.
         /// </summary>
         public const string AcrValues = "acr_values";
 
-
         /// <summary>
         /// Used to support enrollment of a factor during an /authorize call.
         /// </summary>
         public const string Prompt = "prompt";
-        
         /// <summary>
         /// Used to pass a case-sensitive string that represents a list of authenticator method references.
         /// </summary>
