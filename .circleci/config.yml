@@ -12,7 +12,7 @@ orbs:
 jobs:
   reversing-labs:
     docker:
-      - image: mcr.microsoft.com/dotnet/sdk:8.0
+      - image: mcr.microsoft.com/dotnet/sdk:10.0
     resource_class: large
     steps:
       - run:
@@ -103,6 +103,15 @@ jobs:
           command: |
             git clone https://github.com/okta/okta-aspnet.git .
             git checkout $env:CIRCLE_SHA1
+      - run:
+          name: Install .NET 10 SDK
+          command: |
+            Write-Host "Downloading .NET install script..."
+            Invoke-WebRequest -Uri "https://dot.net/v1/dotnet-install.ps1" -OutFile "dotnet-install.ps1"
+            Write-Host "Installing .NET 10 SDK..."
+            .\dotnet-install.ps1 -Channel 10.0 -InstallDir "$env:ProgramFiles\dotnet"
+            Write-Host "Verifying installation..."
+            dotnet --list-sdks
       - run:
           name: "Build Okta ASP.NET"
           command: .\build.ps1
