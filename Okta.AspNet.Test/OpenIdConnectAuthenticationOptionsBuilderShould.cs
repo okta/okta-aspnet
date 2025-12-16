@@ -154,5 +154,42 @@ namespace Okta.AspNet.Test
             proxy.Should().BeOfType<DefaultProxy>();
             proxy.GetProxy(new Uri("https://any.com")).ToString().Should().Be($"{testProxy}:{testPort}/");
         }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ApplyUseTokenLifetimeCorrectly(bool useTokenLifetime)
+        {
+            var oktaMvcOptions = new OktaMvcOptions()
+            {
+                OktaDomain = "http://myoktadomain.com",
+                ClientId = "foo",
+                ClientSecret = "bar",
+                UseTokenLifetime = useTokenLifetime,
+            };
+
+            var oidcOptions = new OpenIdConnectAuthenticationOptionsBuilder(
+                OktaDefaults.MvcAuthenticationType,
+                oktaMvcOptions).BuildOpenIdConnectAuthenticationOptions();
+
+            oidcOptions.UseTokenLifetime.Should().Be(useTokenLifetime);
+        }
+
+        [Fact]
+        public void DefaultUseTokenLifetimeToFalse()
+        {
+            var oktaMvcOptions = new OktaMvcOptions()
+            {
+                OktaDomain = "http://myoktadomain.com",
+                ClientId = "foo",
+                ClientSecret = "bar",
+            };
+
+            var oidcOptions = new OpenIdConnectAuthenticationOptionsBuilder(
+                OktaDefaults.MvcAuthenticationType,
+                oktaMvcOptions).BuildOpenIdConnectAuthenticationOptions();
+
+            oidcOptions.UseTokenLifetime.Should().BeFalse();
+        }
     }
 }

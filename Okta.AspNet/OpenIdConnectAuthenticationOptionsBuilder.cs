@@ -87,6 +87,7 @@ namespace Okta.AspNet
                 SecurityTokenValidator = new StrictSecurityTokenValidator(),
                 AuthenticationMode = (_oktaMvcOptions.LoginMode == LoginMode.SelfHosted) ? AuthenticationMode.Passive : AuthenticationMode.Active,
                 SaveTokens = true,
+                UseTokenLifetime = _oktaMvcOptions.UseTokenLifetime,
                 Notifications = _oktaMvcOptions.OpenIdConnectEvents,
                 BackchannelHttpHandler = backchannelHandler,
                 BackchannelTimeout = _oktaMvcOptions.BackchannelTimeout,
