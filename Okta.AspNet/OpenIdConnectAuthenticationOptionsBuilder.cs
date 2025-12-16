@@ -153,19 +153,22 @@ namespace Okta.AspNet
 
         private async Task SecurityTokenValidatedAsync(SecurityTokenValidatedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions> context, Func<SecurityTokenValidatedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions>, Task> tokenEvent)
         {
-            context.AuthenticationTicket.Identity.AddClaim(new Claim("id_token", context.ProtocolMessage.IdToken));
-            context.AuthenticationTicket.Identity.AddClaim(new Claim("access_token", context.ProtocolMessage.AccessToken));
-
-            if (!string.IsNullOrEmpty(context.ProtocolMessage.RefreshToken))
+            if (context.AuthenticationTicket?.Identity != null && context.ProtocolMessage != null)
             {
-                context.AuthenticationTicket.Identity.AddClaim(new Claim("refresh_token", context.ProtocolMessage.RefreshToken));
-            }
+                context.AuthenticationTicket.Identity.AddClaim(new Claim("id_token", context.ProtocolMessage.IdToken));
+                context.AuthenticationTicket.Identity.AddClaim(new Claim("access_token", context.ProtocolMessage.AccessToken));
 
-            FillNameIdentifierClaimOnIdentity(context.AuthenticationTicket.Identity);
+                if (!string.IsNullOrEmpty(context.ProtocolMessage.RefreshToken))
+                {
+                    context.AuthenticationTicket.Identity.AddClaim(new Claim("refresh_token", context.ProtocolMessage.RefreshToken));
+                }
 
-            if (_oktaMvcOptions.GetClaimsFromUserInfoEndpoint)
-            {
-                await _userInformationProvider.EnrichIdentityViaUserInfoAsync(context.AuthenticationTicket.Identity, context.ProtocolMessage.AccessToken).ConfigureAwait(false);
+                FillNameIdentifierClaimOnIdentity(context.AuthenticationTicket.Identity);
+
+                if (_oktaMvcOptions.GetClaimsFromUserInfoEndpoint)
+                {
+                    await _userInformationProvider.EnrichIdentityViaUserInfoAsync(context.AuthenticationTicket.Identity, context.ProtocolMessage.AccessToken).ConfigureAwait(false);
+                }
             }
 
             if (tokenEvent != null)

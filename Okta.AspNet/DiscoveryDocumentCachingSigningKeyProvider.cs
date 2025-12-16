@@ -61,7 +61,8 @@ namespace Okta.AspNet
                     {
                         // Don't throw exceptions on background threads.
                     }
-                }, state: null);
+                },
+                state: null);
         }
 
         private void RetrieveMetadata()

@@ -31,11 +31,13 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder
+                        .UseTestServer()
                         .UseStartup<Startup>()
                         .UseConfiguration(Configuration);
                 })
                 .Build();
             
+            _host.Start();
             _server = _host.GetTestServer();
             _server.BaseAddress = new Uri(BaseUrl);
         }

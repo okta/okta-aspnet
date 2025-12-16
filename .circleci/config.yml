@@ -7,8 +7,6 @@ orbs:
   python: circleci/python@2.0.3
   aws-cli: circleci/aws-cli@5.1
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   reversing-labs:
     docker:
@@ -91,7 +89,7 @@ jobs:
               --build-env "circleci" \
               --suppress_output
 
-  build:
+  Build:
     description: Run tests and build
     executor:
       name: windows/default
@@ -141,26 +139,25 @@ jobs:
           detection-depth: 4
           additional-arguments: "--exclude=tools"
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  "Build and Scan":
+  Build-and-Scan:
     jobs:
-      - build
+      - Build
       - snyk-scan:
-          name: execute-snyk
+          name: Snyk Dependency Scan
           context:
             - static-analysis
           requires:
-            - build
+            - Build
       - platform-helpers/job-semgrep-scan:
           context:
             - static-analysis
-          name: "Scan with Semgrep"
+          name: Semgrep Code Analysis
           requires:
-            - build
+            - Build
       - reversing-labs:
+          name: ReversingLabs Binary Scan
           context:
             - static-analysis
           requires:
-            - build
+            - Build

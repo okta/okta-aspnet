@@ -26,6 +26,9 @@ namespace Okta.AspNetCore.WebApi.IntegrationTest
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Use direct environment variables to match CircleCI environment setup
+            var oktaDomain = Environment.GetEnvironmentVariable("OKTA_CLIENT_OKTADOMAIN") ?? Configuration["Okta:OktaDomain"];
+
             JwtBearerEvents events = new JwtBearerEvents();
             events.OnChallenge = context =>
             {
@@ -41,7 +44,7 @@ namespace Okta.AspNetCore.WebApi.IntegrationTest
             })
             .AddOktaWebApi(new OktaWebApiOptions()
             {
-                OktaDomain = Configuration["Okta:OktaDomain"],
+                OktaDomain = oktaDomain,
                 JwtBearerEvents = events,
             });
 

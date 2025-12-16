@@ -23,7 +23,9 @@ namespace Okta.AspNet
         private readonly ConfigurationManager<OpenIdConnectConfiguration> _configurationManager;
         private static readonly HttpClient HttpClient = new HttpClient();
 
-        public UserInformationProvider(OktaMvcOptions options, string issuer,
+        public UserInformationProvider(
+            OktaMvcOptions options,
+            string issuer,
             ConfigurationManager<OpenIdConnectConfiguration> configurationManager)
         {
             _options = options;

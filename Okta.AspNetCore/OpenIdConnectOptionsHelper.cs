@@ -44,8 +44,9 @@ namespace Okta.AspNetCore
             {
                 MapInboundClaims = true,
             };
-#endif
+#else
             oidcOptions.SecurityTokenValidator = new StrictSecurityTokenValidator();
+#endif
             oidcOptions.SaveTokens = true;
             oidcOptions.UseTokenLifetime = false;
             oidcOptions.BackchannelHttpHandler = new OktaHttpMessageHandler(

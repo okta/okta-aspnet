@@ -17,6 +17,14 @@ var Projects = new List<string>()
     "Okta.AspNetCore.Test"
 };
 
+var IntegrationTestProjects = new List<string>()
+{
+    "Okta.AspNet.WebApi.IntegrationTest",
+    "Okta.AspNet.Mvc.IntegrationTest",
+    "Okta.AspNetCore.WebApi.IntegrationTest",
+    "Okta.AspNetCore.Mvc.IntegrationTest"
+};
+
 // Ignoring .NET 4.5.2 projects as it is causing issues with travis.
 // https://github.com/okta/okta-aspnet/issues/40
 var netCoreProjects = new List<string>()
@@ -54,6 +62,13 @@ Task("Restore")
         Console.WriteLine($"\nRestoring packages for {name}");
         DotNetCoreRestore($"./{name}");
     });
+    
+    // Also restore integration test projects
+    IntegrationTestProjects.ForEach(name =>
+    {
+        Console.WriteLine($"\nRestoring packages for {name}");
+        DotNetCoreRestore($"./{name}");
+    });
 });
 
 Task("Build")
@@ -81,6 +96,16 @@ Task("Build")
         }
         
     });
+    
+    // Also build integration test projects
+    IntegrationTestProjects.ForEach(name =>
+    {
+        Console.WriteLine($"\nBuilding {name}");
+        DotNetCoreBuild($"./{name}", new DotNetCoreBuildSettings
+        {
+            Configuration = configuration,
+        });
+    });
 });
 
 Task("RunTests")
@@ -89,10 +114,41 @@ Task("RunTests")
 .Does(() =>
 {
     Projects
-    .Where(name => name.EndsWith(".Test")) // For now, we won't run integration tests in CI
+    .Where(name => name.EndsWith(".Test"))
     .ToList()
     .ForEach(name => {
         DotNetCoreTest(string.Format("./{0}/{0}.csproj", name));
+    });
+});
+
+Task("RunIntegrationTests")
+.IsDependentOn("Build")
+.Does(() =>
+{
+    // Check if Okta credentials are available
+    var hasOktaCredentials = !string.IsNullOrEmpty(EnvironmentVariable("OKTA_CLIENT_OKTADOMAIN")) &&
+                             !string.IsNullOrEmpty(EnvironmentVariable("OKTA_CLIENT_CLIENTID"));
+    
+    if (!hasOktaCredentials)
+    {
+        Console.WriteLine("⚠️  Skipping integration tests - OKTA_CLIENT_* environment variables not set");
+        return;
+    }
+
+    Console.WriteLine("✓ Running integration tests with Okta credentials");
+    Console.WriteLine($"   Domain: {EnvironmentVariable("OKTA_CLIENT_OKTADOMAIN")}");
+    Console.WriteLine($"   ClientId: {EnvironmentVariable("OKTA_CLIENT_CLIENTID")?.Substring(0, 8)}...");
+    
+    IntegrationTestProjects.ForEach(name => {
+        Console.WriteLine($"\n========================================");
+        Console.WriteLine($"Running integration tests for {name}");
+        Console.WriteLine($"========================================");
+        DotNetCoreTest(string.Format("./{0}/{0}.csproj", name), new DotNetCoreTestSettings
+        {
+            Configuration = configuration,
+            NoBuild = false, // Build tests to ensure they're up to date
+            Verbosity = DotNetCoreVerbosity.Normal,
+        });
     });
 });
 
@@ -148,6 +204,15 @@ Task("Default")
     .IsDependentOn("Restore")
     .IsDependentOn("Build")
     .IsDependentOn("RunTests")
+    .IsDependentOn("PackNuget");
+
+Task("DefaultIT")
+    .IsDependentOn("Info")
+    .IsDependentOn("Clean")
+    .IsDependentOn("Restore")
+    .IsDependentOn("Build")
+    .IsDependentOn("RunTests")
+    .IsDependentOn("RunIntegrationTests")
     .IsDependentOn("PackNuget");
     
 // Run the specified (or default) target
