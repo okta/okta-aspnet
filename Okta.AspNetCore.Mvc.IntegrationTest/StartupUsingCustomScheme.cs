@@ -59,13 +59,9 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
                 OktaDomain = oktaDomain,
                 OpenIdConnectEvents = events,
                 CallbackPath = "/signin-oidc", // Use the standard ASP.NET Core callback path
-            });
-            
-            // Disable Pushed Authorization Requests (PAR) for tests to verify parameters in URL
-            services.PostConfigure<OpenIdConnectOptions>(CustomScheme, options =>
-            {
 #if NET9_0_OR_GREATER
-                options.PushedAuthorizationBehavior = Microsoft.AspNetCore.Authentication.OpenIdConnect.PushedAuthorizationBehavior.Disable;
+                // Disable Pushed Authorization Requests (PAR) for tests to verify parameters in URL
+                PushedAuthorizationBehavior = Microsoft.AspNetCore.Authentication.OpenIdConnect.PushedAuthorizationBehavior.Disable,
 #endif
             });
             

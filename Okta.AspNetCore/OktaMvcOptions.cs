@@ -57,5 +57,13 @@ namespace Okta.AspNetCore
         /// </summary>
         /// <seealso cref="https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectevents"/>
         public OpenIdConnectEvents OpenIdConnectEvents { get; set; }
+
+#if NET9_0_OR_GREATER
+        /// <summary>
+        /// Gets or sets the behavior for Pushed Authorization Requests (PAR).
+        /// </summary>
+        /// <value>The pushed authorization behavior. If not set, the default behavior (UseIfAvailable) will be used.</value>
+        public PushedAuthorizationBehavior? PushedAuthorizationBehavior { get; set; }
+#endif
     }
 }

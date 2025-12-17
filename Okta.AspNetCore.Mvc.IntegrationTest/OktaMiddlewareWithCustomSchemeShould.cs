@@ -90,6 +90,28 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
             }
         }
 
+#if NET9_0_OR_GREATER
+        [Fact]
+        public async Task NotIncludeRequestUriWhenPushedAuthorizationBehaviorIsDisabledWithCustomScheme()
+        {
+            // This test verifies that when PushedAuthorizationBehavior is set to Disable with a custom scheme,
+            // the authorization parameters are sent directly in the URL (not via PAR endpoint)
+            using (var client = _server.CreateClient())
+            {
+                var response = await client.GetAsync(ProtectedEndpoint);
+                Assert.True(response.StatusCode == System.Net.HttpStatusCode.Found);
+                
+                // When PAR is disabled, the authorize URL should NOT contain request_uri parameter
+                Assert.DoesNotContain("request_uri=", response.Headers.Location.AbsoluteUri);
+                
+                // Instead, it should contain the actual parameters in the URL
+                Assert.Contains("client_id=", response.Headers.Location.AbsoluteUri);
+                Assert.Contains("redirect_uri=", response.Headers.Location.AbsoluteUri);
+                Assert.Contains("response_type=code", response.Headers.Location.AbsoluteUri);
+            }
+        }
+#endif
+
         public void Dispose()
         {
             _server.Dispose();

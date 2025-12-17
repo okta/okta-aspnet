@@ -76,6 +76,13 @@ namespace Okta.AspNetCore
                 oidcOptions.Events = oktaMvcOptions.OpenIdConnectEvents;
             }
 
+#if NET9_0_OR_GREATER
+            if (oktaMvcOptions.PushedAuthorizationBehavior.HasValue)
+            {
+                oidcOptions.PushedAuthorizationBehavior = oktaMvcOptions.PushedAuthorizationBehavior.Value;
+            }
+#endif
+
             if (oktaMvcOptions.GetClaimsFromUserInfoEndpoint)
             {
                 oidcOptions.ClaimActions.Add(new MapAllClaimsAction());
