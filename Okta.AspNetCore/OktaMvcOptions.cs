@@ -55,8 +55,41 @@ namespace Okta.AspNetCore
         /// <summary>
         /// Gets or sets the OIDC events.
         /// </summary>
+        /// <remarks>
+        /// Use this property to provide an instance of <see cref="OpenIdConnectEvents"/>.
+        /// For dependency injection support, use <see cref="OpenIdConnectEventsType"/> instead.
+        /// If both are set, <see cref="OpenIdConnectEventsType"/> takes precedence.
+        /// </remarks>
         /// <seealso cref="https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.openidconnect.openidconnectevents"/>
         public OpenIdConnectEvents OpenIdConnectEvents { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of OpenIdConnectEvents to use for handling authentication events.
+        /// </summary>
+        /// <remarks>
+        /// When set, the events instance will be resolved from the dependency injection container,
+        /// allowing constructor injection of services into your custom events class.
+        /// This property takes precedence over <see cref="OpenIdConnectEvents"/> if both are set.
+        /// The type must derive from <see cref="OpenIdConnectEvents"/>.
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// // Register your custom events class
+        /// services.AddScoped&lt;CustomOpenIdConnectEvents&gt;();
+        ///
+        /// // Configure Okta to use DI for events
+        /// services.AddAuthentication()
+        ///     .AddOktaMvc(new OktaMvcOptions
+        ///     {
+        ///         OktaDomain = "https://your-domain.okta.com",
+        ///         ClientId = "your-client-id",
+        ///         ClientSecret = "your-client-secret",
+        ///         OpenIdConnectEventsType = typeof(CustomOpenIdConnectEvents)
+        ///     });
+        /// </code>
+        /// </example>
+        /// <seealso cref="https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.authenticationschemeoptions.eventstype"/>
+        public Type OpenIdConnectEventsType { get; set; }
 
 #if NET9_0_OR_GREATER
         /// <summary>

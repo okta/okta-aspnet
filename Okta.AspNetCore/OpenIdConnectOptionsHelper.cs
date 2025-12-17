@@ -82,6 +82,12 @@ namespace Okta.AspNetCore
             oidcOptions.Events = existingEvents;
             oidcOptions.Events.OnRemoteFailure = context => OnOpenIdConnectRemoteFailure(context, existingOnRemoteFailure, oktaMvcOptions);
 
+            // Set EventsType for DI support - this takes precedence over the Events instance
+            if (oktaMvcOptions.OpenIdConnectEventsType != null)
+            {
+                oidcOptions.EventsType = oktaMvcOptions.OpenIdConnectEventsType;
+            }
+
 #if NET9_0_OR_GREATER
             if (oktaMvcOptions.PushedAuthorizationBehavior.HasValue)
             {
@@ -166,6 +172,12 @@ namespace Okta.AspNetCore
 
             jwtBearerOptions.Events = existingEvents;
             jwtBearerOptions.Events.OnAuthenticationFailed = context => OnJwtBearerAuthenticationFailed(context, existingOnAuthenticationFailed, oktaWebApiOptions);
+
+            // Set EventsType for DI support - this takes precedence over the Events instance
+            if (oktaWebApiOptions.JwtBearerEventsType != null)
+            {
+                jwtBearerOptions.EventsType = oktaWebApiOptions.JwtBearerEventsType;
+            }
 
             jwtBearerOptions.BackchannelTimeout = oktaWebApiOptions.BackchannelTimeout;
         }
