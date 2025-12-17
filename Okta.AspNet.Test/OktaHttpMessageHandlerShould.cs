@@ -8,7 +8,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
-using NSubstitute;
 using Okta.AspNet.Abstractions;
 using Xunit;
 
@@ -37,7 +36,7 @@ namespace Okta.AspNet.Test
             httpClientHandler.Proxy.Should().BeAssignableTo<DefaultProxy>();
 
             var webProxy = (DefaultProxy)httpClientHandler.Proxy;
-            webProxy.GetProxy(Arg.Any<Uri>()).ToString().Should().Be(testProxyAddress);
+            webProxy.GetProxy(new Uri("https://example.com")).ToString().Should().Be(testProxyAddress);
             webProxy.Credentials.Should().BeNull();
         }
 
@@ -107,7 +106,7 @@ namespace Okta.AspNet.Test
             httpClientHandler.Proxy.Should().BeAssignableTo<DefaultProxy>();
 
             var webProxy = (DefaultProxy)httpClientHandler.Proxy;
-            var proxyUri = webProxy.GetProxy(Arg.Any<Uri>());
+            var proxyUri = webProxy.GetProxy(new Uri("https://example.com"));
             proxyUri.ToString().Should().Be(expectedProxyAddress);
             proxyUri.Port.Should().Be(testPort);
             webProxy.Credentials.Should().BeNull();
@@ -138,10 +137,10 @@ namespace Okta.AspNet.Test
             httpClientHandler.Proxy.Should().BeAssignableTo<DefaultProxy>();
 
             var webProxy = (DefaultProxy)httpClientHandler.Proxy;
-            webProxy.GetProxy(Arg.Any<Uri>()).ToString().Should().Be(testProxyAddress);
+            webProxy.GetProxy(new Uri("https://example.com")).ToString().Should().Be(testProxyAddress);
             webProxy.Credentials.Should().NotBeNull();
-            webProxy.Credentials.GetCredential(Arg.Any<Uri>(), string.Empty).UserName.Should().Be(testUserName);
-            webProxy.Credentials.GetCredential(Arg.Any<Uri>(), string.Empty).Password.Should().Be(testPassword);
+            webProxy.Credentials.GetCredential(new Uri("https://example.com"), string.Empty).UserName.Should().Be(testUserName);
+            webProxy.Credentials.GetCredential(new Uri("https://example.com"), string.Empty).Password.Should().Be(testPassword);
         }
 
         [Fact]

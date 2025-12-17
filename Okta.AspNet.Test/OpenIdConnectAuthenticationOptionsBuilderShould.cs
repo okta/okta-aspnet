@@ -24,7 +24,7 @@ namespace Okta.AspNet.Test
     public class OpenIdConnectAuthenticationOptionsBuilderShould
     {
         [Fact]
-        public void BuildOpenIdConnectAuthenticationOptionsCorrectly()
+        public async Task BuildOpenIdConnectAuthenticationOptionsCorrectly()
         {
             var mockTokenEvent = Substitute.For<Func<SecurityTokenValidatedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions>, Task>>();
 
@@ -64,8 +64,8 @@ namespace Okta.AspNet.Test
             context.AuthenticationTicket = new AuthenticationTicket(new ClaimsIdentity(), null);
             context.ProtocolMessage = new OpenIdConnectMessage() { AccessToken = "foo", IdToken = "bar" };
             // Check the event was call once with the corresponding context
-            oidcOptions.Notifications.SecurityTokenValidated(context);
-            mockTokenEvent.Received(1).Invoke(context);
+            await oidcOptions.Notifications.SecurityTokenValidated(context);
+            await mockTokenEvent.Received(1).Invoke(context);
         }
 
         [Fact]

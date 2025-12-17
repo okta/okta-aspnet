@@ -43,7 +43,10 @@ namespace Okta.AspNet
 
             var signingKeyCachingProvider =
                 new DiscoveryDocumentCachingSigningKeyProvider(
-                    new DiscoveryDocumentSigningKeyProvider(configurationManager));
+                    new DiscoveryDocumentSigningKeyProvider(
+                        configurationManager,
+                        options.OktaDomain,
+                        options.AuthorizationServerId));
 
             var tokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
             {
