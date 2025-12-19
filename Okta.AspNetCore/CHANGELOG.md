@@ -1,6 +1,32 @@
 # Changelog
 Running changelog of releases since `3.2.0`
 
+## v5.0.0
+
+### Breaking Changes
+
+- Removed support for EOL .NET frameworks (.NET Core 3.x, .NET 5.0, .NET 6.0, .NET 7.0)
+- Now supports only .NET 8.0, .NET 9.0, and .NET 10.0
+- Upgraded .NET Framework minimum requirement from 4.8 to 4.8.1
+
+### Features
+
+- Add IConfiguration binding support for simplified configuration (#197)
+- Add Issuer property to OktaWebOptions for automatic URL parsing
+- Add configurable UseTokenLifetime property to OktaMvcOptions
+- Expose PushedAuthorizationBehavior on OktaMvcOptions for .NET 9.0+
+- Add EventsType support for dependency injection in OktaWebApiOptions and OktaMvcOptions
+- Add comprehensive ASP.NET MVC integration tests
+
+### Improvements
+
+- Modernize ASP.NET Core test infrastructure
+- Improved error messages for OIDC discovery failures
+- Update all packages to latest versions (Microsoft.IdentityModel.* 8.15.0, Microsoft.Extensions.Configuration 10.0.0)
+- Switch from DelaySign to PublicSign for strong name signing
+- Fix safe code analysis warnings
+- Update CI/CD pipeline for .NET 10 support
+
 ## v4.6.8
 
 ### Bug Fixes

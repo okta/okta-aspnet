@@ -22,16 +22,19 @@ We also publish these other libraries for .NET:
 
 This library uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/).
 
-:heavy_check_mark: The current stable major version series is: 4.x for Okta.AspNetCore and 2.x for Okta.AspNet.
+:heavy_check_mark: The current stable major version series is: 5.x for Okta.AspNetCore (with .NET 8.0, 9.0, and 10.0 support) and 4.x for Okta.AspNet (with .NET Framework 4.8.1 support).
 
 |Package| Version | Status                    | Compatibility|
 | ------- | ------- | ------------------------- | ----------------------- |
-|`Okta.AspNet.Abstractions`| 5.x   | :heavy_check_mark: Stable | .NET Standard 2.0 and .NET Framework 4.8 or higher.|
-|`Okta.AspNet.Abstractions`| 4.x   | :warning: Retiring November 28th, 2023 | .NET Standard 2.0 and .NET Framework 4.5.2 or higher.|
-|`Okta.AspNet`| 3.x | :heavy_check_mark: Stable | .NET Framework 4.8 |
-|`Okta.AspNet`| 2.x | :warning: Retiring | .NET Framework 4.5.2 |
-|`Okta.AspNetCore`| 4.x | :heavy_check_mark: Stable | .NET Core 3.x, .NET 5.0, .NET 6.0, .NET 7.0 and .NET 8.0 |
-|`Okta.AspNetCore`| 3.x | :warning: Retiring | .NET Standard 2.0 and .NET Core 2.x |
+|`Okta.AspNet.Abstractions`| 6.x   | :heavy_check_mark: Stable | .NET Standard 2.0, .NET Framework 4.8.1, .NET 8.0, .NET 9.0, and .NET 10.0|
+|`Okta.AspNet.Abstractions`| 5.x   | :x: Retired | .NET Standard 2.0 and .NET Framework 4.8 or higher.|
+|`Okta.AspNet.Abstractions`| 4.x   | :x: Retired | .NET Standard 2.0 and .NET Framework 4.5.2 or higher.|
+|`Okta.AspNet`| 4.x | :heavy_check_mark: Stable | .NET Framework 4.8.1 |
+|`Okta.AspNet`| 3.x | :x: Retired | .NET Framework 4.8 |
+|`Okta.AspNet`| 2.x | :x: Retired | .NET Framework 4.5.2 |
+|`Okta.AspNetCore`| 5.x | :heavy_check_mark: Stable | .NET 8.0, .NET 9.0, and .NET 10.0 |
+|`Okta.AspNetCore`| 4.x | :x: Retired | .NET Core 3.x, .NET 5.0, .NET 6.0, .NET 7.0 and .NET 8.0 |
+|`Okta.AspNetCore`| 3.x | :x: Retired | .NET Standard 2.0 and .NET Core 2.x |
 
 
 The latest release can always be found on the [releases page][github-releases].
