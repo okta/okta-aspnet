@@ -15,6 +15,52 @@ dotnet add package Okta.AspNet
 
 Okta plugs into your OWIN Startup class with the `UseOktaWebApi()` method:
 
+## Simplified Configuration (Recommended)
+
+Starting in version 5.0.0, you can use the simplified `IConfiguration` binding to automatically load all Okta settings from your configuration:
+
+```csharp
+public class Startup
+{
+    public IConfiguration Configuration { get; }
+
+    public Startup()
+    {
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            .AddJsonFile("appsettings.json");
+        Configuration = builder.Build();
+    }
+
+    public void Configuration(IAppBuilder app)
+    {
+        app.UseOktaWebApi(Configuration);  // All options bound automatically from "Okta" section
+    }
+}
+```
+
+Add an `appsettings.json` file to your project:
+
+```json
+{
+  "Okta": {
+    "OktaDomain": "https://dev-123456.okta.com",
+    "AuthorizationServerId": "default",
+    "Audience": "api://default"
+  }
+}
+```
+
+You can also specify a custom configuration section name:
+
+```csharp
+app.UseOktaWebApi(Configuration, "MyOktaSettings");
+```
+
+## Manual Configuration
+
+If you prefer explicit control, you can still use the traditional manual configuration approach:
+
 ```csharp
 public class Startup
 {

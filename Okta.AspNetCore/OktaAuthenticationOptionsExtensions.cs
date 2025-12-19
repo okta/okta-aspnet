@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Okta.AspNet.Abstractions;
 
@@ -63,6 +64,69 @@ namespace Okta.AspNetCore
         }
 
         /// <summary>
+        /// Configures Okta for MVC applications using configuration from <see cref="IConfiguration"/>.
+        /// Uses the default authentication scheme <see cref="OpenIdConnectDefaults.AuthenticationScheme"/>.
+        /// </summary>
+        /// <param name="builder">The application builder.</param>
+        /// <param name="configuration">The configuration to bind Okta options from.</param>
+        /// <param name="sectionName">The configuration section name. Defaults to "Okta".</param>
+        /// <returns>The authentication builder.</returns>
+        /// <example>
+        /// <code>
+        /// services.AddAuthentication()
+        ///     .AddOktaMvc(configuration);
+        ///
+        /// // Or with custom section name
+        /// services.AddAuthentication()
+        ///     .AddOktaMvc(configuration, "MyOktaSettings");
+        /// </code>
+        /// </example>
+        public static AuthenticationBuilder AddOktaMvc(this AuthenticationBuilder builder, IConfiguration configuration, string sectionName = OktaConfigurationExtensions.DefaultConfigurationSection)
+        {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
+
+            var options = configuration.GetOktaMvcOptions(sectionName);
+            return AddOktaMvc(builder, options);
+        }
+
+        /// <summary>
+        /// Configures Okta for MVC applications using configuration from <see cref="IConfiguration"/> with a specified authentication scheme.
+        /// </summary>
+        /// <param name="builder">The application builder.</param>
+        /// <param name="authenticationScheme">The authentication scheme.</param>
+        /// <param name="configuration">The configuration to bind Okta options from.</param>
+        /// <param name="sectionName">The configuration section name. Defaults to "Okta".</param>
+        /// <returns>The authentication builder.</returns>
+        public static AuthenticationBuilder AddOktaMvc(this AuthenticationBuilder builder, string authenticationScheme, IConfiguration configuration, string sectionName = OktaConfigurationExtensions.DefaultConfigurationSection)
+        {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (authenticationScheme == null)
+            {
+                throw new ArgumentNullException(nameof(authenticationScheme));
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
+
+            var options = configuration.GetOktaMvcOptions(sectionName);
+            return AddOktaMvc(builder, authenticationScheme, options);
+        }
+
+        /// <summary>
         /// Configures Okta for Web API apps using the default authentication scheme <see cref="JwtBearerDefaults.AuthenticationScheme"/>.
         /// </summary>
         /// <param name="builder">The application builder.</param>
@@ -102,6 +166,69 @@ namespace Okta.AspNetCore
             new OktaWebApiOptionsValidator().Validate(options);
 
             return AddJwtValidation(builder, authenticationScheme, options);
+        }
+
+        /// <summary>
+        /// Configures Okta for Web API apps using configuration from <see cref="IConfiguration"/>.
+        /// Uses the default authentication scheme <see cref="JwtBearerDefaults.AuthenticationScheme"/>.
+        /// </summary>
+        /// <param name="builder">The application builder.</param>
+        /// <param name="configuration">The configuration to bind Okta options from.</param>
+        /// <param name="sectionName">The configuration section name. Defaults to "Okta".</param>
+        /// <returns>The authentication builder.</returns>
+        /// <example>
+        /// <code>
+        /// services.AddAuthentication()
+        ///     .AddOktaWebApi(configuration);
+        ///
+        /// // Or with custom section name
+        /// services.AddAuthentication()
+        ///     .AddOktaWebApi(configuration, "MyOktaSettings");
+        /// </code>
+        /// </example>
+        public static AuthenticationBuilder AddOktaWebApi(this AuthenticationBuilder builder, IConfiguration configuration, string sectionName = OktaConfigurationExtensions.DefaultConfigurationSection)
+        {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
+
+            var options = configuration.GetOktaWebApiOptions(sectionName);
+            return AddOktaWebApi(builder, options);
+        }
+
+        /// <summary>
+        /// Configures Okta for Web API apps using configuration from <see cref="IConfiguration"/> with a specified authentication scheme.
+        /// </summary>
+        /// <param name="builder">The application builder.</param>
+        /// <param name="authenticationScheme">The authentication scheme.</param>
+        /// <param name="configuration">The configuration to bind Okta options from.</param>
+        /// <param name="sectionName">The configuration section name. Defaults to "Okta".</param>
+        /// <returns>The authentication builder.</returns>
+        public static AuthenticationBuilder AddOktaWebApi(this AuthenticationBuilder builder, string authenticationScheme, IConfiguration configuration, string sectionName = OktaConfigurationExtensions.DefaultConfigurationSection)
+        {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (authenticationScheme == null)
+            {
+                throw new ArgumentNullException(nameof(authenticationScheme));
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
+
+            var options = configuration.GetOktaWebApiOptions(sectionName);
+            return AddOktaWebApi(builder, authenticationScheme, options);
         }
 
         private static AuthenticationBuilder AddCodeFlow(AuthenticationBuilder builder, string authenticationScheme, OktaMvcOptions options)

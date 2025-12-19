@@ -19,9 +19,60 @@ These examples will help you to understand how to use this library. You can also
 * [ASP.NET MVC Samples](https://github.com/okta/samples-aspnet)
 * [ASP.NET Web Forms Samples](https://github.com/okta/samples-aspnet-webforms)
 
+## Simplified Configuration (Recommended)
+
+Starting in version 5.0.0, you can use the simplified `IConfiguration` binding to automatically load all Okta settings from your configuration:
+
+```csharp
+public class Startup
+{
+    public IConfiguration Configuration { get; }
+
+    public Startup()
+    {
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            .AddJsonFile("appsettings.json");
+        Configuration = builder.Build();
+    }
+
+    public void Configuration(IAppBuilder app)
+    {
+        app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
+        app.UseCookieAuthentication(new CookieAuthenticationOptions());
+
+        app.UseOktaMvc(Configuration);  // All options bound automatically from "Okta" section
+    }
+}
+```
+
+Add an `appsettings.json` file to your project:
+
+```json
+{
+  "Okta": {
+    "OktaDomain": "https://dev-123456.okta.com",
+    "ClientId": "your-client-id",
+    "ClientSecret": "your-client-secret",
+    "AuthorizationServerId": "default",
+    "RedirectUri": "http://localhost:8080/authorization-code/callback",
+    "PostLogoutRedirectUri": "http://localhost:8080/Home",
+    "Scope": "openid profile email"
+  }
+}
+```
+
+You can also specify a custom configuration section name:
+
+```csharp
+app.UseOktaMvc(Configuration, "MyOktaSettings");
+```
+
+> Note: The `Scope` property in configuration should be a space-separated string (e.g., `"openid profile email"`), which will be parsed into a list automatically.
+
 ## Basic configuration
 
-Okta plugs into your OWIN Startup class with the `UseOktaMvc()` method:
+If you prefer explicit control, you can still use the traditional manual configuration approach:
 
 ```csharp
 public class Startup
