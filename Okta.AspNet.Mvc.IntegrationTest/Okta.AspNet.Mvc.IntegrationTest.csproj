@@ -1,10 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net481</TargetFramework>
     <IsPackable>false</IsPackable>
-    <RootNamespace>Okta.AspNet.WebApi.IntegrationTest</RootNamespace>
-    <AssemblyName>Okta.AspNet.WebApi.IntegrationTest</AssemblyName>
+    <RootNamespace>Okta.AspNet.Mvc.IntegrationTest</RootNamespace>
+    <AssemblyName>Okta.AspNet.Mvc.IntegrationTest</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
@@ -14,17 +14,16 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="8.8.0" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.3.0" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Owin" Version="5.3.0" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.3.0" />
+    <PackageReference Include="Microsoft.Owin.Host.SystemWeb" Version="4.2.3" />
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
     <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.15.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.15.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageReference Include="Microsoft.Owin" Version="4.2.3" />
     <PackageReference Include="Microsoft.Owin.Hosting" Version="4.2.3" />
     <PackageReference Include="Microsoft.Owin.Security" Version="4.2.3" />
-    <PackageReference Include="Microsoft.Owin.Security.OAuth" Version="4.2.3" />
+    <PackageReference Include="Microsoft.Owin.Security.Cookies" Version="4.2.3" />
+    <PackageReference Include="Microsoft.Owin.Security.OpenIdConnect" Version="4.2.3" />
     <PackageReference Include="Microsoft.Owin.Testing" Version="4.2.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="Owin" Version="1.0" />

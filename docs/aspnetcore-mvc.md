@@ -16,9 +16,70 @@ dotnet add package Okta.AspNetCore
 
 These examples will help you to understand how to use this library. You can also check out our [ASP.NET Core samples](https://github.com/okta/samples-aspnetcore).
 
+## Simplified Configuration (Recommended)
+
+Starting in version 5.0.0, you can use the simplified `IConfiguration` binding to automatically load all Okta settings from your configuration:
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = OktaDefaults.MvcAuthenticationScheme;
+    })
+    .AddCookie()
+    .AddOktaMvc(Configuration);  // All options bound automatically from "Okta" section
+
+    services.AddMvc();
+}
+```
+
+Add the Okta section to your `appsettings.json`:
+
+```json
+{
+  "Okta": {
+    "OktaDomain": "https://dev-123456.okta.com",
+    "ClientId": "your-client-id",
+    "ClientSecret": "your-client-secret",
+    "AuthorizationServerId": "default",
+    "PostLogoutRedirectUri": "https://localhost:5001/",
+    "Scope": "openid profile email"
+  }
+}
+```
+
+**Alternative: Using Issuer URL**
+
+You can also use the full `Issuer` URL instead of specifying `OktaDomain` and `AuthorizationServerId` separately:
+
+```json
+{
+  "Okta": {
+    "Issuer": "https://dev-123456.okta.com/oauth2/default",
+    "ClientId": "your-client-id",
+    "ClientSecret": "your-client-secret",
+    "PostLogoutRedirectUri": "https://localhost:5001/",
+    "Scope": "openid profile email"
+  }
+}
+```
+
+The `Issuer` URL will be automatically parsed to extract the `OktaDomain` and `AuthorizationServerId`.
+
+You can also specify a custom configuration section name:
+
+```csharp
+.AddOktaMvc(Configuration, "MyOktaSettings");
+```
+
+> Note: The `Scope` property in configuration should be a space-separated string (e.g., `"openid profile email"`), which will be parsed into a list automatically.
+
 ## Basic configuration
 
-Okta plugs into your OWIN Startup class with the `UseOktaMvc()` method:
+If you prefer explicit control, you can still use the traditional manual configuration approach:
 
 ```csharp
 

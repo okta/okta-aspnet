@@ -27,6 +27,11 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            // Use direct environment variables to match CircleCI environment setup
+            var oktaDomain = Environment.GetEnvironmentVariable("OKTA_CLIENT_OKTADOMAIN") ?? Configuration["Okta:OktaDomain"];
+            var clientId = Environment.GetEnvironmentVariable("OKTA_CLIENT_CLIENTID") ?? Configuration["Okta:ClientId"];
+            var clientSecret = Environment.GetEnvironmentVariable("OKTA_CLIENT_CLIENTSECRET") ?? Configuration["Okta:ClientSecret"];
+
             Func<RedirectContext, Task> myRedirectEvent = context =>
             {
                 context.ProtocolMessage.SetParameter("myCustomParamKey", "myCustomParamValue");
@@ -47,12 +52,17 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
             .AddCookie()
             .AddOktaMvc(new OktaMvcOptions()
             {
-                ClientId = Configuration["Okta:ClientId"],
-                ClientSecret = Configuration["Okta:ClientSecret"],
-                OktaDomain = Configuration["Okta:OktaDomain"],
+                ClientId = clientId,
+                ClientSecret = clientSecret,
+                OktaDomain = oktaDomain,
                 OpenIdConnectEvents = events,
-                
+                CallbackPath = "/signin-oidc", // Use the standard ASP.NET Core callback path
+#if NET9_0_OR_GREATER
+                // Disable Pushed Authorization Requests (PAR) for tests to verify parameters in URL
+                PushedAuthorizationBehavior = Microsoft.AspNetCore.Authentication.OpenIdConnect.PushedAuthorizationBehavior.Disable,
+#endif
             });
+            
             services.AddAuthorization();
             services.AddControllers();
 

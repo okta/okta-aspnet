@@ -1,6 +1,25 @@
 # Changelog
 Running changelog of releases since `3.0.5`
 
+## v6.0.0
+
+### Breaking Changes
+
+- Upgraded .NET Framework minimum requirement from 4.8 to 4.8.1
+- Multi-targeted for netstandard2.0, net481, net8.0, net9.0, and net10.0
+
+### Features
+
+- Add support for .NET 9.0 and .NET 10.0
+- Add Issuer property to OktaWebOptions for automatic URL parsing
+
+### Improvements
+
+- Remove unnecessary System.Runtime.InteropServices.RuntimeInformation package dependency
+- Update all packages to latest versions (Microsoft.IdentityModel.* 8.15.0, System.Text.Json 10.0.0)
+- Switch from DelaySign to PublicSign for strong name signing
+- Fix safe code analysis warnings
+
 ## v5.1.7
 
 ### Bug Fixes

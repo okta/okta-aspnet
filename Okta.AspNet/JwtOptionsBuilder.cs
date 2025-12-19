@@ -27,7 +27,8 @@ namespace Okta.AspNet
         /// <param name="authenticationType">The authentication type.</param>
         /// <param name="options">The Okta options.</param>
         /// <returns>An instance of JwtBearerAuthenticationOptions.</returns>
-        public static JwtBearerAuthenticationOptions BuildJwtBearerAuthenticationOptions(string authenticationType,
+        public static JwtBearerAuthenticationOptions BuildJwtBearerAuthenticationOptions(
+            string authenticationType,
             OktaWebApiOptions options)
         {
             var issuer = UrlHelper.CreateIssuerUrl(options.OktaDomain, options.AuthorizationServerId);
@@ -42,7 +43,10 @@ namespace Okta.AspNet
 
             var signingKeyCachingProvider =
                 new DiscoveryDocumentCachingSigningKeyProvider(
-                    new DiscoveryDocumentSigningKeyProvider(configurationManager));
+                    new DiscoveryDocumentSigningKeyProvider(
+                        configurationManager,
+                        options.OktaDomain,
+                        options.AuthorizationServerId));
 
             var tokenValidationParameters = new DefaultTokenValidationParameters(options, issuer)
             {

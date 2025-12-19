@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,9 +10,10 @@ using Xunit;
 
 namespace Okta.AspNetCore.Mvc.IntegrationTest
 {
-    public class OktaMiddlewareShould : IDisposable
+    public sealed class OktaMiddlewareShould : IDisposable
     {
         private readonly TestServer _server;
+        private readonly IHost _host;
 
         private string BaseUrl { get; set; }
 
@@ -24,12 +26,20 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
             Configuration = TestConfiguration.GetConfiguration();
             BaseUrl = "http://localhost:57451";
             ProtectedEndpoint = string.Format("{0}/Account/Claims", BaseUrl);
-            _server = new TestServer(new WebHostBuilder()
-            .UseStartup<Startup>()
-            .UseConfiguration(Configuration))
-            {
-                BaseAddress = new Uri(BaseUrl),
-            };
+            
+            _host = Host.CreateDefaultBuilder()
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder
+                        .UseTestServer()
+                        .UseStartup<Startup>()
+                        .UseConfiguration(Configuration);
+                })
+                .Build();
+            
+            _host.Start();
+            _server = _host.GetTestServer();
+            _server.BaseAddress = new Uri(BaseUrl);
         }
 
         [Fact]
@@ -106,9 +116,32 @@ namespace Okta.AspNetCore.Mvc.IntegrationTest
             }
         }
 
+#if NET9_0_OR_GREATER
+        [Fact]
+        public async Task NotIncludeRequestUriWhenPushedAuthorizationBehaviorIsDisabled()
+        {
+            // This test verifies that when PushedAuthorizationBehavior is set to Disable,
+            // the authorization parameters are sent directly in the URL (not via PAR endpoint)
+            using (var client = _server.CreateClient())
+            {
+                var response = await client.GetAsync(ProtectedEndpoint);
+                Assert.True(response.StatusCode == System.Net.HttpStatusCode.Found);
+                
+                // When PAR is disabled, the authorize URL should NOT contain request_uri parameter
+                Assert.DoesNotContain("request_uri=", response.Headers.Location.AbsoluteUri);
+                
+                // Instead, it should contain the actual parameters in the URL
+                Assert.Contains("client_id=", response.Headers.Location.AbsoluteUri);
+                Assert.Contains("redirect_uri=", response.Headers.Location.AbsoluteUri);
+                Assert.Contains("response_type=code", response.Headers.Location.AbsoluteUri);
+            }
+        }
+#endif
+
         public void Dispose()
         {
             _server.Dispose();
+            _host.Dispose();
         }
     }
 }

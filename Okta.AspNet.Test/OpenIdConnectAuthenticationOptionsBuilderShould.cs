@@ -24,7 +24,7 @@ namespace Okta.AspNet.Test
     public class OpenIdConnectAuthenticationOptionsBuilderShould
     {
         [Fact]
-        public void BuildOpenIdConnectAuthenticationOptionsCorrectly()
+        public async Task BuildOpenIdConnectAuthenticationOptionsCorrectly()
         {
             var mockTokenEvent = Substitute.For<Func<SecurityTokenValidatedNotification<OpenIdConnectMessage, OpenIdConnectAuthenticationOptions>, Task>>();
 
@@ -64,8 +64,8 @@ namespace Okta.AspNet.Test
             context.AuthenticationTicket = new AuthenticationTicket(new ClaimsIdentity(), null);
             context.ProtocolMessage = new OpenIdConnectMessage() { AccessToken = "foo", IdToken = "bar" };
             // Check the event was call once with the corresponding context
-            oidcOptions.Notifications.SecurityTokenValidated(context);
-            mockTokenEvent.Received(1).Invoke(context);
+            await oidcOptions.Notifications.SecurityTokenValidated(context);
+            await mockTokenEvent.Received(1).Invoke(context);
         }
 
         [Fact]
@@ -153,6 +153,43 @@ namespace Okta.AspNet.Test
             var proxy = ((HttpClientHandler)oktaHandler.InnerHandler).Proxy;
             proxy.Should().BeOfType<DefaultProxy>();
             proxy.GetProxy(new Uri("https://any.com")).ToString().Should().Be($"{testProxy}:{testPort}/");
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ApplyUseTokenLifetimeCorrectly(bool useTokenLifetime)
+        {
+            var oktaMvcOptions = new OktaMvcOptions()
+            {
+                OktaDomain = "http://myoktadomain.com",
+                ClientId = "foo",
+                ClientSecret = "bar",
+                UseTokenLifetime = useTokenLifetime,
+            };
+
+            var oidcOptions = new OpenIdConnectAuthenticationOptionsBuilder(
+                OktaDefaults.MvcAuthenticationType,
+                oktaMvcOptions).BuildOpenIdConnectAuthenticationOptions();
+
+            oidcOptions.UseTokenLifetime.Should().Be(useTokenLifetime);
+        }
+
+        [Fact]
+        public void DefaultUseTokenLifetimeToFalse()
+        {
+            var oktaMvcOptions = new OktaMvcOptions()
+            {
+                OktaDomain = "http://myoktadomain.com",
+                ClientId = "foo",
+                ClientSecret = "bar",
+            };
+
+            var oidcOptions = new OpenIdConnectAuthenticationOptionsBuilder(
+                OktaDefaults.MvcAuthenticationType,
+                oktaMvcOptions).BuildOpenIdConnectAuthenticationOptions();
+
+            oidcOptions.UseTokenLifetime.Should().BeFalse();
         }
     }
 }

@@ -5,8 +5,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using Microsoft.IdentityModel.Tokens;
+using Okta.AspNet.Abstractions;
 
 namespace Okta.AspNet
 {
@@ -16,6 +18,7 @@ namespace Okta.AspNet
         private readonly IDiscoveryDocumentSigningKeyProvider _discoveryDocumentSigningKeyProvider;
         private DateTimeOffset _syncAfter = new DateTimeOffset(new DateTime(2001, 1, 1));
         private IEnumerable<SecurityKey> _keys;
+        private Exception _lastRefreshException;
 
         public DiscoveryDocumentCachingSigningKeyProvider(IDiscoveryDocumentSigningKeyProvider provider)
         {
@@ -34,6 +37,13 @@ namespace Okta.AspNet
             get
             {
                 RefreshMetadata();
+
+                // If we have no keys and had a previous error, throw that error
+                if (_keys == null && _lastRefreshException != null)
+                {
+                    throw _lastRefreshException;
+                }
+
                 return _keys;
             }
         }
@@ -56,12 +66,19 @@ namespace Okta.AspNet
                     try
                     {
                         RetrieveMetadata();
+                        _lastRefreshException = null; // Clear any previous error on success
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        // Don't throw exceptions on background threads.
+                        // Store the exception for later reporting, but don't throw on background threads.
+                        _lastRefreshException = ex;
+
+                        // Log the error using Debug/Trace so it's visible during troubleshooting
+                        Debug.WriteLine($"[Okta] Background OIDC discovery refresh failed: {ex.Message}");
+                        Trace.TraceWarning($"[Okta] Background OIDC discovery refresh failed: {ex.Message}");
                     }
-                }, state: null);
+                },
+                state: null);
         }
 
         private void RetrieveMetadata()

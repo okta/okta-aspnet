@@ -16,6 +16,62 @@ dotnet add package Okta.AspNetCore
 
 Okta plugs into your OWIN Startup class with the `UseOktaWebApi()` method:
 
+## Simplified Configuration (Recommended)
+
+Starting in version 5.0.0, you can use the simplified `IConfiguration` binding to automatically load all Okta settings from your configuration:
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = OktaDefaults.ApiAuthenticationScheme;
+        options.DefaultChallengeScheme = OktaDefaults.ApiAuthenticationScheme;
+        options.DefaultSignInScheme = OktaDefaults.ApiAuthenticationScheme;
+    })
+    .AddOktaWebApi(Configuration);  // All options bound automatically from "Okta" section
+
+    services.AddMvc();
+}
+```
+
+Add the Okta section to your `appsettings.json`:
+
+```json
+{
+  "Okta": {
+    "OktaDomain": "https://dev-123456.okta.com",
+    "AuthorizationServerId": "default",
+    "Audience": "api://default"
+  }
+}
+```
+
+**Alternative: Using Issuer URL**
+
+You can also use the full `Issuer` URL instead of specifying `OktaDomain` and `AuthorizationServerId` separately:
+
+```json
+{
+  "Okta": {
+    "Issuer": "https://dev-123456.okta.com/oauth2/default",
+    "Audience": "api://default"
+  }
+}
+```
+
+The `Issuer` URL will be automatically parsed to extract the `OktaDomain` and `AuthorizationServerId`.
+
+You can also specify a custom configuration section name:
+
+```csharp
+.AddOktaWebApi(Configuration, "MyOktaSettings");
+```
+
+## Manual Configuration
+
+If you prefer explicit control, you can still use the traditional manual configuration approach:
+
 ```csharp
 public void ConfigureServices(IServiceCollection services)
 {

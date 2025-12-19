@@ -34,7 +34,7 @@ namespace Okta.AspNet.Abstractions.Test
             httpRequestMessage.Headers.UserAgent.ToString()
                 .IndexOf(
                     ProductInfoHeaderValue.Parse($"{frameworkName}/{version.Major}.{version.Minor}.{version.Build}")
-                        .ToString(), StringComparison.InvariantCultureIgnoreCase).Should().BeGreaterOrEqualTo(0);
+                        .ToString(), StringComparison.InvariantCultureIgnoreCase).Should().BeGreaterThanOrEqualTo(0);
         }
     }
 }

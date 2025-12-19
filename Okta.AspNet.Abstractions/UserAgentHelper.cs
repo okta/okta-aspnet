@@ -37,7 +37,7 @@ namespace Okta.AspNet.Abstractions
             {
                 if (string.IsNullOrEmpty(assemblyCodeBase))
                 {
-                    assemblyCodeBase = typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly?.CodeBase;
+                    assemblyCodeBase = typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly?.Location;
                 }
 
                 if (assemblyCodeBase != null)

@@ -57,6 +57,14 @@ namespace Okta.AspNet
         public bool GetClaimsFromUserInfoEndpoint { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets a value indicating whether the authentication session lifetime should match the token lifetime.
+        /// When set to false, the authentication cookie lifetime is managed independently from the token expiration.
+        /// This allows for longer session durations than the token lifetime.
+        /// </summary>
+        /// <value>The UseTokenLifetime flag. Defaults to false to allow independent session management.</value>
+        public bool UseTokenLifetime { get; set; } = false;
+
+        /// <summary>
         /// Gets or sets the OIDC events which the underlying OpenIdConnectAuthenticationMiddleware invokes to enable developer control over the authentication process.
         /// </summary>
         /// <seealso cref="https://docs.microsoft.com/en-us/previous-versions/aspnet/dn800270(v=vs.113)"/>

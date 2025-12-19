@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net48;netstandard2.0;net8.0</TargetFrameworks>
-    <Version>5.1.7</Version>
+        <TargetFrameworks>netstandard2.0;net481;net8.0;net9.0;net10.0</TargetFrameworks>
+    <Version>6.0.0</Version>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -15,16 +15,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.2.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.2.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.2.0" />
-    <PackageReference Include="System.Text.Json" Version="9.0.3" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.15.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.15.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" PrivateAssets="All" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
+    <PackageReference Include="System.Text.Json" Version="10.0.0" />
     <AdditionalFiles Include="..\stylecop.json" />
   </ItemGroup>
 
   <!-- System.Runtime.InteropServices.RuntimeInformation package removed (Issue #298) -->
-  <!-- RuntimeInformation is available in BCL for net48, netstandard2.0, and net8.0+ -->
+  <!-- RuntimeInformation is available in BCL for net481, netstandard2.0, and net8.0+ -->
 
   <ItemGroup>
     <Folder Include="Properties\" />
@@ -32,11 +32,16 @@
 
   <PropertyGroup>
     <CodeAnalysisRuleSet>..\OktaSdk.ruleset</CodeAnalysisRuleSet>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>okta.aspnet.public.snk</AssemblyOriginatorKeyFile>
-    <DelaySign>true</DelaySign>
     <AssemblyVersion>5.1.6.0</AssemblyVersion>
     <FileVersion>5.1.6.0</FileVersion>
+  </PropertyGroup>
+
+  <!-- PublicSign is only supported for production on .NET Core+, not .NET Framework -->
+  <!-- See: https://github.com/dotnet/runtime/blob/main/docs/project/public-signing.md -->
+  <PropertyGroup Condition="'$(TargetFramework)' != 'net481'">
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>okta.aspnet.public.snk</AssemblyOriginatorKeyFile>
+    <PublicSign>true</PublicSign>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

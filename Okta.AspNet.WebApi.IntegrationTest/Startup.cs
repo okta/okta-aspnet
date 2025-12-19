@@ -22,7 +22,7 @@ namespace Okta.AspNet.WebApi.IntegrationTest
 
         public void Configuration(IAppBuilder app)
         {
-            var oktaDomain = Environment.GetEnvironmentVariable("okta:OktaDomain");
+            var oktaDomain = Environment.GetEnvironmentVariable("OKTA_CLIENT_OKTADOMAIN");
             var jwtProvider = new OAuthBearerAuthenticationProvider
             {
                 OnApplyChallenge = context =>

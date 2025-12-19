@@ -17,6 +17,14 @@ var Projects = new List<string>()
     "Okta.AspNetCore.Test"
 };
 
+var IntegrationTestProjects = new List<string>()
+{
+    "Okta.AspNet.WebApi.IntegrationTest",
+    "Okta.AspNet.Mvc.IntegrationTest",
+    "Okta.AspNetCore.WebApi.IntegrationTest",
+    "Okta.AspNetCore.Mvc.IntegrationTest"
+};
+
 // Ignoring .NET 4.5.2 projects as it is causing issues with travis.
 // https://github.com/okta/okta-aspnet/issues/40
 var netCoreProjects = new List<string>()
@@ -54,6 +62,13 @@ Task("Restore")
         Console.WriteLine($"\nRestoring packages for {name}");
         DotNetCoreRestore($"./{name}");
     });
+    
+    // Also restore integration test projects
+    IntegrationTestProjects.ForEach(name =>
+    {
+        Console.WriteLine($"\nRestoring packages for {name}");
+        DotNetCoreRestore($"./{name}");
+    });
 });
 
 Task("Build")
@@ -81,65 +96,64 @@ Task("Build")
         }
         
     });
+    
+    // Also build integration test projects
+    IntegrationTestProjects.ForEach(name =>
+    {
+        Console.WriteLine($"\nBuilding {name}");
+        DotNetCoreBuild($"./{name}", new DotNetCoreBuildSettings
+        {
+            Configuration = configuration,
+        });
+    });
 });
 
 Task("RunTests")
 .IsDependentOn("Restore")
 .IsDependentOn("Build")
-.IsDependentOn("Strongname")
 .Does(() =>
 {
     Projects
-    .Where(name => name.EndsWith(".Test")) // For now, we won't run integration tests in CI
+    .Where(name => name.EndsWith(".Test"))
     .ToList()
     .ForEach(name => {
         DotNetCoreTest(string.Format("./{0}/{0}.csproj", name));
     });
 });
 
-Task("Strongname")
+Task("RunIntegrationTests")
 .IsDependentOn("Build")
 .Does(() =>
-{    
-    var snBinaries = GetFiles("./Okta.AspNet/bin/Release/net4*/Okta.AspNet.dll")
-                    .Concat(GetFiles("./Okta.AspNet.Abstractions/bin/Release/net4*/Okta.AspNet.Abstractions.dll"))
-                    .Concat(GetFiles("./Okta.AspNetCore/bin/Release/net4*/Okta.AspNetCore.dll"))
-                    .Concat(GetFiles("./Okta.AspNet.Test/bin/Release/net4*/Okta.AspNet.Test.dll"));
-
-    // Use full path to sn.exe as recommended by CircleCI team
-    var snExePath = @"C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe";
+{
+    // Check if Okta credentials are available
+    var hasOktaCredentials = !string.IsNullOrEmpty(EnvironmentVariable("OKTA_CLIENT_OKTADOMAIN")) &&
+                             !string.IsNullOrEmpty(EnvironmentVariable("OKTA_CLIENT_CLIENTID"));
     
-    // Fallback to sn.exe in PATH for local development
-    if (!System.IO.File.Exists(snExePath))
+    if (!hasOktaCredentials)
     {
-        snExePath = "sn.exe";
+        Console.WriteLine("⚠️  Skipping integration tests - OKTA_CLIENT_* environment variables not set");
+        return;
     }
 
-    foreach (var binary in snBinaries)
-    {
-        Information($"Attempting to complete strong name signing for: {binary}");
-        
-        try 
-        {
-            // Complete delay signing with key container
-            StartProcess(snExePath, $"-Rc \"{binary}\" OktaDotnetStrongname");
-            Information($"Successfully applied strong name signature to: {binary}");
-        }
-        catch (Exception ex)
-        {
-            Warning($"Could not complete strong name signing for {binary}: {ex.Message}");
-            Warning("This is expected in development environments without the private key container.");
-            Warning("The assembly remains delay-signed with correct public key token: a5a8152428dc4790");
-        }
-    }
+    Console.WriteLine("✓ Running integration tests with Okta credentials");
+    Console.WriteLine($"   Domain: {EnvironmentVariable("OKTA_CLIENT_OKTADOMAIN")}");
+    Console.WriteLine($"   ClientId: {EnvironmentVariable("OKTA_CLIENT_CLIENTID")?.Substring(0, 8)}...");
     
-    Information("Strong name signing process completed. In production CI, assemblies should be fully signed.");
-    Information("In development, assemblies remain delay-signed which is sufficient for debugging.");
+    IntegrationTestProjects.ForEach(name => {
+        Console.WriteLine($"\n========================================");
+        Console.WriteLine($"Running integration tests for {name}");
+        Console.WriteLine($"========================================");
+        DotNetCoreTest(string.Format("./{0}/{0}.csproj", name), new DotNetCoreTestSettings
+        {
+            Configuration = configuration,
+            NoBuild = false, // Build tests to ensure they're up to date
+            Verbosity = DotNetCoreVerbosity.Normal,
+        });
+    });
 });
 
 Task("PackNuget")
 .IsDependentOn("RunTests")
-.IsDependentOn("Strongname")
 .Does(() =>
 {
     Projects
@@ -189,8 +203,16 @@ Task("Default")
     .IsDependentOn("Clean")
     .IsDependentOn("Restore")
     .IsDependentOn("Build")
-    .IsDependentOn("Strongname")
     .IsDependentOn("RunTests")
+    .IsDependentOn("PackNuget");
+
+Task("DefaultIT")
+    .IsDependentOn("Info")
+    .IsDependentOn("Clean")
+    .IsDependentOn("Restore")
+    .IsDependentOn("Build")
+    .IsDependentOn("RunTests")
+    .IsDependentOn("RunIntegrationTests")
     .IsDependentOn("PackNuget");
     
 // Run the specified (or default) target

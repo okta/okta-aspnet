@@ -313,5 +313,285 @@ namespace Okta.AspNetCore.Test
             emailClaim.Type.Should().Be("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress");
         }
 #endif
+
+        #region EventsType DI Support Tests (Issue #247)
+
+        /// <summary>
+        /// Custom JwtBearerEvents class for testing EventsType DI support.
+        /// </summary>
+        public class CustomJwtBearerEvents : JwtBearerEvents
+        {
+            public bool WasConstructed { get; } = true;
+        }
+
+        /// <summary>
+        /// Custom OpenIdConnectEvents class for testing EventsType DI support.
+        /// </summary>
+        public class CustomOpenIdConnectEvents : OpenIdConnectEvents
+        {
+            public bool WasConstructed { get; } = true;
+        }
+
+        [Fact]
+        public void SetJwtBearerEventsType_WhenProvided()
+        {
+            // Arrange - Test for Issue #247
+            // Verifies that JwtBearerEventsType is correctly mapped to JwtBearerOptions.EventsType
+            var oktaWebApiOptions = new OktaWebApiOptions
+            {
+                AuthorizationServerId = "default",
+                OktaDomain = "https://dev-12345.okta.com",
+                Audience = "api://default",
+                JwtBearerEventsType = typeof(CustomJwtBearerEvents),
+            };
+
+            var jwtBearerOptions = new JwtBearerOptions();
+
+            // Act
+            OpenIdConnectOptionsHelper.ConfigureJwtBearerOptions(oktaWebApiOptions, jwtBearerOptions);
+
+            // Assert
+            jwtBearerOptions.EventsType.Should().Be(typeof(CustomJwtBearerEvents),
+                "EventsType should be set to enable DI resolution of custom events class");
+        }
+
+        [Fact]
+        public void NotSetJwtBearerEventsType_WhenNotProvided()
+        {
+            // Arrange - Verify backward compatibility
+            // When JwtBearerEventsType is not set, EventsType should remain null
+            var oktaWebApiOptions = new OktaWebApiOptions
+            {
+                AuthorizationServerId = "default",
+                OktaDomain = "https://dev-12345.okta.com",
+                Audience = "api://default",
+                // JwtBearerEventsType is NOT set
+            };
+
+            var jwtBearerOptions = new JwtBearerOptions();
+
+            // Act
+            OpenIdConnectOptionsHelper.ConfigureJwtBearerOptions(oktaWebApiOptions, jwtBearerOptions);
+
+            // Assert
+            jwtBearerOptions.EventsType.Should().BeNull(
+                "EventsType should remain null when JwtBearerEventsType is not configured");
+        }
+
+        [Fact]
+        public async Task SetBothJwtBearerEventsAndEventsType_EventsTypeWillTakePrecedence()
+        {
+            // Arrange - Test that EventsType takes precedence over Events instance
+            // This is the expected ASP.NET Core behavior
+            bool instanceEventInvoked = false;
+            var oktaWebApiOptions = new OktaWebApiOptions
+            {
+                AuthorizationServerId = "default",
+                OktaDomain = "https://dev-12345.okta.com",
+                Audience = "api://default",
+                JwtBearerEvents = new JwtBearerEvents
+                {
+                    OnTokenValidated = context =>
+                    {
+                        instanceEventInvoked = true;
+                        return Task.CompletedTask;
+                    }
+                },
+                JwtBearerEventsType = typeof(CustomJwtBearerEvents),
+            };
+
+            var jwtBearerOptions = new JwtBearerOptions();
+
+            // Act
+            OpenIdConnectOptionsHelper.ConfigureJwtBearerOptions(oktaWebApiOptions, jwtBearerOptions);
+
+            // Assert - Both should be set, but ASP.NET Core will prefer EventsType
+            jwtBearerOptions.Events.Should().NotBeNull("Events instance should still be set");
+            jwtBearerOptions.EventsType.Should().Be(typeof(CustomJwtBearerEvents),
+                "EventsType should also be set and will take precedence at runtime");
+
+            // The instance event can still be invoked (for testing), but in production ASP.NET Core
+            // will resolve from DI when EventsType is set
+            await jwtBearerOptions.Events.OnTokenValidated(default);
+            instanceEventInvoked.Should().BeTrue("The instance events are still callable");
+        }
+
+        [Fact]
+        public void SetOpenIdConnectEventsType_WhenProvided()
+        {
+            // Arrange - Test for Issue #247 (OpenIdConnect variant)
+            // Verifies that OpenIdConnectEventsType is correctly mapped to OpenIdConnectOptions.EventsType
+            var oktaMvcOptions = new OktaMvcOptions
+            {
+                AuthorizationServerId = "default",
+                OktaDomain = "https://dev-12345.okta.com",
+                ClientId = "test-client-id",
+                ClientSecret = "test-client-secret",
+                OpenIdConnectEventsType = typeof(CustomOpenIdConnectEvents),
+            };
+
+            var oidcOptions = new OpenIdConnectOptions();
+
+            // Act
+            OpenIdConnectOptionsHelper.ConfigureOpenIdConnectOptions(oktaMvcOptions, oidcOptions);
+
+            // Assert
+            oidcOptions.EventsType.Should().Be(typeof(CustomOpenIdConnectEvents),
+                "EventsType should be set to enable DI resolution of custom events class");
+        }
+
+        [Fact]
+        public void NotSetOpenIdConnectEventsType_WhenNotProvided()
+        {
+            // Arrange - Verify backward compatibility for OpenIdConnect
+            // When OpenIdConnectEventsType is not set, EventsType should remain null
+            var oktaMvcOptions = new OktaMvcOptions
+            {
+                AuthorizationServerId = "default",
+                OktaDomain = "https://dev-12345.okta.com",
+                ClientId = "test-client-id",
+                ClientSecret = "test-client-secret",
+                // OpenIdConnectEventsType is NOT set
+            };
+
+            var oidcOptions = new OpenIdConnectOptions();
+
+            // Act
+            OpenIdConnectOptionsHelper.ConfigureOpenIdConnectOptions(oktaMvcOptions, oidcOptions);
+
+            // Assert
+            oidcOptions.EventsType.Should().BeNull(
+                "EventsType should remain null when OpenIdConnectEventsType is not configured");
+        }
+
+        [Fact]
+        public async Task SetBothOpenIdConnectEventsAndEventsType_EventsTypeWillTakePrecedence()
+        {
+            // Arrange - Test that EventsType takes precedence over Events instance for OpenIdConnect
+            bool instanceEventInvoked = false;
+            var oktaMvcOptions = new OktaMvcOptions
+            {
+                AuthorizationServerId = "default",
+                OktaDomain = "https://dev-12345.okta.com",
+                ClientId = "test-client-id",
+                ClientSecret = "test-client-secret",
+                OpenIdConnectEvents = new OpenIdConnectEvents
+                {
+                    OnTokenValidated = context =>
+                    {
+                        instanceEventInvoked = true;
+                        return Task.CompletedTask;
+                    }
+                },
+                OpenIdConnectEventsType = typeof(CustomOpenIdConnectEvents),
+            };
+
+            var oidcOptions = new OpenIdConnectOptions();
+
+            // Act
+            OpenIdConnectOptionsHelper.ConfigureOpenIdConnectOptions(oktaMvcOptions, oidcOptions);
+
+            // Assert - Both should be set, but ASP.NET Core will prefer EventsType
+            oidcOptions.Events.Should().NotBeNull("Events instance should still be set");
+            oidcOptions.EventsType.Should().Be(typeof(CustomOpenIdConnectEvents),
+                "EventsType should also be set and will take precedence at runtime");
+
+            // The instance event can still be invoked (for testing), but in production ASP.NET Core
+            // will resolve from DI when EventsType is set
+            await oidcOptions.Events.OnTokenValidated(default);
+            instanceEventInvoked.Should().BeTrue("The instance events are still callable");
+        }
+
+        [Fact]
+        public async Task ExistingJwtBearerEventsStillWork_WhenEventsTypeNotSet()
+        {
+            // Arrange - Verify no regression for existing functionality
+            // Users who set JwtBearerEvents without EventsType should continue to work
+            bool tokenValidatedInvoked = false;
+            bool authFailedInvoked = false;
+
+            var oktaWebApiOptions = new OktaWebApiOptions
+            {
+                AuthorizationServerId = "default",
+                OktaDomain = "https://dev-12345.okta.com",
+                Audience = "api://default",
+                JwtBearerEvents = new JwtBearerEvents
+                {
+                    OnTokenValidated = context =>
+                    {
+                        tokenValidatedInvoked = true;
+                        return Task.CompletedTask;
+                    },
+                    OnAuthenticationFailed = context =>
+                    {
+                        authFailedInvoked = true;
+                        return Task.CompletedTask;
+                    }
+                },
+                // JwtBearerEventsType is NOT set - using instance-based events
+            };
+
+            var jwtBearerOptions = new JwtBearerOptions();
+
+            // Act
+            OpenIdConnectOptionsHelper.ConfigureJwtBearerOptions(oktaWebApiOptions, jwtBearerOptions);
+
+            // Assert - Events should work exactly as before
+            jwtBearerOptions.EventsType.Should().BeNull("EventsType should not be set");
+            jwtBearerOptions.Events.Should().NotBeNull("Events instance should be set");
+
+            await jwtBearerOptions.Events.OnTokenValidated(default);
+            tokenValidatedInvoked.Should().BeTrue("OnTokenValidated event should be invoked");
+
+            await jwtBearerOptions.Events.OnAuthenticationFailed(default);
+            authFailedInvoked.Should().BeTrue("OnAuthenticationFailed event should be invoked");
+        }
+
+        [Fact]
+        public async Task ExistingOpenIdConnectEventsStillWork_WhenEventsTypeNotSet()
+        {
+            // Arrange - Verify no regression for existing OpenIdConnect functionality
+            bool tokenValidatedInvoked = false;
+            bool remoteFailureInvoked = false;
+
+            var oktaMvcOptions = new OktaMvcOptions
+            {
+                AuthorizationServerId = "default",
+                OktaDomain = "https://dev-12345.okta.com",
+                ClientId = "test-client-id",
+                ClientSecret = "test-client-secret",
+                OpenIdConnectEvents = new OpenIdConnectEvents
+                {
+                    OnTokenValidated = context =>
+                    {
+                        tokenValidatedInvoked = true;
+                        return Task.CompletedTask;
+                    },
+                    OnRemoteFailure = context =>
+                    {
+                        remoteFailureInvoked = true;
+                        return Task.CompletedTask;
+                    }
+                },
+                // OpenIdConnectEventsType is NOT set - using instance-based events
+            };
+
+            var oidcOptions = new OpenIdConnectOptions();
+
+            // Act
+            OpenIdConnectOptionsHelper.ConfigureOpenIdConnectOptions(oktaMvcOptions, oidcOptions);
+
+            // Assert - Events should work exactly as before
+            oidcOptions.EventsType.Should().BeNull("EventsType should not be set");
+            oidcOptions.Events.Should().NotBeNull("Events instance should be set");
+
+            await oidcOptions.Events.OnTokenValidated(default);
+            tokenValidatedInvoked.Should().BeTrue("OnTokenValidated event should be invoked");
+
+            await oidcOptions.Events.OnRemoteFailure(default);
+            remoteFailureInvoked.Should().BeTrue("OnRemoteFailure event should be invoked");
+        }
+
+        #endregion
     }
 }

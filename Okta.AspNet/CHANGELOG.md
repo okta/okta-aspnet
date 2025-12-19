@@ -1,6 +1,30 @@
 # Changelog
 Running changelog of releases since `1.6.0`
 
+## v4.0.0
+
+### Breaking Changes
+
+- Upgraded .NET Framework minimum requirement from 4.8 to 4.8.1
+- Upgrade to Okta.AspNet.Abstractions v6.0.0
+
+### Features
+
+- Add IConfiguration binding support for simplified configuration (#197)
+- Add Issuer property to OktaWebOptions for automatic URL parsing
+- Add configurable UseTokenLifetime property to OktaMvcOptions
+- Expose PushedAuthorizationBehavior on OktaMvcOptions
+- Add EventsType support for dependency injection in OktaWebApiOptions and OktaMvcOptions
+- Add comprehensive ASP.NET MVC integration tests
+
+### Improvements
+
+- Improved error messages for OIDC discovery failures
+- Update all packages to latest versions (Microsoft.IdentityModel.* 8.15.0, Microsoft.Extensions.Configuration 10.0.0)
+- Switch from DelaySign to PublicSign for strong name signing
+- Fix safe code analysis warnings
+- Update CI/CD pipeline for .NET 10 support
+
 ## v3.2.11
 
 ### Bug Fixes
