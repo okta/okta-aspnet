@@ -3,10 +3,6 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
-Boolean.TryParse(EnvironmentVariable("CIRCLE_CI"), out var circleCiEnabled);
-Console.WriteLine($"\n Circle Ci enabled: {circleCiEnabled}");
-Console.WriteLine($"\n Jenkins build: {BuildSystem.IsRunningOnJenkins}");
-
 var Projects = new List<string>()
 {
     "Okta.AspNet.Abstractions",
@@ -24,23 +20,6 @@ var IntegrationTestProjects = new List<string>()
     "Okta.AspNetCore.WebApi.IntegrationTest",
     "Okta.AspNetCore.Mvc.IntegrationTest"
 };
-
-// Ignoring .NET 4.5.2 projects as it is causing issues with travis.
-// https://github.com/okta/okta-aspnet/issues/40
-var netCoreProjects = new List<string>()
-{
-    "Okta.AspNet.Abstractions",
-    "Okta.AspNet.Abstractions.Test",
-    "Okta.AspNet",
-    "Okta.AspNet.Test",
-    "Okta.AspNetCore",
-    "Okta.AspNetCore.Test"
-};
-
-if(circleCiEnabled) 
-{
-    Projects = netCoreProjects;
-}
 
 Task("Clean").Does(() =>
 {
