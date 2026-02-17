@@ -3,10 +3,6 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
-Boolean.TryParse(EnvironmentVariable("CIRCLE_CI"), out var circleCiEnabled);
-Console.WriteLine($"\n Circle Ci enabled: {circleCiEnabled}");
-Console.WriteLine($"\n Jenkins build: {BuildSystem.IsRunningOnJenkins}");
-
 var Projects = new List<string>()
 {
     "Okta.AspNet.Abstractions",
@@ -24,23 +20,6 @@ var IntegrationTestProjects = new List<string>()
     "Okta.AspNetCore.WebApi.IntegrationTest",
     "Okta.AspNetCore.Mvc.IntegrationTest"
 };
-
-// Ignoring .NET 4.5.2 projects as it is causing issues with travis.
-// https://github.com/okta/okta-aspnet/issues/40
-var netCoreProjects = new List<string>()
-{
-    "Okta.AspNet.Abstractions",
-    "Okta.AspNet.Abstractions.Test",
-    "Okta.AspNet",
-    "Okta.AspNet.Test",
-    "Okta.AspNetCore",
-    "Okta.AspNetCore.Test"
-};
-
-if(circleCiEnabled) 
-{
-    Projects = netCoreProjects;
-}
 
 Task("Clean").Does(() =>
 {
@@ -79,21 +58,10 @@ Task("Build")
     {
         Console.WriteLine($"\nBuilding {name}");
        
-        if(circleCiEnabled && name == "Okta.AspNet.Abstractions")
+        DotNetCoreBuild($"./{name}", new DotNetCoreBuildSettings
         {
-            DotNetCoreBuild($"./{name}", new DotNetCoreBuildSettings
-            {
-                Configuration = configuration,
-                Framework = "netstandard2.0", 
-            });
-        }
-        else
-        {
-            DotNetCoreBuild($"./{name}", new DotNetCoreBuildSettings
-            {
-                Configuration = configuration,
-            });
-        }
+            Configuration = configuration,
+        });
         
     });
     
@@ -163,28 +131,12 @@ Task("PackNuget")
     {
         Console.WriteLine($"\nCreating NuGet package for {name}");
         
-        if(circleCiEnabled && name == "Okta.AspNet.Abstractions") 
+        DotNetCorePack($"./{name}", new DotNetCorePackSettings
         {
-            var msBuildSettings = new DotNetCoreMSBuildSettings();
-            msBuildSettings.SetTargetFramework("netstandard2.0");
-
-            DotNetCorePack($"./{name}", new DotNetCorePackSettings
-            {
-                Configuration = configuration,
-                OutputDirectory = "./artifacts",
-                MSBuildSettings = msBuildSettings,
-				NoBuild = true,
-            });
-        } 
-        else
-        {
-            DotNetCorePack($"./{name}", new DotNetCorePackSettings
-            {
-                Configuration = configuration,
-                OutputDirectory = "./artifacts",
-                NoBuild = true,
-            });
-        }
+            Configuration = configuration,
+            OutputDirectory = "./artifacts",
+            NoBuild = true,
+        });
     });
 });
 
