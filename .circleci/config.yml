@@ -93,8 +93,6 @@ jobs:
     description: Run tests and build
     executor:
       name: windows/default
-    environment:
-      CIRCLE_CI: True
     steps:
       - run:
           name: Checkout with HTTPS
@@ -117,13 +115,6 @@ jobs:
           root: .
           paths:
             - .
-      - when:
-          condition:
-            equal: [ "<<pipeline.git.branch>>", "master" ]
-          steps:
-            - general-platform-helpers/step-artifacts-prepare-and-upload-windows:
-                files-to-upload: "artifacts"
-                location: "com/okta/devex/okta-aspnet"
 
   snyk-scan:
     docker:
